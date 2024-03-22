@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:nb_utils/nb_utils.dart';
+import 'package:running_community_mobile/widgets/AppBar.dart';
+
+import '../utils/constants.dart';
 
 class DashboardScreen extends StatefulWidget {
   const DashboardScreen({super.key});
@@ -11,11 +15,16 @@ class _DashboardScreenState extends State<DashboardScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Dashboard'),
+      appBar: MyAppBar(
+        // automaticallyImplyLeading: false,
+        title: 'Dashboard',
+        
       ),
       body: Center(
-        child: Text('Welcome to Dashboard'),
+        child: TextButton(onPressed: () async {
+          await setValue(AppConstant.TOKEN_KEY, '');
+        },
+        child: Text('Logout'),),
       ),
     );
   }
