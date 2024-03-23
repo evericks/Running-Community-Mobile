@@ -24,7 +24,17 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^3.0.0
+  assets_gen: 1.5.0
 
+assets_gen:
+  output: utils/app_assets.dart
+  class_name: AppAssets
+  enable: true
+  gen_package_path: false
+  ignore_resolution: false
+  omit_path_levels: 2
+  exclude:
+     
 flutter:
   uses-material-design: true
 

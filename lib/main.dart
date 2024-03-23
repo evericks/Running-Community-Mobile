@@ -23,6 +23,8 @@ class MainApp extends StatelessWidget {
       home: _fetchAuthAndInitialRoute(),
       theme: ThemeData(
         fontFamily: 'Roboto',
+        scaffoldBackgroundColor: white.withOpacity(0.8)
+
       ),
       debugShowCheckedModeBanner: false, // Remove debug banner
       onGenerateRoute: generateRoute,

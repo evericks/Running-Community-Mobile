@@ -15,4 +15,14 @@ class UserCubit extends Cubit<UserState>{
       emit(LoginFailedState(e.toString()));
     }
   }
+
+  Future<void> getUserProfile() async {
+    emit(UserProfileLoadingState());
+    try {
+      final user = await _userRepo.getUserProfile();
+      emit(UserProfileSuccessState(user));
+    } catch (e) {
+      emit(UserProfileFailedState(e.toString()));
+    }
+  }
 }
