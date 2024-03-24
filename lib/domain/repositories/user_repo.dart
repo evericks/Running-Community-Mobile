@@ -6,12 +6,12 @@ import '../../utils/get_it.dart';
 import '../../utils/messages.dart';
 import '../models/user.dart';
 
-final Dio apiClient = getIt.get<Dio>();
+final Dio _apiClient = getIt.get<Dio>();
 
 class UserRepo {
   Future<void> login({required String username, required String password}) async {
     try {
-      final response = await apiClient.post(
+      final response = await _apiClient.post(
         '/api/auth/users',
         data: {
           'phone': username,
@@ -34,7 +34,7 @@ class UserRepo {
 
   Future<User> getUserProfile() async {
     try {
-      final response = await apiClient.post('/api/auth/users/sign-in-with-token');
+      final response = await _apiClient.post('/api/auth/users/sign-in-with-token');
       return User.fromJson(response.data);
     } on DioException catch (e) {
       if (e.response?.statusCode == 400) {

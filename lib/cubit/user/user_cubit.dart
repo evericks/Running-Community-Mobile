@@ -1,11 +1,12 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:running_community_mobile/utils/get_it.dart';
 
 import '../../domain/repositories/user_repo.dart';
 import 'user_state.dart';
 
 class UserCubit extends Cubit<UserState>{
   UserCubit() : super(UserState());
-  final UserRepo _userRepo = UserRepo();
+  final UserRepo _userRepo = getIt<UserRepo>();
   Future<void> login({required String username, required String password}) async {
     emit(LoginLoadingState());
     try {
