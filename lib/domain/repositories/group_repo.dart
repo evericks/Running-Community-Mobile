@@ -21,4 +21,18 @@ class GroupRepo {
       throw Exception(msg_server_error);
     }
   }
+
+  Future<int> createGroup({required String name, required String description, required String userId}) async {
+    try {
+      final response = await _apiClient.post('/api/groups', data: {
+        'name': name,
+        'description': description,
+        'userId': userId,
+      });
+      return response.statusCode!;
+    } on DioException catch (e) {
+      print('Error at createGroup: $e');
+      throw Exception(msg_server_error);
+    }
+  }
 }

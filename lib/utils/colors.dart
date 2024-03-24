@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:nb_utils/nb_utils.dart';
 
 const primaryColor = Color(0xFF4F46E5);
 

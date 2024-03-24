@@ -1,16 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:nb_utils/nb_utils.dart';
-import 'package:running_community_mobile/fragments/PersonalTrainingFragment.dart';
-import 'package:running_community_mobile/fragments/SearchFragment.dart';
-import 'package:running_community_mobile/fragments/TournamentFragment.dart';
-import 'package:running_community_mobile/utils/app_assets.dart';
-import 'package:running_community_mobile/utils/colors.dart';
-import 'package:running_community_mobile/widgets/AppBar.dart';
-
 import '../fragments/GroupFragment.dart';
+import '../fragments/PersonalTrainingFragment.dart';
 import '../fragments/ProfileFragment.dart';
-import '../utils/constants.dart';
+import '../fragments/SearchFragment.dart';
+import '../fragments/TournamentFragment.dart';
+import '../utils/app_assets.dart';
+import '../utils/colors.dart';
 
 class DashboardScreen extends StatefulWidget {
   const DashboardScreen({super.key, this.tabIndex});
