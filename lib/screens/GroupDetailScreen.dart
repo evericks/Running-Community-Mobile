@@ -5,6 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:nb_utils/nb_utils.dart';
 import 'package:running_community_mobile/cubit/group/group_cubit.dart';
 import 'package:running_community_mobile/cubit/group/group_state.dart';
+import 'package:running_community_mobile/domain/models/groups.dart';
 import 'package:running_community_mobile/domain/repositories/user_repo.dart';
 import 'package:running_community_mobile/utils/app_assets.dart';
 import 'package:running_community_mobile/utils/colors.dart';
@@ -63,12 +64,24 @@ class _GroupDetailScreenState extends State<GroupDetailScreen> {
                                   borderRadius: BorderRadius.circular(8),
                                   child: FadeInImage.assetNetwork(placeholder: AppAssets.placeholder, image: group.thumbnailUrl!, height: 100, width: 100, fit: BoxFit.cover)),
                             ),
-                            UserRepo.user.id == group.groupMembers!.firstWhere((mem) => mem.role == 'Owner').user!.id ? const SizedBox.shrink() : Positioned(
+                            UserRepo.user.id == group.groupMembers!.firstWhere((mem) => mem.role == 'Owner').user!.id ? const SizedBox.shrink() :  group.groupMembers!.any((mem) => mem.user!.id == UserRepo.user.id) ? Positioned(
                               right: 16,
                               bottom: 0,
                                 child: Container(
                                   padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 8),
                                   decoration: BoxDecoration(
+                                    border: Border.all(color: group.groupMembers!.any((mem) => mem.user!.id == UserRepo.user.id) ? gray : primaryColor),
+                                    color: group.groupMembers!.any((mem) => mem.user!.id == UserRepo.user.id) ? white : primaryColor,
+                                    borderRadius: BorderRadius.circular(8),
+                                  ),
+                              child: Text(group.groupMembers!.any((mem) => mem.user!.id == UserRepo.user.id) ? 'Out' : 'Join', style: boldTextStyle(color: group.groupMembers!.any((mem) => mem.user!.id == UserRepo.user.id) ? grey : white),),
+                            )) : Positioned(
+                              right: 16,
+                              bottom: 0,
+                                child: Container(
+                                  padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 8),
+                                  decoration: BoxDecoration(
+                                    border: Border.all(color: primaryColor),
                                     color: primaryColor,
                                     borderRadius: BorderRadius.circular(8),
                                   ),
@@ -123,20 +136,7 @@ class _GroupDetailScreenState extends State<GroupDetailScreen> {
                           Gap.kSection.height,
                           ListView.separated(
                             shrinkWrap: true,
-                            itemBuilder: (context, index) => Row(children: [
-                            ClipOval(
-                              child: FadeInImage.assetNetwork(placeholder: AppAssets.placeholder, image: group.groupMembers![index].user!.avatarUrl!, height: 40, width: 40, fit: BoxFit.cover),
-                            ),
-                            Gap.k8.width,
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(group.groupMembers![index].user!.name!, style: boldTextStyle(size: 16),),
-                                Text(group.groupMembers![index].role!, style: secondaryTextStyle(size: 14),),
-                              ],
-                            ).expand()
-                          
-                          ],), separatorBuilder:  (context, index) => const Divider(), itemCount: group.groupMembers!.length)
+                            itemBuilder: (context, index) => MemberWidget(member: group.groupMembers![index]), separatorBuilder:  (context, index) => const Divider(), itemCount: group.groupMembers!.length)
                         ],
                       ).paddingSymmetric(horizontal: 16)
                     ],
@@ -147,5 +147,32 @@ class _GroupDetailScreenState extends State<GroupDetailScreen> {
             }),
           ),
         ));
+  }
+}
+
+class MemberWidget extends StatelessWidget {
+  const MemberWidget({
+    super.key,
+    required this.member,
+  });
+
+  final GroupMembers member;
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(children: [
+    ClipOval(
+      child: member.user!.avatarUrl == null ? Image.asset(AppAssets.user_placeholder, height: 40, width: 40, fit: BoxFit.cover) : FadeInImage.assetNetwork(placeholder: AppAssets.user_placeholder, image: member.user!.avatarUrl!, height: 40, width: 40, fit: BoxFit.cover),
+    ),
+    Gap.k8.width,
+    Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(member.user!.name!, style: boldTextStyle(size: 16),),
+        Text(member.role!, style: secondaryTextStyle(size: 14),),
+      ],
+    ).expand()
+                              
+                              ],);
   }
 }

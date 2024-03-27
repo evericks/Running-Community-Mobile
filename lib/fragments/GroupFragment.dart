@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:nb_utils/nb_utils.dart';
 import 'package:running_community_mobile/domain/models/groups.dart';
 import 'package:running_community_mobile/domain/repositories/user_repo.dart';
+import 'package:running_community_mobile/screens/GroupDetailScreen.dart';
 import 'package:running_community_mobile/screens/PostsScreen.dart';
 import '../cubit/group/group_cubit.dart';
 import '../cubit/group/group_state.dart';
@@ -140,7 +141,7 @@ class GroupsList extends StatelessWidget {
             ),
           ),
         ).onTap(() {
-          Navigator.pushNamed(context, PostsScreen.routeName, arguments: groups[index].id);
+          Navigator.pushNamed(context, groups[index].groupMembers!.firstWhere((mem) => mem.role == 'Owner').user!.id == UserRepo.user.id ? PostsScreen.routeName : GroupDetailScreen.routeName, arguments: groups[index].id);
           // Navigator.pushNamed(context, GroupDetailScreen.routeName, arguments: groups[index].id);
         });
       },

@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:nb_utils/nb_utils.dart';
+import 'package:running_community_mobile/screens/GroupDetailScreen.dart';
 import 'package:running_community_mobile/widgets/AppBar.dart';
 
 class PostsScreen extends StatefulWidget {
@@ -16,6 +18,14 @@ class _PostsScreenState extends State<PostsScreen> {
     return Scaffold(
       appBar: MyAppBar(
         title: 'Posts',
+        actions: [
+          IconButton(
+            icon: Icon(Icons.info, color: textPrimaryColor,),
+            onPressed: () {
+              Navigator.pushNamed(context, GroupDetailScreen.routeName, arguments: widget.groupId);
+            },
+          ),
+        ],
       ),
       body: Container(
         child: Center(
