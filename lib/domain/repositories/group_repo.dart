@@ -38,4 +38,14 @@ class GroupRepo {
       throw Exception(msg_server_error);
     }
   }
+
+  Future<Group> getGroupById(String id) async {
+    try {
+      final response = await _apiClient.get('/api/groups/$id');
+      return Group.fromJson(response.data);
+    } on DioException catch (e) {
+      print('Error at getGroupById: $e');
+      throw Exception(msg_server_error);
+    }
+  }
 }

@@ -25,3 +25,15 @@ class GroupCreateFailedState extends GroupState {
   final String error;
   GroupCreateFailedState(this.error);
 }
+
+class GetGroupLoadingState extends GroupState {}
+
+class GetGroupSuccessState extends GroupState {
+  final Group group;
+  GetGroupSuccessState(this.group);
+}
+
+class GetGroupFailedState extends GroupState {
+  final String error;
+  GetGroupFailedState(this.error);
+}

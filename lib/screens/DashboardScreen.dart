@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:nb_utils/nb_utils.dart';
+import '../cubit/archivement/archivement_cubit.dart';
+import '../cubit/user/user_cubit.dart';
+import '../cubit/user/user_state.dart';
 import '../fragments/GroupFragment.dart';
 import '../fragments/PersonalTrainingFragment.dart';
 import '../fragments/ProfileFragment.dart';
@@ -46,12 +50,13 @@ class _DashboardScreenState extends State<DashboardScreen> {
     return Scaffold(
       floatingActionButton: FloatingActionButton(
         shape: CircleBorder(),
-        onPressed: () {onTabSelection(2);},
+        onPressed: () {
+          onTabSelection(2);
+        },
         child: SvgPicture.asset(AppAssets.run, height: 24, color: white),
         backgroundColor: primaryColor,
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-
       bottomNavigationBar: SizedBox(
         height: 60,
         child: Container(
@@ -63,16 +68,55 @@ class _DashboardScreenState extends State<DashboardScreen> {
             color: primaryColor.withOpacity(0.2),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              IconButton(onPressed: (){onTabSelection(0);}, icon: SvgPicture.asset(AppAssets.globe, height: 24, color: primaryColor,)),
-              IconButton(onPressed: (){onTabSelection(1);}, icon: SvgPicture.asset(AppAssets.group, height: 24, color: primaryColor,)),
-              const SizedBox(width: 24,),
-              IconButton(onPressed: (){onTabSelection(3);}, icon: SvgPicture.asset(AppAssets.award, height: 24, color: primaryColor,)),
-              IconButton(onPressed: (){onTabSelection(4);}, icon: SvgPicture.asset(AppAssets.user, height: 24, color: primaryColor,)),],
-          ),),
+              children: [
+                IconButton(
+                    onPressed: () {
+                      onTabSelection(0);
+                    },
+                    icon: SvgPicture.asset(
+                      AppAssets.globe,
+                      height: 24,
+                      color: primaryColor,
+                    )),
+                IconButton(
+                    onPressed: () {
+                      onTabSelection(1);
+                    },
+                    icon: SvgPicture.asset(
+                      AppAssets.group,
+                      height: 24,
+                      color: primaryColor,
+                    )),
+                const SizedBox(
+                  width: 24,
+                ),
+                IconButton(
+                    onPressed: () {
+                      onTabSelection(3);
+                    },
+                    icon: SvgPicture.asset(
+                      AppAssets.award,
+                      height: 24,
+                      color: primaryColor,
+                    )),
+                IconButton(
+                    onPressed: () {
+                      onTabSelection(4);
+                    },
+                    icon: SvgPicture.asset(
+                      AppAssets.user,
+                      height: 24,
+                      color: primaryColor,
+                    )),
+              ],
+            ),
+          ),
         ),
       ),
-      body: _fragments.elementAt(selectedIndex),
+      body: MultiBlocProvider(providers: [
+        BlocProvider<UserCubit>(create: (context) => UserCubit()..getUserProfile()),
+        BlocProvider<ArchivementCubit>(create: (context) => ArchivementCubit()..getArchivements()),
+      ], child: MultiBlocListener(listeners: [BlocListener<UserCubit, UserState>(listener: (context, state) {})], child: _fragments.elementAt(selectedIndex))),
     );
   }
 }

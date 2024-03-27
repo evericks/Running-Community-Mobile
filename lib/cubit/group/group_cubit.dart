@@ -32,4 +32,14 @@ class GroupCubit extends Cubit<GroupState>{
       emit(GroupCreateFailedState(e.toString()));
     }
   }
+
+  Future<void> getGroupById(String id) async {
+    emit(GetGroupLoadingState());
+    try {
+      final group = await _groupRepo.getGroupById(id);
+      emit(GetGroupSuccessState(group));
+    } catch (e) {
+      emit(GetGroupFailedState(e.toString()));
+    }
+  }
 }
