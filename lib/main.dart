@@ -1,20 +1,26 @@
+import 'package:camera/camera.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:nb_utils/nb_utils.dart';
+import 'package:running_community_mobile/cubit/group/group_cubit.dart';
 import 'package:running_community_mobile/cubit/user/user_cubit.dart';
 import 'package:running_community_mobile/cubit/user/user_state.dart';
-
 import 'cubit/archivement/archivement_cubit.dart';
 import 'screens/DashboardScreen.dart';
 import 'screens/SplashScreen.dart';
 import 'utils/constants.dart';
 import 'utils/get_it.dart';
 import 'utils/route.dart';
+import 'firebase_options.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await initialize();
   await initialGetIt();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
   runApp(const MainApp());
 }
 
@@ -24,10 +30,16 @@ class MainApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: MultiBlocProvider(
-          providers: [BlocProvider<UserCubit>(create: (context) => UserCubit()..getUserProfile()), BlocProvider(create: (context) => ArchivementCubit()..getArchivements())],
-          child: MultiBlocListener(listeners: [BlocListener<UserCubit, UserState>(listener: (context, state){})], child: _fetchAuthAndInitialRoute())),
-      theme: ThemeData(fontFamily: 'Roboto', scaffoldBackgroundColor: white.withOpacity(0.8)),
+      home: MultiBlocProvider(providers: [
+        BlocProvider<UserCubit>(create: (context) => UserCubit()..getUserProfile()),
+        BlocProvider(create: (context) => ArchivementCubit()..getArchivements()),
+        // BlocProvider<GroupCubit>(
+        //   create: (context) => GroupCubit(),
+        // )
+      ], child: MultiBlocListener(listeners: [BlocListener<UserCubit, UserState>(listener: (context, state) {})], child: _fetchAuthAndInitialRoute())),
+      theme: ThemeData(
+        fontFamily: 'Roboto',
+      ),
       debugShowCheckedModeBanner: false, // Remove debug banner
       onGenerateRoute: generateRoute,
     );
@@ -45,4 +57,18 @@ Widget _fetchAuthAndInitialRoute() {
     debugPrint("ex ${e.toString()}"); // Print exception
   }
   return const SplashScreen();
+}
+
+class CameraService {
+  static final CameraService _instance = CameraService._internal();
+
+  factory CameraService() => _instance;
+
+  CameraService._internal();
+
+  List<CameraDescription>? cameras;
+
+  Future<void> initializeCameras() async {
+    cameras = await availableCameras();
+  }
 }

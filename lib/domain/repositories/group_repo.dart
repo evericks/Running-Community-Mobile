@@ -1,3 +1,4 @@
+import 'package:camera/camera.dart';
 import 'package:dio/dio.dart';
 import 'package:running_community_mobile/utils/get_it.dart';
 
@@ -22,13 +23,15 @@ class GroupRepo {
     }
   }
 
-  Future<int> createGroup({required String name, required String description, required String userId}) async {
+  Future<int> createGroup({required String name, required String description, required String rule, required XFile thumbnail}) async {
     try {
-      final response = await _apiClient.post('/api/groups', data: {
+      FormData formData = FormData.fromMap({
+        'thumbnail': await MultipartFile.fromFile(thumbnail.path, filename: '$name-thumbnail'),
         'name': name,
         'description': description,
-        'userId': userId,
+        'rule': rule,
       });
+      final response = await _apiClient.post('/api/groups', data: formData, options: Options(contentType: Headers.multipartFormDataContentType));
       return response.statusCode!;
     } on DioException catch (e) {
       print('Error at createGroup: $e');

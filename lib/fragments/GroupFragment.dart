@@ -29,8 +29,6 @@ class GroupFragment extends StatelessWidget {
           if (state is GroupsSuccessState) {
             var groups = state.groups.groups!;
             var joinedGroups = groups.where((gr) => gr.groupMembers!.any((mem) => mem.user!.id == UserRepo.user.id)).toList();
-            print(UserRepo.user.id);
-            print(joinedGroups);
             return RefreshIndicator(
               onRefresh: () async {
                 context.read<GroupCubit>().getGroups();
@@ -52,7 +50,9 @@ class GroupFragment extends StatelessWidget {
                           style: primaryTextStyle(color: blueColor),
                           textAlign: TextAlign.center,
                         ),
-                      ).expand(),
+                      ).onTap(() {
+                        Navigator.pushNamed(context, '/create-group');
+                      }).expand(),
                       Gap.k16.width,
                       Container(
                         padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
