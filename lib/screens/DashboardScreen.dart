@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:nb_utils/nb_utils.dart';
+import 'package:running_community_mobile/cubit/group/group_state.dart';
 import '../cubit/archivement/archivement_cubit.dart';
+import '../cubit/group/group_cubit.dart';
 import '../cubit/user/user_cubit.dart';
 import '../cubit/user/user_state.dart';
 import '../fragments/GroupFragment.dart';
@@ -105,7 +107,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     },
                     icon: SvgPicture.asset(
                       AppAssets.user,
-                      height: 24,
+                      height: 24, 
                       color: primaryColor,
                     )),
               ],
@@ -116,7 +118,10 @@ class _DashboardScreenState extends State<DashboardScreen> {
       body: MultiBlocProvider(providers: [
         BlocProvider<UserCubit>(create: (context) => UserCubit()..getUserProfile()),
         BlocProvider<ArchivementCubit>(create: (context) => ArchivementCubit()..getArchivements()),
-      ], child: MultiBlocListener(listeners: [BlocListener<UserCubit, UserState>(listener: (context, state) {})], child: _fragments.elementAt(selectedIndex))),
+        BlocProvider<GroupCubit>(
+          create: (context) => GroupCubit()..getGroups(),
+        )
+      ], child: MultiBlocListener(listeners: [BlocListener<UserCubit, UserState>(listener: (context, state) {}), BlocListener<GroupCubit, GroupState>(listener: (context, state){})], child: _fragments.elementAt(selectedIndex))),
     );
   }
 }

@@ -6,7 +6,7 @@ import 'archivement_state.dart';
 
 class ArchivementCubit extends Cubit<ArchivementState>{
   ArchivementCubit() : super(ArchivementLoadingState());
-  final ArchivementRepo _archivementRepo = getIt<ArchivementRepo>();
+  final ArchivementRepo _archivementRepo = getIt.get<ArchivementRepo>();
 
   Future<void> getArchivements() async {
     emit(ArchivementLoadingState());

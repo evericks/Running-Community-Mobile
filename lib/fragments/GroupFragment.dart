@@ -20,73 +20,72 @@ class GroupFragment extends StatelessWidget {
       appBar: MyAppBar(
         title: 'Group',
       ),
-      body: BlocProvider<GroupCubit>(
-        create: (context) => GroupCubit()..getGroups(),
-        child: BlocBuilder<GroupCubit, GroupState>(builder: (context, state) {
-          if (state is GroupsLoadingState) {
-            return Center(
-              child: CircularProgressIndicator(),
-            );
-          }
-          if (state is GroupsSuccessState) {
-            var groups = state.groups.groups!;
-            var joinedGroups = groups.where((gr) => gr.groupMembers!.any((mem) => mem.user!.id == UserRepo.user.id)).toList();
-            print(joinedGroups.length);
-            print(UserRepo.user.id);
-            return RefreshIndicator(
-              onRefresh: () async {
-                context.read<GroupCubit>().getGroups();
-              },
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Container(
-                        padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(8),
-                          border: Border.all(color: blueColor),
+      body: BlocBuilder<GroupCubit, GroupState>(builder: (context, state) {
+        if (state is GroupsLoadingState) {
+          return Center(
+            child: CircularProgressIndicator(),
+          );
+        }
+        if (state is GroupsSuccessState) {
+          var groups = state.groups.groups!;
+          var joinedGroups = groups.where((gr) => gr.groupMembers!.any((mem) => mem.user!.id == UserRepo.user.id)).toList();
+          print(joinedGroups.length);
+          print(UserRepo.user.id);
+          return RefreshIndicator(
+            onRefresh: () async {
+              context.read<GroupCubit>().getGroups();
+            },
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Container(
+                      padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(8),
+                        border: Border.all(color: blueColor),
+                      ),
+                      child: Text(
+                        'New Group',
+                        style: primaryTextStyle(color: blueColor),
+                        textAlign: TextAlign.center,
+                      ),
+                    ).onTap(() {
+                      Navigator.pushNamed(context, '/create-group');
+                    }).expand(),
+                    Gap.k16.width,
+                    Container(
+                      padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(8),
+                        border: Border.all(color: blueColor),
+                      ),
+                      child: Text(
+                        'Join',
+                        style: primaryTextStyle(
+                          color: blueColor,
                         ),
-                        child: Text(
-                          'New Group',
-                          style: primaryTextStyle(color: blueColor),
-                          textAlign: TextAlign.center,
-                        ),
-                      ).onTap(() {
-                        Navigator.pushNamed(context, '/create-group');
-                      }).expand(),
-                      Gap.k16.width,
-                      Container(
-                        padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(8),
-                          border: Border.all(color: blueColor),
-                        ),
-                        child: Text(
-                          'Join',
-                          style: primaryTextStyle(color: blueColor,),
-                          textAlign: TextAlign.center,
-                        ),
-                      ).expand(),
-                    ],
-                  ),
-                  Gap.k16.height,
-                  Text('Joined Groups (${joinedGroups.length})', style: secondaryTextStyle()),
-                  Gap.k8.height,
-                  GroupsList(groups: joinedGroups),
-                  Gap.k16.height,
-                  Text('Suggestion for you', style: secondaryTextStyle()),
-                  Gap.k8.height,
-                  GroupsList(groups: groups.where((gr) => !joinedGroups.contains(gr)).toList()),
-                ],
-              ).paddingSymmetric(horizontal: 32, vertical: 16),
-            );
-          }
-          return const SizedBox();
-        }),
-      ),
+                        textAlign: TextAlign.center,
+                      ),
+                    ).expand(),
+                  ],
+                ),
+                Gap.k16.height,
+                Text('Joined Groups (${joinedGroups.length})', style: secondaryTextStyle()),
+                Gap.k8.height,
+                GroupsList(groups: joinedGroups),
+                Gap.k16.height,
+                Text('Suggestion for you', style: secondaryTextStyle()),
+                Gap.k8.height,
+                GroupsList(groups: groups.where((gr) => !joinedGroups.contains(gr)).toList()),
+              ],
+            ).paddingSymmetric(horizontal: 32, vertical: 16),
+          );
+        }
+        return const SizedBox();
+      }),
     );
   }
 }

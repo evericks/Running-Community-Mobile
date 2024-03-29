@@ -11,7 +11,7 @@ class PostCubit extends Cubit<PostState>{
   Future<void> getPosts({String? content, String? creatorId, String? groupId, int? pageSize, int? pageNumber}) async {
     emit(GetPostsLoadingState());
     try {
-      final posts = await _postRepo.getPosts();
+      final posts = await _postRepo.getPosts(content: content, creatorId: creatorId, groupId: groupId, pageSize: pageSize, pageNumber: pageNumber);
       emit(GetPostsSuccessState(posts));
     } catch (e) {
       emit(GetPostsFailedState(e.toString()));

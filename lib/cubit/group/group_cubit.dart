@@ -7,7 +7,7 @@ import 'group_state.dart';
 
 class GroupCubit extends Cubit<GroupState>{
   GroupCubit() : super(GroupsLoadingState());
-  final GroupRepo _groupRepo = getIt<GroupRepo>();
+  final GroupRepo _groupRepo = getIt.get<GroupRepo>();
 
   Future<void> getGroups({String? name, String? userId, int? pageNumber, int? pageSize}) async {
     emit(GroupsLoadingState());

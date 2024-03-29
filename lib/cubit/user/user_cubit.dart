@@ -6,7 +6,7 @@ import 'user_state.dart';
 
 class UserCubit extends Cubit<UserState>{
   UserCubit() : super(UserState());
-  final UserRepo _userRepo = getIt<UserRepo>();
+  final UserRepo _userRepo = getIt.get<UserRepo>();
   Future<void> login({required String username, required String password}) async {
     emit(LoginLoadingState());
     try {
