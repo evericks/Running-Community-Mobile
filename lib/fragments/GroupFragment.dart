@@ -141,7 +141,7 @@ class GroupsList extends StatelessWidget {
             ),
           ),
         ).onTap(() {
-          Navigator.pushNamed(context, groups[index].groupMembers!.firstWhere((mem) => mem.role == 'Owner').user!.id == UserRepo.user.id ? PostsScreen.routeName : GroupDetailScreen.routeName, arguments: groups[index].id);
+          Navigator.pushNamed(context, groups[index].groupMembers!.any((mem) => mem.user!.id == UserRepo.user.id) ? PostsScreen.routeName : GroupDetailScreen.routeName, arguments: groups[index].id);
           // Navigator.pushNamed(context, GroupDetailScreen.routeName, arguments: groups[index].id);
         });
       },

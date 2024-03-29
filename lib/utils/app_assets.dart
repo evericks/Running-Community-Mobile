@@ -11,4 +11,9 @@ class AppAssets {
   static const String award = 'assets/icons/award.svg';
   static const String info = 'assets/icons/info.svg';
   static const String trophy = 'assets/icons/trophy.svg';
+  static const String ellipsis = 'assets/icons/ellipsis.svg';
+  static const String location_dot = 'assets/icons/location-dot.svg';
+  static const String calendar = 'assets/icons/calendar.svg';
+  static const String comment = 'assets/icons/comment.svg';
+  static const String thumbs_up = 'assets/icons/thumbs-up.svg';
 }

@@ -13,10 +13,11 @@ class MyAppBar extends StatelessWidget implements PreferredSizeWidget {
   final double? elevation;
   final String? leadingIcon;
   final Color? leadingIconColor;
+  final PreferredSize? bottom;
   const MyAppBar({
     Key? key,
     required this.title,
-    this.actions = const [], this.automaticallyImplyLeading, this.backgroundColor, this.titleColor, this.centerTitle, this.elevation = 0, this.leadingIcon, this.leadingIconColor,
+    this.actions = const [], this.automaticallyImplyLeading, this.backgroundColor, this.titleColor, this.centerTitle, this.elevation = 0, this.leadingIcon, this.leadingIconColor, this.bottom,
   }) : super(key: key);
 
   @override
@@ -30,6 +31,7 @@ class MyAppBar extends StatelessWidget implements PreferredSizeWidget {
       titleTextStyle: TextStyle(color: titleColor ?? textPrimaryColor, fontSize: 20, fontWeight: FontWeight.bold,),
       centerTitle: centerTitle ?? true,
       elevation: elevation,
+      bottom: bottom,
       leading: leadingIcon != null ? Container(
         decoration: BoxDecoration(
           shape: BoxShape.circle,

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:running_community_mobile/screens/CreateGroupScreen.dart';
+import 'package:running_community_mobile/screens/CreatePostScreen.dart';
 import 'package:running_community_mobile/screens/GroupDetailScreen.dart';
 import 'package:running_community_mobile/screens/LoginScreen.dart';
 import 'package:running_community_mobile/screens/PostsScreen.dart';
@@ -27,6 +28,8 @@ Route<dynamic> generateRoute(RouteSettings settings) {
               ));
     case PostsScreen.routeName:
       return MaterialPageRoute(builder: (_) => PostsScreen(groupId: settings.arguments.toString(),));
+    case CreatePostScreen.routeName:
+      return MaterialPageRoute(builder: (_) => const CreatePostScreen());
     default:
       return MaterialPageRoute(builder: (_) => const NotFoundScreen());
   }
