@@ -13,3 +13,15 @@ class GetPostsFailedState extends PostState {
   final String error;
   GetPostsFailedState(this.error);
 }
+
+class GetPostByIdLoadingState extends PostState {}
+
+class GetPostByIdSuccessState extends PostState {
+  final Post post;
+  GetPostByIdSuccessState(this.post);
+}
+
+class GetPostByIdFailedState extends PostState {
+  final String error;
+  GetPostByIdFailedState(this.error);
+}

@@ -29,8 +29,6 @@ class GroupFragment extends StatelessWidget {
         if (state is GroupsSuccessState) {
           var groups = state.groups.groups!;
           var joinedGroups = groups.where((gr) => gr.groupMembers!.any((mem) => mem.user!.id == UserRepo.user.id)).toList();
-          print(joinedGroups.length);
-          print(UserRepo.user.id);
           return RefreshIndicator(
             onRefresh: () async {
               context.read<GroupCubit>().getGroups();

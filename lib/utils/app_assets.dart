@@ -16,4 +16,6 @@ class AppAssets {
   static const String calendar = 'assets/icons/calendar.svg';
   static const String comment = 'assets/icons/comment.svg';
   static const String thumbs_up = 'assets/icons/thumbs-up.svg';
+  static const String arrow_left = 'assets/icons/arrow-left.svg';
+  static const String send = 'assets/icons/send.svg';
 }

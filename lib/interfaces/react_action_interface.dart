@@ -1,5 +1,7 @@
-abstract class ReactActionDelegate {
-  void onReact();
-  void onUnReact();
-  Stream<int> getReactsCount();
+abstract class ReactActionInterface {
+  Future<void> onReact();
+  Future<void> onUnReact();
+  // Stream<int> getReactsCount();
+  Future<int?> getReactsCount();
+
 }

@@ -1,3 +1,5 @@
+import 'user.dart';
+
 class Posts {
   Pagination? pagination;
   List<Post>? posts;
@@ -55,7 +57,7 @@ class Post {
   String? content;
   String? thumbnailUrl;
   Creator? creator;
-  List<PostComments>? postComments;
+  List<PostComment>? postComments;
   List<PostReacts>? postReacts;
   String? createAt;
 
@@ -75,9 +77,9 @@ class Post {
     creator =
         json['creator'] != null ? new Creator.fromJson(json['creator']) : null;
     if (json['postComments'] != null) {
-      postComments = <PostComments>[];
+      postComments = <PostComment>[];
       json['postComments'].forEach((v) {
-        postComments!.add(new PostComments.fromJson(v));
+        postComments!.add(new PostComment.fromJson(v));
       });
     }
     if (json['postReacts'] != null) {
@@ -133,7 +135,7 @@ class Creator {
   }
 }
 
-class PostComments {
+class PostComment {
   String? id;
   User? user;
   String? content;
@@ -141,7 +143,7 @@ class PostComments {
   List<PostCommentReacts>? postCommentReacts;
   String? createAt;
 
-  PostComments(
+  PostComment(
       {this.id,
       this.user,
       this.content,
@@ -149,7 +151,7 @@ class PostComments {
       this.postCommentReacts,
       this.createAt});
 
-  PostComments.fromJson(Map<String, dynamic> json) {
+  PostComment.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     user = json['user'] != null ? new User.fromJson(json['user']) : null;
     content = json['content'];
@@ -183,55 +185,6 @@ class PostComments {
       data['postCommentReacts'] =
           this.postCommentReacts!.map((v) => v.toJson()).toList();
     }
-    data['createAt'] = this.createAt;
-    return data;
-  }
-}
-
-class User {
-  String? id;
-  String? phone;
-  String? name;
-  String? avatarUrl;
-  String? address;
-  double? longitude;
-  double? latitude;
-  String? status;
-  String? createAt;
-
-  User(
-      {this.id,
-      this.phone,
-      this.name,
-      this.avatarUrl,
-      this.address,
-      this.longitude,
-      this.latitude,
-      this.status,
-      this.createAt});
-
-  User.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
-    phone = json['phone'];
-    name = json['name'];
-    avatarUrl = json['avatarUrl'];
-    address = json['address'];
-    longitude = json['longitude'];
-    latitude = json['latitude'];
-    status = json['status'];
-    createAt = json['createAt'];
-  }
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
-    data['phone'] = this.phone;
-    data['name'] = this.name;
-    data['avatarUrl'] = this.avatarUrl;
-    data['address'] = this.address;
-    data['longitude'] = this.longitude;
-    data['latitude'] = this.latitude;
-    data['status'] = this.status;
     data['createAt'] = this.createAt;
     return data;
   }

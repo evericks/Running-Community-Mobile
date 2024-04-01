@@ -3,6 +3,7 @@ import 'package:running_community_mobile/screens/CreateGroupScreen.dart';
 import 'package:running_community_mobile/screens/CreatePostScreen.dart';
 import 'package:running_community_mobile/screens/GroupDetailScreen.dart';
 import 'package:running_community_mobile/screens/LoginScreen.dart';
+import 'package:running_community_mobile/screens/PostDetailScreen.dart';
 import 'package:running_community_mobile/screens/PostsScreen.dart';
 import 'package:running_community_mobile/screens/SignUpScreen.dart';
 import '../screens/DashboardScreen.dart';
@@ -30,6 +31,11 @@ Route<dynamic> generateRoute(RouteSettings settings) {
       return MaterialPageRoute(builder: (_) => PostsScreen(groupId: settings.arguments.toString(),));
     case CreatePostScreen.routeName:
       return MaterialPageRoute(builder: (_) => const CreatePostScreen());
+    case PostDetailScreen.routeName:
+      return MaterialPageRoute(
+          builder: (_) => PostDetailScreen(
+                postId: settings.arguments.toString(),
+              ));
     default:
       return MaterialPageRoute(builder: (_) => const NotFoundScreen());
   }

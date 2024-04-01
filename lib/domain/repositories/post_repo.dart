@@ -21,4 +21,14 @@ class PostRepo {
       throw Exception(msg_server_error);
     }
   }
+
+  Future<Post> getPostById({required String postId}) async {
+    try {
+    final response = await _apiClient.get('/api/posts/$postId');
+    return Post.fromJson(response.data);
+    } on DioException catch (e) {
+      print('Error at getPostById: $e');
+      throw Exception(msg_server_error);
+    }
+  }
 }
