@@ -21,7 +21,7 @@ class CreateGroupScreen extends StatefulWidget {
 }
 
 class _CreateGroupScreenState extends State<CreateGroupScreen> {
-  XFile? imageFile = null;
+  XFile? imageFile;
   TextEditingController groupNameController = TextEditingController();
   TextEditingController groupDescriptionController = TextEditingController();
   TextEditingController groupRuleController = TextEditingController();

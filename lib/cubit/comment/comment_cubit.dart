@@ -27,4 +27,14 @@ class PostCommentCubit extends Cubit<PostCommentState>{
       emit(CreatePostCommentFailedState(e.toString()));
     }
   }
+
+  Future<void> createReplyComment({required String commentId, required String content}) async {
+    emit(CreateReplyCommentLoadingState());
+    try {
+      await postCommentRepo.createReplyComment(commentId: commentId, content: content);
+      emit(CreateReplyCommentSuccessState());
+    } catch (e) {
+      emit(CreateReplyCommentFailedState(e.toString()));
+    }
+  }
 }

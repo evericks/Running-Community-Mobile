@@ -1,3 +1,4 @@
+import 'package:camera/camera.dart';
 import 'package:dio/dio.dart';
 import 'package:running_community_mobile/domain/models/posts.dart';
 import 'package:running_community_mobile/utils/get_it.dart';
@@ -28,6 +29,21 @@ class PostRepo {
     return Post.fromJson(response.data);
     } on DioException catch (e) {
       print('Error at getPostById: $e');
+      throw Exception(msg_server_error);
+    }
+  }
+
+  Future<bool> createPost({required String groupId, String? content, XFile? image }) async {
+    try {
+      FormData data = FormData.fromMap({
+        'content': content,
+        'groupId': groupId,
+        'thumbnail': await MultipartFile.fromFile(image!.path, filename: 'post-thumbnail-$groupId'),
+      });
+      await _apiClient.post('/api/posts', data: data, options: Options(contentType: Headers.multipartFormDataContentType));
+      return true;
+    } on DioException catch (e) {
+      print('Error at createPost: $e');
       throw Exception(msg_server_error);
     }
   }

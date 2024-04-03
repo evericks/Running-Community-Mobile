@@ -1,3 +1,4 @@
+import 'package:camera/camera.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../domain/repositories/post_repo.dart';
@@ -25,6 +26,16 @@ class PostCubit extends Cubit<PostState>{
       emit(GetPostByIdSuccessState(post));
     } catch (e) {
       emit(GetPostByIdFailedState(e.toString()));
+    }
+  }
+
+  Future<void> createPost({required String groupId, String? content, XFile? image }) async {
+    emit(CreatePostLoadingState());
+    try {
+      await _postRepo.createPost(groupId: groupId, content: content, image: image);
+      emit(CreatePostSuccessState());
+    } catch (e) {
+      emit(CreatePostFailedState(e.toString()));
     }
   }
 }

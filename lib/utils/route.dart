@@ -30,7 +30,7 @@ Route<dynamic> generateRoute(RouteSettings settings) {
     case PostsScreen.routeName:
       return MaterialPageRoute(builder: (_) => PostsScreen(groupId: settings.arguments.toString(),));
     case CreatePostScreen.routeName:
-      return MaterialPageRoute(builder: (_) => const CreatePostScreen());
+      return MaterialPageRoute(builder: (_) => CreatePostScreen(groupId: settings.arguments.toString(),));
     case PostDetailScreen.routeName:
       return MaterialPageRoute(
           builder: (_) => PostDetailScreen(

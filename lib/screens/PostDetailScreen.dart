@@ -2,19 +2,18 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:nb_utils/nb_utils.dart';
-import 'package:running_community_mobile/cubit/comment/comment_cubit.dart';
-import 'package:running_community_mobile/cubit/comment/comment_state.dart';
-import 'package:running_community_mobile/cubit/post/post_cubit.dart';
-import 'package:running_community_mobile/cubit/post/post_state.dart';
 import 'package:running_community_mobile/domain/models/posts.dart';
-import 'package:running_community_mobile/domain/repositories/user_repo.dart';
-import 'package:running_community_mobile/utils/colors.dart';
-import 'package:running_community_mobile/widgets/AppBar.dart';
-
+import '../cubit/comment/comment_cubit.dart';
+import '../cubit/comment/comment_state.dart';
+import '../cubit/post/post_cubit.dart';
+import '../cubit/post/post_state.dart';
 import '../cubit/postReact/postReact_cubit.dart';
 import '../delegates/react_action_delegate.dart';
+import '../domain/repositories/user_repo.dart';
 import '../utils/app_assets.dart';
+import '../utils/colors.dart';
 import '../utils/gap.dart';
+import '../widgets/AppBar.dart';
 import '../widgets/CommentWidget.dart';
 import '../widgets/ReactWidget.dart';
 
@@ -29,6 +28,7 @@ class PostDetailScreen extends StatefulWidget {
 
 class _PostDetailScreenState extends State<PostDetailScreen> {
   TextEditingController commentController = TextEditingController();
+  PostComment? postCommentReply;
   @override
   Widget build(BuildContext context) {
     bool isReacted = false;
@@ -53,7 +53,16 @@ class _PostDetailScreenState extends State<PostDetailScreen> {
               }
               if (state is CreatePostCommentSuccessState) {
                 Navigator.of(context, rootNavigator: true).pop('dialog');
-                Fluttertoast.showToast(msg: 'Create comment success');
+                Fluttertoast.showToast(msg: 'Comment success');
+                context.read<PostCubit>().getPostById(id: widget.postId);
+                setState(() {});
+              }
+              if (state is CreateReplyCommentLoadingState) {
+                showBottomSheet(context: context, builder: ((context) => const CircularProgressIndicator()));
+              }
+              if (state is CreateReplyCommentSuccessState) {
+                Navigator.of(context, rootNavigator: true).pop('dialog');
+                Fluttertoast.showToast(msg: 'Reply comment success');
                 context.read<PostCubit>().getPostById(id: widget.postId);
                 setState(() {});
               }
@@ -84,14 +93,21 @@ class _PostDetailScreenState extends State<PostDetailScreen> {
                   children: <Widget>[
                     Expanded(
                       child: TextField(
+                        onChanged: (value) => setState(() {}),
                         controller: commentController,
-                        decoration: InputDecoration(hintText: 'Write a comment...', border: InputBorder.none, hintStyle: secondaryTextStyle()),
+                        decoration: InputDecoration(hintText: postCommentReply == null ? 'Write a comment...' : 'Write your answer to ${postCommentReply!.user!.name}', border: InputBorder.none, hintStyle: secondaryTextStyle()),
                       ),
                     ),
                     SvgPicture.asset(AppAssets.send, width: 24, height: 24, color: commentController.text != '' ? primaryColor : textPrimaryColor).onTap(() {
-                      if (commentController.text.isNotEmpty) {
+                      if (postCommentReply == null && commentController.text.isNotEmpty) {
                         context.read<PostCommentCubit>().createPostComment(postId: widget.postId, content: commentController.text);
                         commentController.clear();
+                      } else if (postCommentReply != null && commentController.text.isNotEmpty) {
+                        context.read<PostCommentCubit>().createReplyComment(commentId: postCommentReply!.id!, content: commentController.text);
+                        commentController.clear();
+                        setState(() {
+                          postCommentReply = null;
+                        });
                       }
                     }),
                   ],
@@ -150,7 +166,11 @@ class _PostDetailScreenState extends State<PostDetailScreen> {
                       itemCount: post.postComments!.length,
                       physics: const NeverScrollableScrollPhysics(),
                       separatorBuilder: (context, index) => Gap.k8.height,
-                      itemBuilder: (context, index) => CommentWidget(postComment: post.postComments![index]),
+                      itemBuilder: (context, index) => CommentWidget(postComment: post.postComments![index], onReply: () {
+                        setState(() {
+                          postCommentReply = post.postComments![index];
+                        });
+                      },),
                     )
                   ],
                 ).paddingSymmetric(horizontal: 16),

@@ -1,35 +1,49 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:nb_utils/nb_utils.dart';
+import 'package:running_community_mobile/cubit/comment_react/comment_react_cubit.dart';
+import 'package:running_community_mobile/cubit/comment_react/comment_react_state.dart';
+import 'package:running_community_mobile/cubit/reply_comment/reply_comment_cubit.dart';
+import 'package:running_community_mobile/cubit/reply_comment/reply_comment_state.dart';
+import 'package:running_community_mobile/domain/repositories/user_repo.dart';
 
 import '../domain/models/posts.dart';
 import '../utils/app_assets.dart';
+import '../utils/colors.dart';
 import '../utils/gap.dart';
 
 class CommentWidget extends StatefulWidget {
   const CommentWidget({
     super.key,
-    required this.postComment,
+    required this.postComment, required this.onReply,
   });
 
   final PostComment postComment;
+  final VoidCallback onReply;
 
   @override
   State<CommentWidget> createState() => _CommentWidgetState();
 }
 
 class _CommentWidgetState extends State<CommentWidget> {
-  List<GlobalKey> replyCommentKeys = [];
+  // List<GlobalKey> replyCommentKeys = [];
+  PostComment? comments;
+  bool isReacted = false;
 
   @override
   void initState() {
+    comments = widget.postComment;
     super.initState();
     // Khởi tạo GlobalKey cho mỗi reply comment
-    replyCommentKeys = List<GlobalKey>.generate(widget.postComment.replyComments!.length, (index) => GlobalKey());
+    // replyCommentKeys = List<GlobalKey>.generate(widget.postComment.replyComments!.length, (index) => GlobalKey());
   }
 
   @override
   Widget build(BuildContext context) {
     // print((replyCommentKeys.first.currentContext?.findRenderObject() as RenderBox?)!.localToGlobal(Offset.zero));
+    isReacted = comments!.postCommentReacts!.any((rcreact) => rcreact.user!.id == UserRepo.user.id);
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -60,14 +74,69 @@ class _CommentWidgetState extends State<CommentWidget> {
                   children: [
                     Text(widget.postComment.user!.name!, style: boldTextStyle(size: 14)),
                     // Gap.k8.height,
-                    Text(widget.postComment.content!, style: primaryTextStyle(size: 16), maxLines: null,),
+                    ConstrainedBox(
+                      constraints: BoxConstraints(maxWidth: context.width() * 0.7),
+                      child: Text(
+                        widget.postComment.content!,
+                        style: primaryTextStyle(size: 16),
+                        maxLines: null,
+                      ),
+                    ),
                   ],
                 )),
-            Row(children: [
-              Text('Like', style: boldTextStyle(size: 12),),
-              Gap.k8.width,
-              Text('Reply', style: boldTextStyle(size: 12),),
-            ],),
+            MultiBlocProvider(
+              providers: [
+                BlocProvider<PostCommentReactCubit>(
+                  create: (context) => PostCommentReactCubit(),
+                )
+              ],
+              child: Row(
+                children: [
+                  BlocConsumer<PostCommentReactCubit, PostCommentReactState>(
+                    listener: (contextm, state) {
+                      if (state is CreatePostCommentReactSuccessState) {
+                        setState(() {
+                          comments!.postCommentReacts!.add(PostCommentReacts(user: UserRepo.user));
+                        });
+                      }
+                      if (state is DeletePostCommentReactSuccessState) {
+                        setState(() {
+                          comments!.postCommentReacts!.removeWhere((rcreact) => rcreact.user!.id == UserRepo.user.id);
+                        });
+                      }
+                    },
+                    builder: (context, state) => Row(
+                      children: [
+                        Text(
+                          comments != null ? comments!.postCommentReacts!.length.toString() : widget.postComment.postCommentReacts!.length.toString(),
+                          style: secondaryTextStyle(size: 12),
+                        ),
+                        Gap.k4.width,
+                        Text(
+                          'Like',
+                          style: boldTextStyle(
+                              size: 12,
+                              color: comments != null
+                                  ? (comments!.postCommentReacts!.any((rcreact) => rcreact.user!.id == UserRepo.user.id) ? primaryColor : null)
+                                  : (widget.postComment.postCommentReacts!.any((rcreact) => rcreact.user!.id == UserRepo.user.id) ? primaryColor : null)),
+                        ).onTap(() {
+                          isReacted
+                              ? context.read<PostCommentReactCubit>().deletePostCommentReact(commentId: comments != null ? comments!.id! : widget.postComment.id!)
+                              : context.read<PostCommentReactCubit>().createPostCommentReact(commentId: comments != null ? comments!.id! : widget.postComment.id!);
+                        }),
+                      ],
+                    ),
+                  ),
+                  Gap.k16.width,
+                  Text(
+                    'Reply',
+                    style: boldTextStyle(
+                      size: 12,
+                    ),
+                  ).onTap(widget.onReply),
+                ],
+              ),
+            ),
             Gap.k8.height,
             widget.postComment.replyComments!.isNotEmpty
                 ? ListView.separated(
@@ -79,7 +148,7 @@ class _CommentWidgetState extends State<CommentWidget> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         ClipOval(
-                          key: replyCommentKeys[index],
+                          // key: replyCommentKeys[index],
                           child: widget.postComment.replyComments![index].user!.avatarUrl != null
                               ? FadeInImage.assetNetwork(
                                   placeholder: AppAssets.user_placeholder, image: widget.postComment.replyComments![index].user!.avatarUrl!, width: 20, height: 20, fit: BoxFit.cover)
@@ -87,6 +156,7 @@ class _CommentWidgetState extends State<CommentWidget> {
                         ),
                         Gap.k8.width,
                         Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Container(
                               padding: EdgeInsets.all(8),
@@ -99,11 +169,53 @@ class _CommentWidgetState extends State<CommentWidget> {
                                 children: [
                                   Text(widget.postComment.replyComments![index].user!.name!, style: boldTextStyle(size: 14)),
                                   // Gap.k8.height,
-                                  Text(widget.postComment.replyComments![index].content!, style: primaryTextStyle(size: 16), maxLines: null,),
+                                  ConstrainedBox(
+                                    constraints: BoxConstraints(maxWidth: context.width() * 0.6),
+                                    child: Text(
+                                      widget.postComment.replyComments![index].content!,
+                                      style: primaryTextStyle(size: 16),
+                                      maxLines: null,
+                                    ),
+                                  ),
                                 ],
                               ),
                             ),
-                            Text('Like', style: boldTextStyle(size: 12),),
+                            BlocProvider<ReplyCommentReactCubit>(
+                              create: (context) => ReplyCommentReactCubit(),
+                              child: BlocConsumer<ReplyCommentReactCubit, ReplyCommentReactState>(
+                                listener: (context, state) {
+                                  if (state is CreateReplyCommentReactSuccessState) {
+                                    setState(() {
+                                      widget.postComment.replyComments![index].replyCommentReacts!.add(ReplyCommentReacts(userId: UserRepo.user.id));
+                                    });
+                                  }
+                                  if (state is DeleteReplyCommentReactSuccessState) {
+                                    setState(() {
+                                      widget.postComment.replyComments![index].replyCommentReacts!.removeWhere((rcreact) => rcreact.userId == UserRepo.user.id);
+                                    });
+                                    
+                                  }
+                                },
+                                builder: (context, state) {
+                                return Row(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      widget.postComment.replyComments![index].replyCommentReacts!.length.toString(),
+                                      style: secondaryTextStyle(size: 12),
+                                    ),
+                                    Gap.k4.width,
+                                    Text(
+                                      'Like',
+                                      style: boldTextStyle(size: 12, color: widget.postComment.replyComments![index].replyCommentReacts!.any((rcreact) => rcreact.userId == UserRepo.user.id) ? primaryColor : null,)
+                                    ).onTap((){
+                                      widget.postComment.replyComments![index].replyCommentReacts!.any((rcreact) => rcreact.userId == UserRepo.user.id) ? context.read<ReplyCommentReactCubit>().deleteReplyCommentReact(replyCommentId: widget.postComment.replyComments![index].id!) :
+                                      context.read<ReplyCommentReactCubit>().createReplyCommentReact(replyCommentId: widget.postComment.replyComments![index].id!);                                    
+                                    }),
+                                  ],
+                                );
+                              }),
+                            ),
                           ],
                         ),
                       ],

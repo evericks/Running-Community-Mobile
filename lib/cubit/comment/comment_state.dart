@@ -22,3 +22,12 @@ class CreatePostCommentFailedState extends PostCommentState {
   final String error;
   CreatePostCommentFailedState(this.error);
 }
+
+class CreateReplyCommentLoadingState extends PostCommentState {}
+
+class CreateReplyCommentSuccessState extends PostCommentState {}
+
+class CreateReplyCommentFailedState extends PostCommentState {
+  final String error;
+  CreateReplyCommentFailedState(this.error);
+}
