@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:running_community_mobile/screens/CreateGroupScreen.dart';
-import 'package:running_community_mobile/screens/CreatePostScreen.dart';
-import 'package:running_community_mobile/screens/GroupDetailScreen.dart';
-import 'package:running_community_mobile/screens/LoginScreen.dart';
-import 'package:running_community_mobile/screens/PostDetailScreen.dart';
-import 'package:running_community_mobile/screens/PostsScreen.dart';
-import 'package:running_community_mobile/screens/SignUpScreen.dart';
+import '../screens/CreateGroupScreen.dart';
+import '../screens/CreatePostScreen.dart';
 import '../screens/DashboardScreen.dart';
+import '../screens/ExerciseScreen.dart';
+import '../screens/GroupDetailScreen.dart';
+import '../screens/LoginScreen.dart';
+import '../screens/PostDetailScreen.dart';
+import '../screens/PostsScreen.dart';
+import '../screens/SignUpScreen.dart';
 import '../screens/SplashScreen.dart';
 import '../screens/NotFoundScreen.dart';
 
@@ -35,6 +36,11 @@ Route<dynamic> generateRoute(RouteSettings settings) {
       return MaterialPageRoute(
           builder: (_) => PostDetailScreen(
                 postId: settings.arguments.toString(),
+              ));
+    case ExerciseScreen.routeName:
+      return MaterialPageRoute(
+          builder: (_) => ExerciseScreen(
+                id: settings.arguments.toString(),
               ));
     default:
       return MaterialPageRoute(builder: (_) => const NotFoundScreen());

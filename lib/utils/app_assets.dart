@@ -19,4 +19,5 @@ class AppAssets {
   static const String arrow_left = 'assets/icons/arrow-left.svg';
   static const String send = 'assets/icons/send.svg';
   static const String iamge = 'assets/icons/image.svg';
+  static const String circle_play = 'assets/icons/circle-play.svg';
 }
