@@ -28,4 +28,14 @@ class ExerciseCubit extends Cubit<ExerciseState> {
       emit(GetExerciseByIdFailedState(e.toString()));
     }
   }
+
+  Future<void> getExerciseItemById(String id) async {
+    try {
+      emit(GetExerciseItemByIdLoadingState());
+      final exerciseItems = await _exerciseRepository.getExerciseItemById(id);
+      emit(GetExerciseItemByIdSuccessState(exerciseItems));
+    } catch (e) {
+      emit(GetExerciseItemByIdFailedState(e.toString()));
+    }
+  }
 }

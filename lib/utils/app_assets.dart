@@ -20,4 +20,7 @@ class AppAssets {
   static const String send = 'assets/icons/send.svg';
   static const String iamge = 'assets/icons/image.svg';
   static const String circle_play = 'assets/icons/circle-play.svg';
+  static const String play = 'assets/icons/play.svg';
+  static const String pause = 'assets/icons/pause.svg';
+  static const String expand = 'assets/icons/expand.svg';
 }

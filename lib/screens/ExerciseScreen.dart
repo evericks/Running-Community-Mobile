@@ -12,6 +12,7 @@ import 'package:running_community_mobile/widgets/custom_sliver_app_bar_delegate.
 import '../cubit/exercise/exercise_state.dart';
 import '../utils/gap.dart';
 import '../widgets/AppBar.dart';
+import 'ExerciseItemScreen.dart';
 
 class ExerciseScreen extends StatefulWidget {
   const ExerciseScreen({super.key, required this.id});
@@ -120,12 +121,14 @@ class _ExerciseScreenState extends State<ExerciseScreen> {
                                         borderRadius: BorderRadius.circular(8),
                                         child: Image.asset(AppAssets.placeholder, width: 80, height: 80 * 9/16, fit: BoxFit.cover)),
                                     Gap.k16.width,
-                                    Text(exerciseItems[index].content!, style: boldTextStyle()),
+                                    Text(exerciseItems[index].title!, style: boldTextStyle()),
                                     const Spacer(),
                                     SvgPicture.asset(AppAssets.circle_play, width: 24, height: 24, color: primaryColor)
                                   ],
                                 ),
-                              );
+                              ).onTap((){
+                                Navigator.pushNamed(context, ExerciseItemScreen.routeName, arguments: exerciseItems[index].id!);
+                              });
                             }, separatorBuilder: (context, index) => Gap.k8.height, itemCount: exerciseItems.length) : Text('No steps', style: secondaryTextStyle()),
                             Gap.k8.height,
                             

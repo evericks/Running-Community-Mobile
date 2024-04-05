@@ -36,4 +36,14 @@ class ExerciseRepo {
       throw Exception(msg_server_error);
     }
   }
+
+  Future<ExerciseItems> getExerciseItemById(String id) async {
+    try {
+      final response = await _apiClient.get('/api/exercise-items/$id');
+      return ExerciseItems.fromJson(response.data);
+    } on DioException catch (e) {
+      print('Error at getExerciseItem: $e');
+      throw Exception(msg_server_error);
+    }
+  }
 }

@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:running_community_mobile/screens/ExerciseItemScreen.dart';
+import 'package:running_community_mobile/screens/FullScreenVideoScreen.dart';
+import 'package:video_player/video_player.dart';
 import '../screens/CreateGroupScreen.dart';
 import '../screens/CreatePostScreen.dart';
 import '../screens/DashboardScreen.dart';
@@ -41,6 +44,16 @@ Route<dynamic> generateRoute(RouteSettings settings) {
       return MaterialPageRoute(
           builder: (_) => ExerciseScreen(
                 id: settings.arguments.toString(),
+              ));
+    case ExerciseItemScreen.routeName:
+      return MaterialPageRoute(
+          builder: (_) => ExerciseItemScreen(
+                id: settings.arguments.toString(),
+              ));
+    case FullScreenVideoScreen.routeName:
+      return MaterialPageRoute(
+          builder: (_) => FullScreenVideoScreen(
+                videoPlayerController: settings.arguments as VideoPlayerController,
               ));
     default:
       return MaterialPageRoute(builder: (_) => const NotFoundScreen());

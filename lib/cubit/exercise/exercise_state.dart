@@ -25,3 +25,15 @@ class GetExerciseByIdFailedState extends ExerciseState {
   final String error;
   GetExerciseByIdFailedState(this.error);
 }
+
+class GetExerciseItemByIdLoadingState extends ExerciseState {}
+
+class GetExerciseItemByIdSuccessState extends ExerciseState {
+  final ExerciseItems exerciseItems;
+  GetExerciseItemByIdSuccessState(this.exerciseItems);
+}
+
+class GetExerciseItemByIdFailedState extends ExerciseState {
+  final String error;
+  GetExerciseItemByIdFailedState(this.error);
+}

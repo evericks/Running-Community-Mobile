@@ -129,15 +129,17 @@ class Creator {
 
 class ExerciseItems {
   String? id;
+  String? title;
   int? priority;
   String? content;
   String? thumbnailUrl;
   String? videoUrl;
 
-  ExerciseItems({this.id, this.priority, this.content, this.thumbnailUrl, this.videoUrl});
+  ExerciseItems({this.id, this.title, this.priority, this.content, this.thumbnailUrl, this.videoUrl});
 
   ExerciseItems.fromJson(Map<String, dynamic> json) {
     id = json['id'];
+    title = json['title'];
     priority = json['priority'];
     content = json['content'];
     thumbnailUrl = json['thumbnailUrl'];
@@ -147,6 +149,7 @@ class ExerciseItems {
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = <String, dynamic>{};
     data['id'] = id;
+    data['title'] = title;
     data['priority'] = priority;
     data['content'] = content;
     data['thumbnailUrl'] = thumbnailUrl;
