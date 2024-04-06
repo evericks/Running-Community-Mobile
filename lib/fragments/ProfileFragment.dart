@@ -7,6 +7,7 @@ import 'package:nb_utils/nb_utils.dart';
 import 'package:running_community_mobile/cubit/archivement/archivement_state.dart';
 import 'package:running_community_mobile/cubit/user/user_cubit.dart';
 import 'package:running_community_mobile/cubit/user/user_state.dart';
+import 'package:running_community_mobile/screens/DashboardScreen.dart';
 import 'package:running_community_mobile/screens/SplashScreen.dart';
 import 'package:running_community_mobile/utils/app_assets.dart';
 import 'package:running_community_mobile/utils/colors.dart';
@@ -42,7 +43,7 @@ class _ProfileFragmentState extends State<ProfileFragment>{
       appBar: const MyAppBar(
         title: 'Profile',
       ),
-      body: BlocBuilder<UserCubit, UserState>(builder: (context, state) {
+      body: getStringAsync(AppConstant.TOKEN_KEY).isNotEmpty ? BlocBuilder<UserCubit, UserState>(builder: (context, state) {
         if (state is UserProfileLoadingState) {
           return const Center(child: CircularProgressIndicator());
         }
@@ -55,13 +56,13 @@ class _ProfileFragmentState extends State<ProfileFragment>{
                   children: [
                     ClipRRect(
                       borderRadius: BorderRadius.circular(50),
-                      child: FadeInImage.assetNetwork(
+                      child: state.user.avatarUrl != null ? FadeInImage.assetNetwork(
                         placeholder: AppAssets.placeholder,
                         image: state.user.avatarUrl!,
                         height: 60,
                         width: 60,
                         fit: BoxFit.cover,
-                      ),
+                      ) : Image.asset(AppAssets.user_placeholder, height: 60, width: 60, fit: BoxFit.cover,),
                     ),
                     Gap.k16.width,
                     Column(
@@ -190,7 +191,7 @@ class _ProfileFragmentState extends State<ProfileFragment>{
                 child: TextButton(
                   onPressed: () async {
                     await setValue(AppConstant.TOKEN_KEY, '');
-                    Navigator.pushReplacementNamed(context, SplashScreen.routeName);
+                    Navigator.pushReplacementNamed(context, DashboardScreen.routeName);
                   },
                   child: const Text('Logout'),
                 ),
@@ -199,7 +200,7 @@ class _ProfileFragmentState extends State<ProfileFragment>{
           ).paddingSymmetric(vertical: 32);
         }
         return const SizedBox.shrink();
-      }),
+      }) : Center(child: RichText(text: TextSpan(children: [TextSpan(text: 'You are not logged in, please ', style: primaryTextStyle()), TextSpan(text: 'log in', style: primaryTextStyle(color: primaryColor))]),),),
     );
   }
 }

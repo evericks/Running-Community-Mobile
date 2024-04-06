@@ -148,7 +148,7 @@ class _PostsScreenState extends State<PostsScreen> {
                       if (state is GetPostsSuccessState) {
                         var posts = state.posts.posts;
                         isLiked = posts!.any((post) => post.postReacts!.any((react) => react.user!.id == UserRepo.user.id));
-                        return Column(
+                        return posts.isNotEmpty ? Column(
                           children: [
                             ListView.separated(
                                 shrinkWrap: true,
@@ -230,7 +230,7 @@ class _PostsScreenState extends State<PostsScreen> {
                                     ),
                                 itemCount: posts.length),
                           ],
-                        );
+                        ) : Center(child: Text('No posts yet, be the first to write something!', style: secondaryTextStyle(),));
                       }
                       return const SizedBox.shrink();
                     })

@@ -7,6 +7,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:nb_utils/nb_utils.dart';
 import 'package:running_community_mobile/cubit/exercise/exercise_cubit.dart';
 import 'package:running_community_mobile/cubit/exercise/exercise_state.dart';
+import 'package:running_community_mobile/screens/FullScreenVideoScreen.dart';
 import 'package:running_community_mobile/utils/app_assets.dart';
 import 'package:running_community_mobile/utils/colors.dart';
 import 'package:running_community_mobile/utils/gap.dart';
@@ -70,11 +71,11 @@ class _ExerciseItemScreenState extends State<ExerciseItemScreen> {
   @override
   void dispose() {
     _controller.dispose();
-    SystemChrome.setPreferredOrientations([
-      DeviceOrientation.portraitUp,
-      DeviceOrientation.portraitDown,
-    ]);
-    SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
+    // SystemChrome.setPreferredOrientations([
+    //   DeviceOrientation.portraitUp,
+    //   DeviceOrientation.portraitDown,
+    // ]);
+    // SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
     super.dispose();
   }
 
@@ -149,7 +150,7 @@ class _ExerciseItemScreenState extends State<ExerciseItemScreen> {
                                     bottom: 0,
                                     child: SvgPicture.asset(AppAssets.expand, width: 20, height: 20, color: white.withOpacity(0.5)).paddingAll(16).onTap(() {
                                       // _controller.pause();
-                                      Navigator.pushNamed(context, '/full-screen-video', arguments: _controller);
+                                      Navigator.pushNamed(context, FullScreenVideoScreen.routeName, arguments: _controller);
                                     }),
                                   ),
                                   Positioned(
@@ -178,7 +179,7 @@ class _ExerciseItemScreenState extends State<ExerciseItemScreen> {
                               setState(() {
                                 _isControllerVisible = !_isControllerVisible;
                               });
-                              Future.delayed(const Duration(seconds: 3), () {
+                              Future.delayed(const Duration(seconds: 5), () {
                                 if (_controller.value.isPlaying) {
                                   setState(() {
                                     _isControllerVisible = false;

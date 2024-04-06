@@ -27,7 +27,8 @@ class MainApp extends StatelessWidget {
       //   //   create: (context) => GroupCubit(),
       //   // )
       // ], child: MultiBlocListener(listeners: [BlocListener<UserCubit, UserState>(listener: (context, state) {})], child: _fetchAuthAndInitialRoute())),
-      home: _fetchAuthAndInitialRoute(),
+      // home: _fetchAuthAndInitialRoute(),
+      home: DashboardScreen(),
       theme: ThemeData(
         fontFamily: 'Roboto',
       ),
