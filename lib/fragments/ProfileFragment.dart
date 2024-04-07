@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -8,6 +9,7 @@ import 'package:running_community_mobile/cubit/archivement/archivement_state.dar
 import 'package:running_community_mobile/cubit/user/user_cubit.dart';
 import 'package:running_community_mobile/cubit/user/user_state.dart';
 import 'package:running_community_mobile/screens/DashboardScreen.dart';
+import 'package:running_community_mobile/screens/LoginScreen.dart';
 import 'package:running_community_mobile/screens/SplashScreen.dart';
 import 'package:running_community_mobile/utils/app_assets.dart';
 import 'package:running_community_mobile/utils/colors.dart';
@@ -200,7 +202,9 @@ class _ProfileFragmentState extends State<ProfileFragment>{
           ).paddingSymmetric(vertical: 32);
         }
         return const SizedBox.shrink();
-      }) : Center(child: RichText(text: TextSpan(children: [TextSpan(text: 'You are not logged in, please ', style: primaryTextStyle()), TextSpan(text: 'log in', style: primaryTextStyle(color: primaryColor))]),),),
+      }) : Center(child: RichText(text: TextSpan(children: [TextSpan(text: 'You are not logged in, please ', style: primaryTextStyle()), TextSpan(text: 'log in', style: primaryTextStyle(color: primaryColor), recognizer: TapGestureRecognizer()..onTap = (){
+        Navigator.pushNamed(context, LoginScreen.routeName);
+      })]),),),
     );
   }
 }

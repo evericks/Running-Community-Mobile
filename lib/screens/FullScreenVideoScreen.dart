@@ -54,7 +54,8 @@ class _FullScreenVideoScreenState extends State<FullScreenVideoScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: black,
-      body: Center(
+      body: Padding(
+        padding: EdgeInsets.symmetric(horizontal: 40),
           child: Stack(
         alignment: Alignment.center,
         children: [
@@ -94,7 +95,7 @@ class _FullScreenVideoScreenState extends State<FullScreenVideoScreen> {
               bottom: 0,
               child: SvgPicture.asset(AppAssets.expand, width: 20, height: 20, color: white.withOpacity(0.5)).paddingAll(16).onTap(() {
                 SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
-                SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
+                SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual, overlays: SystemUiOverlay.values);
                 Navigator.pop(context);
               }),
             ),
