@@ -1,6 +1,4 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:nb_utils/nb_utils.dart';
 import 'package:running_community_mobile/cubit/group/group_cubit.dart';
@@ -11,6 +9,7 @@ import 'package:running_community_mobile/utils/app_assets.dart';
 import 'package:running_community_mobile/utils/colors.dart';
 import 'package:running_community_mobile/utils/gap.dart';
 import 'package:running_community_mobile/widgets/AppBar.dart';
+import 'package:running_community_mobile/utils/constants.dart';
 
 class GroupDetailScreen extends StatefulWidget {
   const GroupDetailScreen({super.key, required this.id});
@@ -22,6 +21,22 @@ class GroupDetailScreen extends StatefulWidget {
 }
 
 class _GroupDetailScreenState extends State<GroupDetailScreen> {
+
+    void showLoader(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return const Center(
+          child: CircularProgressIndicator(),
+        );
+      },
+    );
+  }
+
+  void hideLoader(BuildContext context) {
+    Navigator.of(context, rootNavigator: true).pop('dialog');
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -31,120 +46,148 @@ class _GroupDetailScreenState extends State<GroupDetailScreen> {
         body: SafeArea(
           child: BlocProvider<GroupCubit>(
             create: (context) => GroupCubit()..getGroupById(widget.id),
-            child: BlocBuilder<GroupCubit, GroupState>(builder: (context, state) {
-              if (state is GetGroupLoadingState) {
-                return const Center(
-                  child: CircularProgressIndicator(),
-                );
-              }
-              if (state is GetGroupSuccessState) {
-                var group = state.group;
-                return SingleChildScrollView(
-                  physics: const AlwaysScrollableScrollPhysics(),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      SizedBox(
-                        height: 170,
-                        child: Stack(
-                          children: [
-                            // Positioned(top: 16, left: 16, child: Icon(Icons.arrow_back, color: textPrimaryColor, size: 20,),),
-                            Positioned(
-                              child: Image.asset(
-                                AppAssets.cover,
-                                height: 120,
-                                width: context.width(),
-                                fit: BoxFit.fitWidth,
-                              ),
-                            ),
-                            Positioned(
-                              top: 70,
-                              left: 16,
-                              child: ClipRRect(
-                                  borderRadius: BorderRadius.circular(8),
-                                  child: FadeInImage.assetNetwork(placeholder: AppAssets.placeholder, image: group.thumbnailUrl!, height: 100, width: 100, fit: BoxFit.cover)),
-                            ),
-                            UserRepo.user.id == group.groupMembers!.firstWhere((mem) => mem.role == 'Owner').user!.id ? const SizedBox.shrink() :  group.groupMembers!.any((mem) => mem.user!.id == UserRepo.user.id) ? Positioned(
-                              right: 16,
-                              bottom: 0,
-                                child: Container(
-                                  padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 8),
-                                  decoration: BoxDecoration(
-                                    border: Border.all(color: group.groupMembers!.any((mem) => mem.user!.id == UserRepo.user.id) ? gray : primaryColor),
-                                    color: group.groupMembers!.any((mem) => mem.user!.id == UserRepo.user.id) ? white : primaryColor,
-                                    borderRadius: BorderRadius.circular(8),
-                                  ),
-                              child: Text(group.groupMembers!.any((mem) => mem.user!.id == UserRepo.user.id) ? 'Out' : 'Join', style: boldTextStyle(color: group.groupMembers!.any((mem) => mem.user!.id == UserRepo.user.id) ? grey : white),),
-                            )) : Positioned(
-                              right: 16,
-                              bottom: 0,
-                                child: Container(
-                                  padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 8),
-                                  decoration: BoxDecoration(
-                                    border: Border.all(color: primaryColor),
-                                    color: primaryColor,
-                                    borderRadius: BorderRadius.circular(8),
-                                  ),
-                              child: Text('Join', style: boldTextStyle(color: white),),
-                            )),
-                          ],
-                        ),
-                      ),
-                      Gap.kSection.height,
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(group.name!, style: boldTextStyle(size: 24),),
-                          Gap.k8.height,
-                          Text(group.description!, style: primaryTextStyle(size: 16),),
-                          Gap.k16.height,
-                          Row(
+            child: BlocConsumer<GroupCubit, GroupState>(
+              listener: (context, state) {
+                if (state is JoinGroupLoadingState) {
+                  showLoader(context);
+                }
+                if (state is JoinGroupSuccessState) {
+                  hideLoader(context);
+                  Fluttertoast.showToast(msg: 'Joined group successfully');
+                  context.read<GroupCubit>().getGroupById(widget.id);
+                }
+                if (state is JoinGroupFailedState) {
+                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(state.error.replaceAll('Exception: ', '')), backgroundColor: tomato,));
+                  hideLoader(context);
+                  // Navigator.pop(context);
+                  context.read<GroupCubit>().getGroupById(widget.id);
+                }
+              },
+              builder:(context, state) => BlocBuilder<GroupCubit, GroupState>(builder: (context, state) {
+                if (state is GetGroupLoadingState) {
+                  return const Center(
+                    child: CircularProgressIndicator(),
+                  );
+                }
+                if (state is GetGroupSuccessState) {
+                  var group = state.group;
+                  return SingleChildScrollView(
+                    physics: const AlwaysScrollableScrollPhysics(),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        SizedBox(
+                          height: 170,
+                          child: Stack(
                             children: [
-                              Container(
-                                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                                decoration: BoxDecoration(
-                                  color: grey.withOpacity(0.1),
-                                  borderRadius: BorderRadius.circular(8),
+                              // Positioned(top: 16, left: 16, child: Icon(Icons.arrow_back, color: textPrimaryColor, size: 20,),),
+                              Positioned(
+                                child: Image.asset(
+                                  AppAssets.cover,
+                                  height: 120,
+                                  width: context.width(),
+                                  fit: BoxFit.fitWidth,
                                 ),
-                                child: RichText(
-                                  textAlign: TextAlign.center,
-                                  text: TextSpan(
-                                  children: [
-                                    TextSpan(text: 'Members', style: secondaryTextStyle(size: 14)),
-                                    TextSpan(text: '  ${group.groupMembers!.length}', style: boldTextStyle(size: 16)),
-                                  ]
-                                )),
-                              ).expand(),
-                              Gap.k16.width,
-                              Container(
-                                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                                decoration: BoxDecoration(
-                                  color: grey.withOpacity(0.1),
-                                  borderRadius: BorderRadius.circular(8),
-                                ),
-                                child: RichText(
-                                  textAlign: TextAlign.center,
-                                  text: TextSpan(
-                                  children: [
-                                    TextSpan(text: 'Leader', style: secondaryTextStyle(size: 14)),
-                                    TextSpan(text: '  ${group.groupMembers!.firstWhere((mem) => mem.role == 'Owner').user!.name}', style: boldTextStyle(size: 16)),
-                                  ]
-                                )),
-                              ).expand()
+                              ),
+                              Positioned(
+                                top: 70,
+                                left: 16,
+                                child: ClipRRect(
+                                    borderRadius: BorderRadius.circular(8),
+                                    child: FadeInImage.assetNetwork(placeholder: AppAssets.placeholder, image: group.thumbnailUrl!, height: 100, width: 100, fit: BoxFit.cover)),
+                              ),
+                              UserRepo.user.id == group.groupMembers!.firstWhere((mem) => mem.role == 'Owner').user!.id ? const SizedBox.shrink() :  group.groupMembers!.any((mem) => mem.user!.id == UserRepo.user.id) ? Positioned(
+                                right: 16,
+                                bottom: 0,
+                                  child: Container(
+                                    padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 8),
+                                    decoration: BoxDecoration(
+                                      border: Border.all(color: group.groupMembers!.any((mem) => mem.user!.id == UserRepo.user.id) ? gray : primaryColor),
+                                      color: group.groupMembers!.any((mem) => mem.user!.id == UserRepo.user.id) ? white : primaryColor,
+                                      borderRadius: BorderRadius.circular(8),
+                                    ),
+                                child: Text(group.groupMembers!.any((mem) => mem.user!.id == UserRepo.user.id) ? 'Out' : 'Join', style: boldTextStyle(color: group.groupMembers!.any((mem) => mem.user!.id == UserRepo.user.id) ? grey : white),),
+                              ).onTap((){
+                                if (!group.groupMembers!.any((mem) => mem.user!.id == UserRepo.user.id)) {
+                                  context.read<GroupCubit>().joinGroup(userId: UserRepo.user.id!, groupId: group.id!);
+                                }
+                              })) : Positioned(
+                                right: 16,
+                                bottom: 0,
+                                  child: Container(
+                                    padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 8),
+                                    decoration: BoxDecoration(
+                                      border: Border.all(color: primaryColor),
+                                      color: primaryColor,
+                                      borderRadius: BorderRadius.circular(8),
+                                    ),
+                                child: Text('Join', style: boldTextStyle(color: white),),
+                              ).onTap((){
+                                        if (getStringAsync(AppConstant.TOKEN_KEY) == '') {
+                                          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Please login to register'), backgroundColor: tomato,));
+                                        } else {
+                                          context.read<GroupCubit>().joinGroup(userId: UserRepo.user.id!, groupId: group.id!);
+                                        }
+                                      })),
                             ],
                           ),
-                          Gap.kSection.height,
-                          ListView.separated(
-                            shrinkWrap: true,
-                            itemBuilder: (context, index) => MemberWidget(member: group.groupMembers![index]), separatorBuilder:  (context, index) => const Divider(), itemCount: group.groupMembers!.length)
-                        ],
-                      ).paddingSymmetric(horizontal: 16)
-                    ],
-                  ),
-                );
-              }
-              return const SizedBox.shrink();
-            }),
+                        ),
+                        Gap.kSection.height,
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(group.name!, style: boldTextStyle(size: 24),),
+                            Gap.k8.height,
+                            Text(group.description!, style: primaryTextStyle(size: 16),),
+                            Gap.k16.height,
+                            Row(
+                              children: [
+                                Container(
+                                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                                  decoration: BoxDecoration(
+                                    color: grey.withOpacity(0.1),
+                                    borderRadius: BorderRadius.circular(8),
+                                  ),
+                                  child: RichText(
+                                    textAlign: TextAlign.center,
+                                    text: TextSpan(
+                                    children: [
+                                      TextSpan(text: 'Members', style: secondaryTextStyle(size: 14)),
+                                      TextSpan(text: '  ${group.groupMembers!.length}', style: boldTextStyle(size: 16)),
+                                    ]
+                                  )),
+                                ).expand(),
+                                Gap.k16.width,
+                                Container(
+                                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                                  decoration: BoxDecoration(
+                                    color: grey.withOpacity(0.1),
+                                    borderRadius: BorderRadius.circular(8),
+                                  ),
+                                  child: RichText(
+                                    textAlign: TextAlign.center,
+                                    text: TextSpan(
+                                    children: [
+                                      TextSpan(text: 'Leader', style: secondaryTextStyle(size: 14)),
+                                      TextSpan(text: '  ${group.groupMembers!.firstWhere((mem) => mem.role == 'Owner').user!.name}', style: boldTextStyle(size: 16)),
+                                    ]
+                                  )),
+                                ).expand()
+                              ],
+                            ),
+                            Gap.kSection.height,
+                            ListView.separated(
+                              shrinkWrap: true,
+                              itemBuilder: (context, index) => MemberWidget(member: group.groupMembers![index]), separatorBuilder:  (context, index) => const Divider(), itemCount: group.groupMembers!.length)
+                          ],
+                        ).paddingSymmetric(horizontal: 16)
+                      ],
+                    ),
+                  );
+                }
+                return const SizedBox.shrink();
+              }),
+            ),
           ),
         ));
   }

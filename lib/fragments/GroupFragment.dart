@@ -26,12 +26,13 @@ class GroupFragment extends StatelessWidget {
         }
         if (state is GroupsSuccessState) {
           var groups = state.groups.groups!;
-          var joinedGroups = groups.where((gr) => gr.groupMembers!.any((mem) => mem.user!.id == UserRepo.user.id)).toList();
+          var joinedGroups = groups.where((gr) => gr.groupMembers!.any((mem) => mem.user!.id == UserRepo.user.id && (mem.role != 'Owner'))).toList();
           return RefreshIndicator(
             onRefresh: () async {
               context.read<GroupCubit>().getGroups();
             },
             child: SingleChildScrollView(
+              physics: const AlwaysScrollableScrollPhysics(),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -82,7 +83,7 @@ class GroupFragment extends StatelessWidget {
                   Gap.k16.height,
                   Text('Suggestion for you', style: secondaryTextStyle()),
                   Gap.k8.height,
-                  GroupsList(groups: groups.where((gr) => !joinedGroups.contains(gr)).toList()),
+                  GroupsList(groups: groups.where((gr) => !joinedGroups.contains(gr) && !groups.where((gr) => gr.groupMembers!.any((mem) => mem.role == 'Owner' && mem.user!.id == UserRepo.user.id)).contains(gr)).toList()),
                   Gap.kSection.height,
                 ],
               ).paddingSymmetric(horizontal: 16),

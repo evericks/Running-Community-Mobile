@@ -48,4 +48,18 @@ class GroupRepo {
       throw Exception(msg_server_error);
     }
   }
+
+  Future<bool> joinGroup({required String userId, required String groupId}) async {
+    try {
+      Map<String, dynamic> data = {
+        'userId': userId,
+        'groupId': groupId,
+      };
+      await _apiClient.post('/api/group-members', data: data);
+      return true;
+    } on DioException catch (e) {
+      print('Error at joinGroup: $e');
+      throw Exception(msg_server_error);
+    }
+  }
 }

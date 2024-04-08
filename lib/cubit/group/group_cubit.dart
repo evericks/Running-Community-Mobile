@@ -42,4 +42,14 @@ class GroupCubit extends Cubit<GroupState>{
       emit(GetGroupFailedState(e.toString()));
     }
   }
+
+  Future<void> joinGroup({required String userId, required String groupId}) async {
+    emit(JoinGroupLoadingState());
+    try {
+      final status = await _groupRepo.joinGroup(userId: userId, groupId: groupId);
+      emit(JoinGroupSuccessState(status));
+    } catch (e) {
+      emit(JoinGroupFailedState(e.toString()));
+    }
+  }
 }

@@ -37,3 +37,15 @@ class GetGroupFailedState extends GroupState {
   final String error;
   GetGroupFailedState(this.error);
 }
+
+class JoinGroupLoadingState extends GroupState {}
+  
+class JoinGroupSuccessState extends GroupState {
+  final bool status;
+  JoinGroupSuccessState(this.status);
+}
+
+class JoinGroupFailedState extends GroupState {
+  final String error;
+  JoinGroupFailedState(this.error);
+}
