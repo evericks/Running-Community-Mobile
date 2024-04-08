@@ -23,4 +23,5 @@ class AppAssets {
   static const String play = 'assets/icons/play.svg';
   static const String pause = 'assets/icons/pause.svg';
   static const String expand = 'assets/icons/expand.svg';
+  static const String calendar_xmark = 'assets/icons/calendar-xmark.svg';
 }

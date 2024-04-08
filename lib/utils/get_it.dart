@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:get_it/get_it.dart';
+import 'package:running_community_mobile/domain/repositories/tournament_repo.dart';
 
 import '../domain/repositories/archivement_repo.dart';
 import '../domain/repositories/comment_repo.dart';
@@ -22,4 +23,5 @@ Future<void> initialGetIt() async {
   getIt.registerLazySingleton(() => PostReactRepo());
   getIt.registerLazySingleton(() => PostCommentRepo());
   getIt.registerLazySingleton(() => ExerciseRepo());
+  getIt.registerLazySingleton(() => TournamentRepo());
 }

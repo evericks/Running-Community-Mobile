@@ -84,7 +84,7 @@ class _ExerciseItemScreenState extends State<ExerciseItemScreen> {
     return BlocProvider<ExerciseCubit>(
       create: (context) => ExerciseCubit()..getExerciseItemById(widget.id),
       child: Scaffold(
-        appBar: const MyAppBar(title: 'Exercise Item'),
+        appBar: const MyAppBar(title: 'Exercise'),
         body: BlocListener<ExerciseCubit, ExerciseState>(
           listener: (context, state) {
             if (state is GetExerciseItemByIdFailedState) {

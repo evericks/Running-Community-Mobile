@@ -10,7 +10,7 @@ import '../cubit/user/user_state.dart';
 import '../fragments/GroupFragment.dart';
 import '../fragments/PersonalTrainingFragment.dart';
 import '../fragments/ProfileFragment.dart';
-import '../fragments/SearchFragment.dart';
+import '../fragments/HomeFragment.dart';
 import '../fragments/TournamentFragment.dart';
 import '../utils/app_assets.dart';
 import '../utils/colors.dart';
@@ -41,7 +41,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
   }
 
   final List<Widget> _fragments = [
-    const SearchFragment(),
+    const HomeFragment(),
     const GroupFragment(),
     const PersonalTrainingFragment(),
     const TournamentFragment(),
@@ -55,8 +55,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
         onPressed: () {
           onTabSelection(2);
         },
-        child: SvgPicture.asset(AppAssets.run, height: 24, color: white),
-        backgroundColor: primaryColor,
+        backgroundColor: selectedIndex == 2 ? primaryColor : primaryColor.withOpacity(0.2),
+        elevation: 0,
+        child: SvgPicture.asset(AppAssets.run, height: 24, color: selectedIndex == 2 ? white : primaryColor),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       bottomNavigationBar: SizedBox(
@@ -78,7 +79,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     icon: SvgPicture.asset(
                       AppAssets.globe,
                       height: 24,
-                      color: primaryColor,
+                      color: selectedIndex == 0 ? primaryColor : gray,
                     )),
                 IconButton(
                     onPressed: () {
@@ -87,7 +88,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     icon: SvgPicture.asset(
                       AppAssets.group,
                       height: 24,
-                      color: primaryColor,
+                      color: selectedIndex == 1 ? primaryColor : gray,
                     )),
                 const SizedBox(
                   width: 24,
@@ -99,7 +100,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     icon: SvgPicture.asset(
                       AppAssets.award,
                       height: 24,
-                      color: primaryColor,
+                      color: selectedIndex == 3 ? primaryColor : gray,
                     )),
                 IconButton(
                     onPressed: () {
@@ -108,7 +109,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     icon: SvgPicture.asset(
                       AppAssets.user,
                       height: 24, 
-                      color: primaryColor,
+                      color: selectedIndex == 4 ? primaryColor : gray,
                     )),
               ],
             ),

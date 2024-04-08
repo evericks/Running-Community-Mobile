@@ -28,7 +28,7 @@ class MyAppBar extends StatelessWidget implements PreferredSizeWidget {
     return AppBar(
       systemOverlayStyle: const SystemUiOverlayStyle(statusBarColor: Colors.transparent, statusBarIconBrightness: Brightness.dark),
       automaticallyImplyLeading: automaticallyImplyLeading ?? true,
-      title: Text(title, style: const TextStyle(fontSize: 16),),
+      title: Text(title, style: const TextStyle(fontSize: 20),),
       actions: actions,
       backgroundColor: backgroundColor ?? Colors.transparent,
       titleTextStyle: TextStyle(color: titleColor ?? textPrimaryColor, fontSize: 20, fontWeight: FontWeight.bold,),

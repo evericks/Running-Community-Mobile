@@ -20,7 +20,7 @@ class GroupsList extends StatelessWidget {
   Widget build(BuildContext context) {
     return ListView.separated(
       shrinkWrap: true,
-      physics: const AlwaysScrollableScrollPhysics(),
+      physics: const NeverScrollableScrollPhysics(),
       itemCount: groups.length,
       separatorBuilder: (context, index) => Gap.k16.height,
       itemBuilder: (context, index) {

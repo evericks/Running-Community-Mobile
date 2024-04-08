@@ -9,14 +9,14 @@ final Dio _apiClient = getIt.get<Dio>();
 class PostRepo {
   Future<Posts> getPosts({String? content, String? creatorId, String? groupId, int? pageSize, int? pageNumber}) async {
     try {
-    Map<String, dynamic> queryParameters = {};
-    if (content != null) queryParameters['content'] = content;
-    if (creatorId != null) queryParameters['creatorId'] = creatorId;
-    if (groupId != null) queryParameters['groupId'] = groupId;
-    if (pageSize != null) queryParameters['pageSize'] = pageSize;
-    if (pageNumber != null) queryParameters['pageNumber'] = pageNumber;
-    final response = await _apiClient.get('/api/posts', queryParameters: queryParameters);
-    return Posts.fromJson(response.data);
+      Map<String, dynamic> queryParameters = {};
+      if (content != null) queryParameters['content'] = content;
+      if (creatorId != null) queryParameters['creatorId'] = creatorId;
+      if (groupId != null) queryParameters['groupId'] = groupId;
+      if (pageSize != null) queryParameters['pageSize'] = pageSize;
+      if (pageNumber != null) queryParameters['pageNumber'] = pageNumber;
+      final response = await _apiClient.get('/api/posts', queryParameters: queryParameters);
+      return Posts.fromJson(response.data);
     } on DioException catch (e) {
       print('Error at getPosts: $e');
       throw Exception(msg_server_error);
@@ -25,20 +25,21 @@ class PostRepo {
 
   Future<Post> getPostById({required String postId}) async {
     try {
-    final response = await _apiClient.get('/api/posts/$postId');
-    return Post.fromJson(response.data);
+      final response = await _apiClient.get('/api/posts/$postId');
+      return Post.fromJson(response.data);
     } on DioException catch (e) {
       print('Error at getPostById: $e');
       throw Exception(msg_server_error);
     }
   }
 
-  Future<bool> createPost({required String groupId, String? content, XFile? image }) async {
+  Future<bool> createPost({required String groupId, String? content, XFile? image}) async {
     try {
       FormData data = FormData.fromMap({
-        'content': content,
+        if (content != null) 'content': content,
         'groupId': groupId,
-        'thumbnail': await MultipartFile.fromFile(image!.path, filename: 'post-thumbnail-$groupId'),
+        if (image != null) 'thumbnail': await MultipartFile.fromFile(image.path, filename: 'post-thumbnail-$groupId'),
+        // 'thumbnail': await MultipartFile.fromFile(image!.path, filename: 'post-thumbnail-$groupId'),
       });
       await _apiClient.post('/api/posts', data: data, options: Options(contentType: Headers.multipartFormDataContentType));
       return true;

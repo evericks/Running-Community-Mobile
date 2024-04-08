@@ -1,7 +1,5 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:nb_utils/nb_utils.dart';
@@ -10,7 +8,6 @@ import 'package:running_community_mobile/cubit/user/user_cubit.dart';
 import 'package:running_community_mobile/cubit/user/user_state.dart';
 import 'package:running_community_mobile/screens/DashboardScreen.dart';
 import 'package:running_community_mobile/screens/LoginScreen.dart';
-import 'package:running_community_mobile/screens/SplashScreen.dart';
 import 'package:running_community_mobile/utils/app_assets.dart';
 import 'package:running_community_mobile/utils/colors.dart';
 import 'package:running_community_mobile/utils/gap.dart';
