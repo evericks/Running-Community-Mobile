@@ -27,4 +27,14 @@ class TournamentCubit extends Cubit<TournamentState>{
       emit(TournamentFailedState(error: e.toString()));
     }
   }
+
+  Future<void> getTournamentById(String id) async {
+    emit(TournamentDetailLoadingState());
+    try {
+      final tournament = await _tournamentRepo.getTournamentById(id);
+      emit(TournamentDetailSuccessState(tournament: tournament));
+    } catch (e) {
+      emit(TournamentDetailFailedState(error: e.toString()));
+    }
+  }
 }

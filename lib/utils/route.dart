@@ -14,6 +14,7 @@ import '../screens/PostsScreen.dart';
 import '../screens/SignUpScreen.dart';
 import '../screens/SplashScreen.dart';
 import '../screens/NotFoundScreen.dart';
+import '../screens/TournamentDetailScreen.dart';
 
 Route<dynamic> generateRoute(RouteSettings settings) {
   switch (settings.name) {
@@ -58,6 +59,8 @@ Route<dynamic> generateRoute(RouteSettings settings) {
               ));
     case SeeAllTournamentScreen.routeName:
       return MaterialPageRoute(builder: (_) => SeeAllTournamentScreen(status: settings.arguments as String,));
+    case TournamentDetailScreen.routeName:
+      return MaterialPageRoute(builder: (_) => TournamentDetailScreen(id: settings.arguments as String,));
     default:
       return MaterialPageRoute(builder: (_) => const NotFoundScreen());
   }

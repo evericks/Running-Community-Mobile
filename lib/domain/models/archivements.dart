@@ -1,4 +1,5 @@
 
+import 'tournaments.dart';
 import 'user.dart';
 
 class Archivements {
@@ -132,71 +133,3 @@ class Creator {
   }
 }
 
-class Tournament {
-  String? id;
-  String? title;
-  String? thumbnailUrl;
-  String? description;
-  String? rule;
-  int? maximumMember;
-  double? distance;
-  String? registerDuration;
-  String? startTime;
-  String? endTime;
-  String? address;
-  double? longitude;
-  double? latitude;
-  String? createAt;
-
-  Tournament(
-      {this.id,
-      this.title,
-      this.thumbnailUrl,
-      this.description,
-      this.rule,
-      this.maximumMember,
-      this.distance,
-      this.registerDuration,
-      this.startTime,
-      this.endTime,
-      this.address,
-      this.longitude,
-      this.latitude,
-      this.createAt});
-
-  Tournament.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
-    title = json['title'];
-    thumbnailUrl = json['thumbnailUrl'];
-    description = json['description'];
-    rule = json['rule'];
-    maximumMember = json['maximumMember'];
-    distance = json['distance'];
-    registerDuration = json['registerDuration'];
-    startTime = json['startTime'];
-    endTime = json['endTime'];
-    address = json['address'];
-    longitude = json['longitude'];
-    latitude = json['latitude'];
-    createAt = json['createAt'];
-  }
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
-    data['title'] = this.title;
-    data['thumbnailUrl'] = this.thumbnailUrl;
-    data['description'] = this.description;
-    data['rule'] = this.rule;
-    data['maximumMember'] = this.maximumMember;
-    data['distance'] = this.distance;
-    data['registerDuration'] = this.registerDuration;
-    data['startTime'] = this.startTime;
-    data['endTime'] = this.endTime;
-    data['address'] = this.address;
-    data['longitude'] = this.longitude;
-    data['latitude'] = this.latitude;
-    data['createAt'] = this.createAt;
-    return data;
-  }
-}

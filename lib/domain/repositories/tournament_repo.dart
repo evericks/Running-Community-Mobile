@@ -26,4 +26,14 @@ class TournamentRepo {
       throw Exception(msg_server_error);
     }
   }
+
+  Future<Tournament> getTournamentById(String id) async {
+    try {
+      final response = await _apiClient.get('/api/tournaments/$id');
+      return Tournament.fromJson(response.data);
+    } on DioException catch (e) {
+      print('Error at getTournamentById: $e');
+      throw Exception(msg_server_error);
+    }
+  }
 }
