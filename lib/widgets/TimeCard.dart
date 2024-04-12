@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:running_community_mobile/utils/gap.dart';
 
+import '../utils/colors.dart';
+
 Widget buildTimeCard({required String time, required String header}) {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
@@ -23,7 +25,7 @@ Widget buildTimeCard({required String time, required String header}) {
             style: TextStyle(
               fontWeight: FontWeight.bold,
               fontSize: 50,
-              color: Colors.teal,
+              color: primaryColor,
             ),
           ),
         ),

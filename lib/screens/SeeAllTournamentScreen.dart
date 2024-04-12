@@ -36,7 +36,10 @@ class SeeAllTournamentScreen extends StatelessWidget {
               if (status == 'upcoming') {
                 tournaments = state.tournaments.tournaments!.where((t) => DateTime.parse(t.startTime!).isAfter(DateTime.now())).toList();
               }
-              return SingleChildScrollView(
+              if (status == 'open') {
+                tournaments = state.tournaments.tournaments!.where((t) => DateTime.parse(t.registerDuration!).isAfter(DateTime.now())).toList();
+              }
+              return tournaments.isNotEmpty ? SingleChildScrollView(
                 physics: const AlwaysScrollableScrollPhysics(),
                 child: Column(
                   children: [
@@ -56,7 +59,7 @@ class SeeAllTournamentScreen extends StatelessWidget {
                         itemCount: tournaments.length)
                   ],
                 ).paddingSymmetric(horizontal: 16),
-              );
+              ) : const Center(child: Text('No tournament found'));
             }
             return const SizedBox.shrink();
           },

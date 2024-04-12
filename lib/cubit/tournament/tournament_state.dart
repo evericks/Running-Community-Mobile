@@ -25,3 +25,15 @@ class TournamentDetailFailedState extends TournamentState {
   final String error;
   TournamentDetailFailedState({required this.error});
 }
+
+class TournamentAttendedLoadingState extends TournamentState {}
+
+class TournamentAttendedSuccessState extends TournamentState {
+  final Tournaments tournaments;
+  TournamentAttendedSuccessState({required this.tournaments});
+}
+
+class TournamentAttendedFailedState extends TournamentState {
+  final String error;
+  TournamentAttendedFailedState({required this.error});
+}

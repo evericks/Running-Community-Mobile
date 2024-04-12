@@ -36,4 +36,14 @@ class TournamentRepo {
       throw Exception(msg_server_error);
     }
   }
+
+  Future<Tournaments> getTournamentsAttendedk() async {
+    try {
+      final response = await _apiClient.get('/api/tournaments/attendeds');
+      return Tournaments.fromJson(response.data);
+    } on DioException catch (e) {
+      print('Error at getTournamentsAttendedk: $e');
+      throw Exception(msg_server_error);
+    }
+  }
 }
