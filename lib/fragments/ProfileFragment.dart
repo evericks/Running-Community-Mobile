@@ -9,6 +9,7 @@ import 'package:running_community_mobile/cubit/tournament/tournament_cubit.dart'
 import 'package:running_community_mobile/cubit/tournament/tournament_state.dart';
 import 'package:running_community_mobile/cubit/user/user_cubit.dart';
 import 'package:running_community_mobile/cubit/user/user_state.dart';
+import 'package:running_community_mobile/domain/repositories/user_repo.dart';
 import 'package:running_community_mobile/screens/DashboardScreen.dart';
 import 'package:running_community_mobile/screens/LoginScreen.dart';
 import 'package:running_community_mobile/screens/SeeAllTournamentScreen.dart';
@@ -18,6 +19,7 @@ import 'package:running_community_mobile/utils/gap.dart';
 import 'package:running_community_mobile/widgets/AppBar.dart';
 
 import '../cubit/archivement/archivement_cubit.dart';
+import '../domain/models/user.dart';
 import '../utils/constants.dart';
 
 class ProfileFragment extends StatefulWidget {
@@ -232,7 +234,7 @@ class _ProfileFragmentState extends State<ProfileFragment> {
                                             FractionallySizedBox(
                                               heightFactor: 1,
                                               child: ClipRRect(
-                                                borderRadius: BorderRadius.only(topLeft: Radius.circular(8), bottomLeft: Radius.circular(8)),
+                                                borderRadius: const BorderRadius.only(topLeft: Radius.circular(8), bottomLeft: Radius.circular(8)),
                                                 child: FadeInImage.assetNetwork(
                                                   placeholder: AppAssets.placeholder,
                                                   image: archivements[index].thumbnailUrl!,
@@ -307,7 +309,7 @@ class _ProfileFragmentState extends State<ProfileFragment> {
                                                   FractionallySizedBox(
                                                     heightFactor: 1,
                                                     child: ClipRRect(
-                                                      borderRadius: BorderRadius.only(topLeft: Radius.circular(8), bottomLeft: Radius.circular(8)),
+                                                      borderRadius: const BorderRadius.only(topLeft: Radius.circular(8), bottomLeft: Radius.circular(8)),
                                                       child: FadeInImage.assetNetwork(
                                                         placeholder: AppAssets.placeholder,
                                                         image: tournaments[index].thumbnailUrl!,
@@ -371,7 +373,7 @@ class _ProfileFragmentState extends State<ProfileFragment> {
                                   return Wrap(
                                     children: [
                                       Container(
-                                        padding: EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+                                        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
                                         width: context.width(),
                                         decoration: BoxDecoration(
                                           color: white,
@@ -393,7 +395,7 @@ class _ProfileFragmentState extends State<ProfileFragment> {
                                             ),
                                             Gap.k16.height,
                                             Container(
-                                              padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                                              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                                               decoration: BoxDecoration(
                                                 color: primaryColor,
                                                 borderRadius: BorderRadius.circular(8),
@@ -423,7 +425,9 @@ class _ProfileFragmentState extends State<ProfileFragment> {
                       child: TextButton(
                         onPressed: () async {
                           await setValue(AppConstant.TOKEN_KEY, '');
+                          UserRepo.user = User();
                           Navigator.pushReplacementNamed(context, DashboardScreen.routeName);
+
                         },
                         child: const Text('Logout'),
                       ),

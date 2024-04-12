@@ -7,6 +7,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:intl/intl.dart';
 import 'package:nb_utils/nb_utils.dart';
 import 'package:running_community_mobile/cubit/tournament/tournament_state.dart';
+import 'package:running_community_mobile/utils/colors.dart';
 import 'package:running_community_mobile/utils/gap.dart';
 import 'package:running_community_mobile/widgets/AppBar.dart';
 
@@ -66,7 +67,7 @@ class _TournamentDetailScreenState extends State<TournamentDetailScreen> {
         create: (context) => TournamentCubit()..getTournamentById(widget.id),
         child: BlocConsumer<TournamentCubit, TournamentState>(
           listener: (context, state) {
-            if(state is TournamentDetailSuccessState) {
+            if (state is TournamentDetailSuccessState) {
               var tournament = state.tournament;
               var endTime = DateTime.parse(tournament.endTime!);
               duration = endTime.difference(DateTime.now());
@@ -120,27 +121,44 @@ class _TournamentDetailScreenState extends State<TournamentDetailScreen> {
                     ).paddingLeft(16),
                     Gap.k16.height,
                     const Divider(),
-                    if(DateTime.now().isBefore(DateTime.parse(tournament.registerDuration!)))...[
+                    if (DateTime.now().isBefore(DateTime.parse(tournament.registerDuration!))) ...[
                       Gap.k16.height,
-                    Text('Registration time remaining', style: boldTextStyle(size: 16)).paddingLeft(16),
-                    Gap.k8.height,
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: <Widget>[
-                        buildTimeCard(time: days, header: 'Ngày'),
-                        Spacer(),
-                        buildTimeCard(time: hours, header: 'Giờ'),
-                        Spacer(),
-                        buildTimeCard(time: minutes, header: 'Phút'),
-                        Spacer(),
-                        buildTimeCard(time: seconds, header: 'Giây'),
-                      ],
-                    ).paddingSymmetric(horizontal: 16),
+                      Text('Registration time remaining', style: boldTextStyle(size: 16)).paddingLeft(16),
+                      Gap.k8.height,
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget>[
+                          buildTimeCard(time: days, header: 'Ngày'),
+                          Spacer(),
+                          buildTimeCard(time: hours, header: 'Giờ'),
+                          Spacer(),
+                          buildTimeCard(time: minutes, header: 'Phút'),
+                          Spacer(),
+                          buildTimeCard(time: seconds, header: 'Giây'),
+                        ],
+                      ).paddingSymmetric(horizontal: 16),
+                      Gap.k16.height,
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Container(
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(8),
+                                    color: primaryColor,
+                                  ),
+                                  child: Text(
+                                    'Register now',
+                                    style: boldTextStyle(color: white, size: 14),
+                                    textAlign: TextAlign.center,
+                                  ).paddingSymmetric(horizontal: 32, vertical: 8))
+                              .expand(),
+                        ],
+                      ).paddingSymmetric(horizontal: 16),
                     ],
                     Gap.k16.height,
                     Text(tournament.description!, style: secondaryTextStyle()).paddingLeft(16),
                   ],
-                ),
+                ).paddingBottom(16),
               );
             }
             return const SizedBox.shrink();

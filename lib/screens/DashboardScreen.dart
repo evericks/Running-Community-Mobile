@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:nb_utils/nb_utils.dart';
 import 'package:running_community_mobile/cubit/group/group_state.dart';
+import 'package:running_community_mobile/domain/repositories/user_repo.dart';
 import '../cubit/archivement/archivement_cubit.dart';
 import '../cubit/group/group_cubit.dart';
 import '../cubit/user/user_cubit.dart';
@@ -51,7 +52,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       floatingActionButton: FloatingActionButton(
-        shape: CircleBorder(),
+        shape: const CircleBorder(),
         onPressed: () {
           onTabSelection(2);
         },
@@ -122,7 +123,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
         BlocProvider<GroupCubit>(
           create: (context) => GroupCubit()..getGroups(),
         )
-      ], child: MultiBlocListener(listeners: [BlocListener<UserCubit, UserState>(listener: (context, state) {}), BlocListener<GroupCubit, GroupState>(listener: (context, state){})], child: _fragments.elementAt(selectedIndex))),
+      ], child: MultiBlocListener(listeners: [BlocListener<UserCubit, UserState>(listener: (context, state) {
+        print('User repo: ' + UserRepo.user.name!);
+      }), BlocListener<GroupCubit, GroupState>(listener: (context, state){})], child: _fragments.elementAt(selectedIndex))),
     );
   }
 }

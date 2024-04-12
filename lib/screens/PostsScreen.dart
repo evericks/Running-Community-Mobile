@@ -230,7 +230,7 @@ class _PostsScreenState extends State<PostsScreen> {
                                     ),
                                 itemCount: posts.length),
                           ],
-                        ) : Center(child: Text('No posts yet, be the first to write something!', style: secondaryTextStyle(),));
+                        ) : Center(child: Text('No posts yet', style: secondaryTextStyle(),));
                       }
                       return const SizedBox.shrink();
                     })

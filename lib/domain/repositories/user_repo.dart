@@ -9,7 +9,7 @@ import '../models/user.dart';
 final Dio _apiClient = getIt.get<Dio>();
 
 class UserRepo {
-  static final user = User();
+  static User user = User();
   Future<void> login({required String username, required String password}) async {
     try {
       final response = await _apiClient.post(
@@ -45,7 +45,6 @@ class UserRepo {
       user.latitude = response.data['latitude'];
       user.status = response.data['status'];
       user.createAt = response.data['createAt'];
-      print(response.data);
       return User.fromJson(response.data);
     } on DioException catch (e) {
       if (e.response?.statusCode == 400) {

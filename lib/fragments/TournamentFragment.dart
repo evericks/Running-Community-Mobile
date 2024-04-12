@@ -41,7 +41,7 @@ class TournamentFragment extends StatelessWidget {
                             Text(
                               'Upcoming (${upcoming.length})',
                               style: primaryTextStyle(),
-                            ),
+                            ).paddingLeft(16),
                             const Spacer(),
                             Text('See All', style: primaryTextStyle(color: primaryColor)).paddingRight(16).onTap(() {
                               Navigator.pushNamed(context, SeeAllTournamentScreen.routeName, arguments: 'upcoming');
@@ -61,7 +61,7 @@ class TournamentFragment extends StatelessWidget {
                             Text(
                               'Happening Now (${happenning.length})',
                               style: primaryTextStyle(),
-                            ),
+                            ).paddingLeft(16),
                             const Spacer(),
                             Text('See All', style: primaryTextStyle(color: primaryColor)).paddingRight(16).onTap(() {
                               Navigator.pushNamed(context, SeeAllTournamentScreen.routeName, arguments: 'happening');
@@ -81,7 +81,7 @@ class TournamentFragment extends StatelessWidget {
                             Text(
                               'Finished (${finished.length})',
                               style: primaryTextStyle(),
-                            ),
+                            ).paddingLeft(16),
                             const Spacer(),
                             Text('See All', style: primaryTextStyle(color: primaryColor)).paddingRight(16).onTap(() {
                               Navigator.pushNamed(context, SeeAllTournamentScreen.routeName, arguments: 'finished');
@@ -92,11 +92,11 @@ class TournamentFragment extends StatelessWidget {
                         finished.isNotEmpty
                             ? TournamentsList(
                                 tournaments: finished,
-                                
+ 
                               )
                             : const SizedBox.shrink(),
                       ],
-                    ).paddingLeft(16)),
+                    ).paddingOnly(bottom: 16)),
               );
             }
             return const SizedBox.shrink();

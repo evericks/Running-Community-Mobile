@@ -124,7 +124,7 @@ class _GroupDetailScreenState extends State<GroupDetailScreen> {
                                 child: Text('Join', style: boldTextStyle(color: white),),
                               ).onTap((){
                                         if (getStringAsync(AppConstant.TOKEN_KEY) == '') {
-                                          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Please login to register'), backgroundColor: tomato,));
+                                          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Please login to join the tournament'), backgroundColor: tomato,));
                                         } else {
                                           context.read<GroupCubit>().joinGroup(userId: UserRepo.user.id!, groupId: group.id!);
                                         }

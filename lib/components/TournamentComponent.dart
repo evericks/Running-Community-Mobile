@@ -72,7 +72,7 @@ class TournamentComponent extends StatelessWidget {
                 ).paddingSymmetric(horizontal: 16).onTap(() {
                   if (getStringAsync(AppConstant.TOKEN_KEY) == '') {
                     ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                      content: Text('Please login to register'),
+                      content: Text('Please login to join the tournament'),
                       backgroundColor: tomato,
                     ));
                   } else {

@@ -185,7 +185,7 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
                       thumbnail: imageFile!,
                     );
                   } else {
-                    Fluttertoast.showToast(msg: 'Please fill all fields');
+                    Fluttertoast.showToast(msg: 'Please login to join the tournament');
                   }
                 }),
               ],
