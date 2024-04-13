@@ -426,7 +426,7 @@ class _ProfileFragmentState extends State<ProfileFragment> {
                         onPressed: () async {
                           await setValue(AppConstant.TOKEN_KEY, '');
                           UserRepo.user = User();
-                          Navigator.pushReplacementNamed(context, DashboardScreen.routeName);
+                          Navigator.pushReplacementNamed(context, DashboardScreen.routeName, arguments: 0);
 
                         },
                         child: const Text('Logout'),

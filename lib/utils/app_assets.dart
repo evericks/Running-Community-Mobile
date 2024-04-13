@@ -26,4 +26,5 @@ class AppAssets {
   static const String calendar_xmark = 'assets/icons/calendar-xmark.svg';
   static const String ruler = 'assets/icons/ruler.svg';
   static const String signature = 'assets/icons/signature.svg';
+  static const String magnifying_glass = 'assets/icons/magnifying-glass.svg';
 }

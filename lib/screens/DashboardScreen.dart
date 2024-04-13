@@ -119,9 +119,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
       ),
       body: MultiBlocProvider(providers: [
         BlocProvider<UserCubit>(create: (context) => UserCubit()..getUserProfile()),
-        BlocProvider<ArchivementCubit>(create: (context) => ArchivementCubit()..getArchivements()),
+        BlocProvider<ArchivementCubit>(create: (context) => ArchivementCubit()..getArchivements(pageSize: 100)),
         BlocProvider<GroupCubit>(
-          create: (context) => GroupCubit()..getGroups(),
+          create: (context) => GroupCubit()..getGroups(pageSize: 100),
         )
       ], child: MultiBlocListener(listeners: [BlocListener<UserCubit, UserState>(listener: (context, state) {
         print('User repo: ' + UserRepo.user.name!);

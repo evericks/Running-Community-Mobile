@@ -35,7 +35,7 @@ class _LoginScreenState extends State<LoginScreen> {
           listener: (context, state) {
             if (state is LoginSuccessState) {
               Navigator.pop(context);
-              Navigator.pushReplacementNamed(context, DashboardScreen.routeName);
+              Navigator.pushReplacementNamed(context, DashboardScreen.routeName, arguments: 0);
             } else if (state is LoginFailedState) {
               // Fluttertoast.showToast(msg: state.error.substring(state.error.indexOf(': ') + 2));
               Fluttertoast.showToast(msg: state.error.replaceAll('Exception: ', ''));

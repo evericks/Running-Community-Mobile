@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:nb_utils/nb_utils.dart';
+import 'package:running_community_mobile/screens/DashboardScreen.dart';
 import 'package:running_community_mobile/utils/app_assets.dart';
 import 'package:running_community_mobile/utils/colors.dart';
 
@@ -102,6 +103,8 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
               if (state.status) {
                 hideLoader(context);
                 Fluttertoast.showToast(msg: 'Group created successfully');
+                Navigator.pop(context);
+                Navigator.pushReplacementNamed(context, DashboardScreen.routeName, arguments: 1);
               }
             }
           },
@@ -140,6 +143,7 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
                   child: TextField(
                     controller: groupNameController,
                     decoration: const InputDecoration(hintText: 'Group name', border: InputBorder.none),
+                    onChanged: (_) => setState(() {}),
                   ),
                 ),
                 Gap.k16.height,
@@ -151,6 +155,7 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
                     maxLines: null,
                     controller: groupDescriptionController,
                     decoration: const InputDecoration(hintText: 'Description', border: InputBorder.none),
+                    onChanged: (_) => setState(() {}),
                   ),
                 ),
                 Gap.k16.height,
@@ -162,6 +167,7 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
                     maxLines: null,
                     controller: groupRuleController,
                     decoration: const InputDecoration(hintText: 'Rule', border: InputBorder.none),
+                    onChanged: (_) => setState(() {}),
                   ),
                 ),
                 Gap.kSection.height,
