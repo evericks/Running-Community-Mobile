@@ -54,4 +54,27 @@ class UserRepo {
       }
     }
   }
+
+  Future<bool> signUp({required String name, required String phone, required String password}) async {
+    try {
+      await _apiClient.post(
+        '/api/users',
+        data: {
+          'name': name,
+          'phone': phone,
+          'password': password,
+        },
+      );
+      return true;
+    } on DioException catch (e) {
+      if (e.response?.statusCode == 400) {
+        throw Exception(e.response!.data);
+      } else if(e.response?.statusCode == 409) {
+        throw Exception(msg_phone_exist);
+      }
+       else {
+        throw Exception(msg_server_error);
+      }
+    }
+  }
 }

@@ -26,4 +26,14 @@ class UserCubit extends Cubit<UserState>{
       emit(UserProfileFailedState(e.toString()));
     }
   }
+
+  Future<void> signUp({required String name, required String phone, required String password}) async {
+    emit(SignUpLoadingState());
+    try {
+      await _userRepo.signUp(name: name, phone: phone, password: password);
+      emit(SignUpSuccessState());
+    } catch (e) {
+      emit(SignUpFailedState(e.toString()));
+    }
+  }
 }
