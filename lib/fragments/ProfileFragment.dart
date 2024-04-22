@@ -13,6 +13,7 @@ import 'package:running_community_mobile/domain/repositories/user_repo.dart';
 import 'package:running_community_mobile/screens/DashboardScreen.dart';
 import 'package:running_community_mobile/screens/LoginScreen.dart';
 import 'package:running_community_mobile/screens/SeeAllTournamentScreen.dart';
+import 'package:running_community_mobile/screens/TournamentDetailScreen.dart';
 import 'package:running_community_mobile/utils/app_assets.dart';
 import 'package:running_community_mobile/utils/colors.dart';
 import 'package:running_community_mobile/utils/gap.dart';
@@ -277,10 +278,10 @@ class _ProfileFragmentState extends State<ProfileFragment> {
                           create: (context) => TournamentCubit()..getTournamentsAttended(),
                           child: BlocBuilder<TournamentCubit, TournamentState>(
                             builder: (context, state) {
-                              if (state is TournamentAttendedLoadingState) {
+                              if (state is GetTournamentAttendedLoadingState) {
                                 return const Center(child: CircularProgressIndicator());
                               }
-                              if (state is TournamentAttendedSuccessState) {
+                              if (state is GetTournamentAttendedSuccessState) {
                                 var tournaments = state.tournaments.tournaments!;
                                 if (tournaments.isNotEmpty) {
                                   return Column(
@@ -291,7 +292,7 @@ class _ProfileFragmentState extends State<ProfileFragment> {
                                           physics: const AlwaysScrollableScrollPhysics(),
                                           itemBuilder: (context, index) {
                                             return Container(
-                                              height: 110,
+                                              height: 90,
                                               decoration: BoxDecoration(
                                                 color: white,
                                                 borderRadius: BorderRadius.circular(8),
@@ -314,7 +315,7 @@ class _ProfileFragmentState extends State<ProfileFragment> {
                                                         placeholder: AppAssets.placeholder,
                                                         image: tournaments[index].thumbnailUrl!,
                                                         // height: 60,
-                                                        width: 110,
+                                                        width: 90,
                                                         fit: BoxFit.cover,
                                                       ),
                                                     ),
@@ -363,9 +364,11 @@ class _ProfileFragmentState extends State<ProfileFragment> {
                                                   ).paddingAll(8).expand(),
                                                 ],
                                               ),
-                                            );
+                                            ).onTap(() {
+                                              Navigator.pushNamed(context, TournamentDetailScreen.routeName, arguments: tournaments[index].id);
+                                            });
                                           },
-                                          separatorBuilder: (context, index) => const Divider(),
+                                          separatorBuilder: (context, index) => Gap.k8.height,
                                           itemCount: tournaments.length)
                                     ],
                                   );
@@ -433,7 +436,7 @@ class _ProfileFragmentState extends State<ProfileFragment> {
                       ),
                     ),
                   ],
-                ).paddingSymmetric(vertical: 32);
+                ).paddingOnly(bottom: 96);
               }
               return const SizedBox.shrink();
             })

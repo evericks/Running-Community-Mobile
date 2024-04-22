@@ -27,4 +27,5 @@ class AppAssets {
   static const String ruler = 'assets/icons/ruler.svg';
   static const String signature = 'assets/icons/signature.svg';
   static const String magnifying_glass = 'assets/icons/magnifying-glass.svg';
+  static const String qr = 'assets/icons/qr.svg';
 }

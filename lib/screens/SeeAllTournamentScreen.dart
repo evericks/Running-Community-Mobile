@@ -45,8 +45,10 @@ class SeeAllTournamentScreen extends StatelessWidget {
                   children: [
                     ListView.separated(
                         shrinkWrap: true,
+                        physics: const NeverScrollableScrollPhysics(),
+                        padding: EdgeInsets.only(bottom: 16),
                         itemBuilder: (context, index) => SizedBox(
-                          height: context.width() * 0.8,
+                          height: context.width() * 0.7,
                           child: LayoutBuilder(
                             builder: (BuildContext context, BoxConstraints constraints) {
                               return TournamentComponent(tournaments: tournaments[index]).onTap(() {

@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:running_community_mobile/domain/models/user.dart';
 import 'package:running_community_mobile/utils/get_it.dart';
 
 import '../../utils/messages.dart';
@@ -43,6 +44,17 @@ class TournamentRepo {
       return Tournaments.fromJson(response.data);
     } on DioException catch (e) {
       print('Error at getTournamentsAttendedk: $e');
+      throw Exception(msg_server_error);
+    }
+  }
+  
+
+  Future<User> attendTournament(String tournamentId) async {
+    try {
+      var res = await _apiClient.post('/api/user-tournaments', data: {'tournamentId': tournamentId});
+      return User.fromJson(res.data);
+    } on DioException catch (e) {
+      print('Error at attendTournament: $e');
       throw Exception(msg_server_error);
     }
   }

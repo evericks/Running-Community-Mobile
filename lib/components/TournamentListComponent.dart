@@ -20,7 +20,7 @@ class TournamentsList extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
         SizedBox(
-          height: context.width() * 0.8,
+          height: context.width() * 0.7,
           width: context.width(),
           child: ListView.separated(
               padding: const EdgeInsets.only(bottom: 16, left: 16, right: 16),

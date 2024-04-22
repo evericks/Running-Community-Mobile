@@ -10,21 +10,29 @@ import '../screens/SeeAllTournamentScreen.dart';
 import '../utils/colors.dart';
 import '../utils/gap.dart';
 
-class TournamentFragment extends StatelessWidget {
+class TournamentFragment extends StatefulWidget {
   const TournamentFragment({super.key});
 
   @override
+  State<TournamentFragment> createState() => _TournamentFragmentState();
+}
+
+class _TournamentFragmentState extends State<TournamentFragment> {
+  @override
   Widget build(BuildContext context) {
+    var attendTournament = [];
     return Scaffold(
       appBar: const MyAppBar(title: 'Tournament'),
       body: BlocProvider<TournamentCubit>(
-          create: (context) => TournamentCubit()..getTournaments(),
-          child: BlocBuilder<TournamentCubit, TournamentState>(builder: (context, state) {
+          create: (context) => TournamentCubit()
+            ..getTournaments(pageSize: 100),
+          child: BlocBuilder<TournamentCubit, TournamentState>( builder: (context, state) {
             if (state is TournamentLoadingState) {
               return const Center(child: CircularProgressIndicator());
             }
             if (state is TournamentSuccessState) {
               var tournaments = state.tournaments.tournaments!;
+              tournaments.removeWhere((t) => attendTournament.contains(t.id));
               var upcoming = tournaments.where((t) => DateTime.parse(t.startTime!).isAfter(DateTime.now())).toList();
               var happenning = tournaments.where((t) => DateTime.parse(t.startTime!).isBefore(DateTime.now()) && DateTime.parse(t.endTime!).isAfter(DateTime.now())).toList();
               var finished = tournaments.where((t) => DateTime.parse(t.endTime!).isBefore(DateTime.now())).toList();
@@ -52,7 +60,6 @@ class TournamentFragment extends StatelessWidget {
                         upcoming.isNotEmpty
                             ? TournamentsList(
                                 tournaments: upcoming,
-                               
                               )
                             : const SizedBox.shrink(),
                         Gap.k16.height,
@@ -72,7 +79,6 @@ class TournamentFragment extends StatelessWidget {
                         happenning.isNotEmpty
                             ? TournamentsList(
                                 tournaments: happenning,
-                                
                               )
                             : const SizedBox.shrink(),
                         Gap.k16.height,
@@ -92,11 +98,10 @@ class TournamentFragment extends StatelessWidget {
                         finished.isNotEmpty
                             ? TournamentsList(
                                 tournaments: finished,
- 
                               )
                             : const SizedBox.shrink(),
                       ],
-                    ).paddingOnly(bottom: 16)),
+                    ).paddingOnly(bottom: 96)),
               );
             }
             return const SizedBox.shrink();
@@ -104,4 +109,3 @@ class TournamentFragment extends StatelessWidget {
     );
   }
 }
-

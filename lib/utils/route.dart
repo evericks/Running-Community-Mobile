@@ -1,6 +1,10 @@
+import 'dart:io';
+import 'dart:typed_data';
+
 import 'package:flutter/material.dart';
 import 'package:running_community_mobile/screens/ExerciseItemScreen.dart';
 import 'package:running_community_mobile/screens/FullScreenVideoScreen.dart';
+import 'package:running_community_mobile/screens/QRCodeScreen.dart';
 import 'package:running_community_mobile/screens/SeeAllTournamentScreen.dart';
 import 'package:video_player/video_player.dart';
 import '../screens/CreateGroupScreen.dart';
@@ -61,6 +65,8 @@ Route<dynamic> generateRoute(RouteSettings settings) {
       return MaterialPageRoute(builder: (_) => SeeAllTournamentScreen(status: settings.arguments as String,));
     case TournamentDetailScreen.routeName:
       return MaterialPageRoute(builder: (_) => TournamentDetailScreen(id: settings.arguments as String,));
+    case QRCodeScreen.routeName:
+      return MaterialPageRoute(builder: (_) => QRCodeScreen(qrCodeImage: settings.arguments as Uint8List,));
     default:
       return MaterialPageRoute(builder: (_) => const NotFoundScreen());
   }

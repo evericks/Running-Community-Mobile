@@ -54,31 +54,36 @@ class TournamentComponent extends StatelessWidget {
                   Gap.k4.width,
                   Text(
                     '${DateFormat('dd/MM/yyyy').format(DateTime.parse(tournaments.startTime!))} to ${DateFormat('dd/MM/yyyy').format(DateTime.parse(tournaments.endTime!))}',
-                    style: primaryTextStyle(),
+                    style: primaryTextStyle(size: 14),
                   )
                 ],
               ).paddingLeft(16),
               if (DateTime.now().isBefore(DateTime.parse(tournaments.registerDuration!))) ...[
                 const Spacer(),
-                Container(
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(8),
-                    color: primaryColor,
-                  ),
-                  child: Text(
-                    'Register',
-                    style: boldTextStyle(color: white, size: 14),
-                  ).paddingSymmetric(horizontal: 32, vertical: 4),
-                ).paddingSymmetric(horizontal: 16).onTap(() {
-                  if (getStringAsync(AppConstant.TOKEN_KEY) == '') {
-                    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                      content: Text('Please login to join the tournament'),
-                      backgroundColor: tomato,
-                    ));
-                  } else {
-                    // Navigator.pushNamed(context, RegisterTournamentScreen.routeName, arguments: tournaments);
-                  }
-                })
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    Container(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(8),
+                        color: primaryColor,
+                      ),
+                      child: Text(
+                        'Register',
+                        style: boldTextStyle(color: white, size: 14),
+                      ).paddingSymmetric(horizontal: 16, vertical: 2),
+                    ).paddingSymmetric(horizontal: 16).onTap(() {
+                      if (getStringAsync(AppConstant.TOKEN_KEY) == '') {
+                        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                          content: Text('Please login to join the tournament'),
+                          backgroundColor: tomato,
+                        ));
+                      } else {
+                        // Navigator.pushNamed(context, RegisterTournamentScreen.routeName, arguments: tournaments);
+                      }
+                    }),
+                  ],
+                )
               ],
               if (!DateTime.now().isBefore(DateTime.parse(tournaments.registerDuration!))) ...[
                 const Spacer(),

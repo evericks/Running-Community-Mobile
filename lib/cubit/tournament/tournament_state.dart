@@ -1,4 +1,5 @@
 import 'package:running_community_mobile/domain/models/tournaments.dart';
+import 'package:running_community_mobile/domain/models/user.dart';
 
 class TournamentState {}
 
@@ -29,11 +30,23 @@ class TournamentDetailFailedState extends TournamentState {
 class TournamentAttendedLoadingState extends TournamentState {}
 
 class TournamentAttendedSuccessState extends TournamentState {
-  final Tournaments tournaments;
-  TournamentAttendedSuccessState({required this.tournaments});
+  final User user;
+  TournamentAttendedSuccessState({required this.user});
 }
 
 class TournamentAttendedFailedState extends TournamentState {
   final String error;
   TournamentAttendedFailedState({required this.error});
+}
+
+class GetTournamentAttendedLoadingState extends TournamentState {}
+  
+class GetTournamentAttendedSuccessState extends TournamentState {
+  final Tournaments tournaments;
+  GetTournamentAttendedSuccessState({required this.tournaments});
+}
+
+class GetTournamentAttendedFailedState extends TournamentState {
+  final String error;
+  GetTournamentAttendedFailedState({required this.error});
 }

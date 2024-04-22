@@ -5,9 +5,7 @@ class Tournaments {
   Tournaments({this.pagination, this.tournaments});
 
   Tournaments.fromJson(Map<String, dynamic> json) {
-    pagination = json['pagination'] != null
-        ? Pagination.fromJson(json['pagination'])
-        : null;
+    pagination = json['pagination'] != null ? Pagination.fromJson(json['pagination']) : null;
     if (json['data'] != null) {
       tournaments = <Tournament>[];
       json['data'].forEach((v) {
@@ -117,4 +115,10 @@ class Tournament {
     data['createAt'] = createAt;
     return data;
   }
+
+  @override
+  bool operator ==(Object other) => identical(this, other) || other is Tournament && runtimeType == other.runtimeType && id == other.id;
+
+  @override
+  int get hashCode => id.hashCode;
 }

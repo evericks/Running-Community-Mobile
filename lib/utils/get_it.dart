@@ -9,6 +9,7 @@ import '../domain/repositories/group_repo.dart';
 import '../domain/repositories/postReact_repo.dart';
 import '../domain/repositories/post_repo.dart';
 import '../domain/repositories/user_repo.dart';
+import '../domain/repositories/user_tournament_repo.dart';
 import 'dio.dart';
 
 final getIt = GetIt.instance;
@@ -24,4 +25,5 @@ Future<void> initialGetIt() async {
   getIt.registerLazySingleton(() => PostCommentRepo());
   getIt.registerLazySingleton(() => ExerciseRepo());
   getIt.registerLazySingleton(() => TournamentRepo());
+  getIt.registerLazySingleton(() => UserTournamentRepo());
 }
