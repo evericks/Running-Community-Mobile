@@ -8,10 +8,11 @@ import '../models/tournaments.dart';
 final Dio _apiClient = getIt.get<Dio>();
 
 class TournamentRepo {
-  Future<Tournaments> getTournaments({String? title, String? startTime, String? endTime, double? minDistance, double? maxDistance, double? longitude, double? latitude, int? pageSize, int? pageNumber}) async {
+  Future<Tournaments> getTournaments({String? title, String? status, String? startTime, String? endTime, double? minDistance, double? maxDistance, double? longitude, double? latitude, int? pageSize, int? pageNumber}) async {
     try {
       Map<String, dynamic> queryParameters = {};
       if (title != null) queryParameters['title'] = title;
+      if (status != null) queryParameters['status'] = status;
       if (startTime != null) queryParameters['duration.startTime'] = startTime;
       if (endTime != null) queryParameters['duration.endTime'] = endTime;
       if (minDistance != null) queryParameters['distance.minDistance'] = minDistance;

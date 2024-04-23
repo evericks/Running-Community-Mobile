@@ -189,7 +189,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         Navigator.pushNamed(context, '/login');
                       }),
                     ],
-                  ).paddingSymmetric(horizontal: 32, vertical: 32),
+                  ).paddingOnly(left: 32, right: 32, top: 32),
                 ),
               ],
             ),

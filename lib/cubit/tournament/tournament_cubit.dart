@@ -1,18 +1,21 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:running_community_mobile/domain/repositories/user_repo.dart';
 
 import '../../domain/repositories/tournament_repo.dart';
 import '../../utils/get_it.dart';
 import 'tournament_state.dart';
 
-class TournamentCubit extends Cubit<TournamentState>{
+class TournamentCubit extends Cubit<TournamentState> {
   TournamentCubit() : super(TournamentState());
   final TournamentRepo _tournamentRepo = getIt.get<TournamentRepo>();
 
-  Future<void> getTournaments({String? title, String? startTime, String? endTime, double? minDistance, double? maxDistance, double? longitude, double? latitude, int? pageSize, int? pageNumber}) async {
+  Future<void> getTournaments(
+      {String? title, String? status, String? startTime, String? endTime, double? minDistance, double? maxDistance, double? longitude, double? latitude, int? pageSize, int? pageNumber}) async {
     emit(TournamentLoadingState());
     try {
       final tournaments = await _tournamentRepo.getTournaments(
         title: title,
+        status: status,
         startTime: startTime,
         endTime: endTime,
         minDistance: minDistance,
@@ -22,8 +25,10 @@ class TournamentCubit extends Cubit<TournamentState>{
         pageSize: pageSize,
         pageNumber: pageNumber,
       );
-      var attendTournament = await _tournamentRepo.getTournamentsAttendedk();
-      tournaments.tournaments!.removeWhere((t) => attendTournament.tournaments!.contains(t));
+      if (UserRepo.user.id != null) {
+        var attendTournament = await _tournamentRepo.getTournamentsAttendedk();
+        tournaments.tournaments!.removeWhere((t) => attendTournament.tournaments!.contains(t));
+      }
       emit(TournamentSuccessState(tournaments: tournaments));
     } catch (e) {
       emit(TournamentFailedState(error: e.toString()));

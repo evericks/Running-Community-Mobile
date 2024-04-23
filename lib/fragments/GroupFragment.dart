@@ -113,17 +113,20 @@ class _GroupFragmentState extends State<GroupFragment> {
                       'Your Groups (${groups.where((gr) => gr.groupMembers!.any((mem) => mem.role == 'Owner' && mem.user!.id == UserRepo.user.id)).length})',
                       style: secondaryTextStyle()),
                   Gap.k8.height,
-                  GroupsList(
+                  groups.where((gr) => gr.groupMembers!.any((mem) =>
+                              mem.role == 'Owner' &&
+                              mem.user!.id == UserRepo.user.id))
+                          .toList().isNotEmpty ? GroupsList(
                       groups: groups
                           .where((gr) => gr.groupMembers!.any((mem) =>
                               mem.role == 'Owner' &&
                               mem.user!.id == UserRepo.user.id))
-                          .toList()),
+                          .toList()) : const SizedBox.shrink(),
                   Gap.k16.height,
                   Text('Joined Groups (${joinedGroups.length})',
                       style: secondaryTextStyle()),
                   Gap.k8.height,
-                  GroupsList(groups: joinedGroups),
+                  joinedGroups.isNotEmpty ? GroupsList(groups: joinedGroups) : const SizedBox.shrink(),
                   Gap.k16.height,
                   Text('Suggestion for you', style: secondaryTextStyle()),
                   Gap.k8.height,

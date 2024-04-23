@@ -30,19 +30,6 @@ class _HomeFragmentState extends State<HomeFragment> {
   @override
   void initState() {
     super.initState();
-    Timer.periodic(const Duration(seconds: 3), (Timer timer) {
-      if (_currentPage < pageSize! - 1) {
-        _currentPage++;
-      } else {
-        _currentPage = 0;
-      }
-
-      _pageController.animateToPage(
-        _currentPage,
-        duration: const Duration(milliseconds: 400),
-        curve: Curves.easeInOut,
-      );
-    });
 
     _pageController.addListener(() {
       int next = _pageController.page!.round();
@@ -96,15 +83,26 @@ class _HomeFragmentState extends State<HomeFragment> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                BlocConsumer<TournamentCubit, TournamentState>(
-                  listener: (context, state) {
-                    if (state is TournamentSuccessState) {  
+                BlocConsumer<TournamentCubit, TournamentState>(listener: (context, state) {
+                  if (state is TournamentSuccessState) {
                     setState(() {
                       pageSize = state.tournaments.tournaments!.where((t) => DateTime.parse(t.registerDuration!).isAfter(DateTime.now())).toList().length;
                     });
-                    }
-                  },
-                  builder: (context, state) {
+                    Timer.periodic(const Duration(seconds: 3), (Timer timer) {
+                      if (_currentPage < pageSize! - 1) {
+                        _currentPage++;
+                      } else {
+                        _currentPage = 0;
+                      }
+
+                      _pageController.animateToPage(
+                        _currentPage,
+                        duration: const Duration(milliseconds: 400),
+                        curve: Curves.easeInOut,
+                      );
+                    });
+                  }
+                }, builder: (context, state) {
                   if (state is TournamentSuccessState) {
                     var tournaments = state.tournaments.tournaments!.where((t) => DateTime.parse(t.registerDuration!).isAfter(DateTime.now())).toList();
                     return Column(
@@ -184,7 +182,7 @@ class _HomeFragmentState extends State<HomeFragment> {
                                             style: boldTextStyle(color: white, size: 14),
                                           ).paddingSymmetric(horizontal: 32, vertical: 4),
                                         ).paddingSymmetric(horizontal: 16).onTap(() {
-                                         Navigator.pushNamed(context, TournamentDetailScreen.routeName, arguments: tournaments[index].id);
+                                          Navigator.pushNamed(context, TournamentDetailScreen.routeName, arguments: tournaments[index].id);
                                         }),
                                       ],
                                     ),
