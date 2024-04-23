@@ -78,16 +78,15 @@ class _TournamentDetailScreenState extends State<TournamentDetailScreen> {
 
   Future<void> _showQRCode(String tournamentId, String userId) async {
     try {
-      
-    final qrCodePath = await generateAndCacheQRCode(tournamentId, userId);
-    setState(() {
-      qrCodeImage = File(qrCodePath);
-    });
-    print('QR code generated: $qrCodePath');
+      final qrCodePath = await generateAndCacheQRCode(tournamentId, userId);
+      setState(() {
+        qrCodeImage = File(qrCodePath);
+      });
+      print('QR code generated: $qrCodePath');
     } catch (e) {
       print('Failed to generate QR code: $e');
     }
-  } 
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -106,8 +105,7 @@ class _TournamentDetailScreenState extends State<TournamentDetailScreen> {
               onPressed: () async {
                 // await _showQRCode(widget.id, UserRepo.user.id!);
                 var qrCodeData = await generateQRCode(widget.id, UserRepo.user.id!);
-                Navigator.pushNamed(context, QRCodeScreen.routeName, arguments:  qrCodeData);
-               
+                Navigator.pushNamed(context, QRCodeScreen.routeName, arguments: qrCodeData);
               },
               child: SvgPicture.asset(
                 AppAssets.qr,
@@ -118,7 +116,15 @@ class _TournamentDetailScreenState extends State<TournamentDetailScreen> {
             )
           : null,
       body: BlocProvider<TournamentCubit>(
-        create: (context) => TournamentCubit()..getTournamentsAttended(),
+        create: (context) {
+          var cubit = TournamentCubit();
+          if (UserRepo.user.id != null) {
+            cubit.getTournamentsAttended();
+          } else {
+            cubit.getTournamentById(widget.id);
+          }
+          return cubit;
+        },
         child: BlocConsumer<TournamentCubit, TournamentState>(
           listener: (context, state) async {
             if (state is TournamentDetailSuccessState) {
@@ -273,15 +279,15 @@ Future<Uint8List> generateQRCode(String tournamentId, String userId) async {
   final qrCode = qrValidationResult.qrCode;
 
   final canvas = Canvas(recorder);
-    final painter = QrPainter.withQr(
-      qr: qrCode!,
-      color: black,
-      gapless: true,
-      emptyColor: Colors.white,
-    );
-    painter.paint(canvas, const Size(200, 200));
-    final picture = recorder.endRecording();
-    final img = await picture.toImage(200, 200);
+  final painter = QrPainter.withQr(
+    qr: qrCode!,
+    color: black,
+    gapless: true,
+    emptyColor: Colors.white,
+  );
+  painter.paint(canvas, const Size(200, 200));
+  final picture = recorder.endRecording();
+  final img = await picture.toImage(200, 200);
 
   final byteData = await img.toByteData(format: ui.ImageByteFormat.png);
   final pngBytes = byteData!.buffer.asUint8List();
@@ -334,4 +340,3 @@ Future<String> generateAndCacheQRCode(String tournamentId, String userId) async 
     return tempPath;
   }
 }
-

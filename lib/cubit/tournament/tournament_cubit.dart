@@ -26,7 +26,7 @@ class TournamentCubit extends Cubit<TournamentState> {
         pageNumber: pageNumber,
       );
       if (UserRepo.user.id != null) {
-        var attendTournament = await _tournamentRepo.getTournamentsAttendedk();
+        var attendTournament = await _tournamentRepo.getTournamentsAttended();
         tournaments.tournaments!.removeWhere((t) => attendTournament.tournaments!.contains(t));
       }
       emit(TournamentSuccessState(tournaments: tournaments));
@@ -48,7 +48,7 @@ class TournamentCubit extends Cubit<TournamentState> {
   Future<void> getTournamentsAttended() async {
     emit(GetTournamentAttendedLoadingState());
     try {
-      final tournaments = await _tournamentRepo.getTournamentsAttendedk();
+      final tournaments = await _tournamentRepo.getTournamentsAttended();
       emit(GetTournamentAttendedSuccessState(tournaments: tournaments));
     } catch (e) {
       emit(GetTournamentAttendedFailedState(error: e.toString()));

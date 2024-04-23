@@ -39,7 +39,7 @@ class TournamentRepo {
     }
   }
 
-  Future<Tournaments> getTournamentsAttendedk() async {
+  Future<Tournaments> getTournamentsAttended() async {
     try {
       final response = await _apiClient.get('/api/tournaments/attendeds');
       return Tournaments.fromJson(response.data);
