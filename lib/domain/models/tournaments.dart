@@ -59,6 +59,7 @@ class Tournament {
   String? registerDuration;
   String? startTime;
   String? endTime;
+  int? fee;
   String? address;
   double? longitude;
   double? latitude;
@@ -75,6 +76,7 @@ class Tournament {
       this.registerDuration,
       this.startTime,
       this.endTime,
+      this.fee,
       this.address,
       this.longitude,
       this.latitude,
@@ -91,6 +93,7 @@ class Tournament {
     registerDuration = json['registerDuration'];
     startTime = json['startTime'];
     endTime = json['endTime'];
+    fee = json['fee'];
     address = json['address'];
     longitude = json['longitude'];
     latitude = json['latitude'];
@@ -109,6 +112,7 @@ class Tournament {
     data['registerDuration'] = registerDuration;
     data['startTime'] = startTime;
     data['endTime'] = endTime;
+    data['fee'] = fee;
     data['address'] = address;
     data['longitude'] = longitude;
     data['latitude'] = latitude;

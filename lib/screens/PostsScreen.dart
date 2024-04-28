@@ -85,7 +85,7 @@ class _PostsScreenState extends State<PostsScreen> {
                             children: [
                               Row(
                                 children: [
-                                  ClipOval(
+                                  UserRepo.user.avatarUrl != null ? ClipOval(
                                     child: FadeInImage.assetNetwork(
                                       placeholder: AppAssets.user_placeholder,
                                       image: UserRepo.user.avatarUrl!,
@@ -93,6 +93,11 @@ class _PostsScreenState extends State<PostsScreen> {
                                       height: 40,
                                       fit: BoxFit.cover,
                                     ),
+                                  ) : Image.asset(
+                                    AppAssets.user_placeholder,
+                                    width: 40,
+                                    height: 40,
+                                    fit: BoxFit.cover,
                                   ),
                                   Gap.k16.width,
                                   Text('Write something on your group',

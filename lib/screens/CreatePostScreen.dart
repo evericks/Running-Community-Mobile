@@ -128,9 +128,9 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
                 children: [
                   Row(
                     children: [
-                      ClipOval(
+                      UserRepo.user.avatarUrl != null ? ClipOval(
                         child: FadeInImage.assetNetwork(placeholder: AppAssets.user_placeholder, image: UserRepo.user.avatarUrl!, width: 40, height: 40, fit: BoxFit.cover,),
-                      ),
+                      ) : Image.asset(AppAssets.user_placeholder, width: 40, height: 40, fit: BoxFit.cover),
                       Gap.k16.width,
                       Text(UserRepo.user.name!, style: boldTextStyle(size: 16)),
                     ],

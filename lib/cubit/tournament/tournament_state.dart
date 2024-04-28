@@ -50,3 +50,15 @@ class GetTournamentAttendedFailedState extends TournamentState {
   final String error;
   GetTournamentAttendedFailedState({required this.error});
 }
+
+class RequestPaymentTournamentLoadingState extends TournamentState {}
+
+class RequestPaymentTournamentSuccessState extends TournamentState {
+  final String paymentUrl;
+  RequestPaymentTournamentSuccessState({required this.paymentUrl});
+}
+
+class RequestPaymentTournamentFailedState extends TournamentState {
+  final String error;
+  RequestPaymentTournamentFailedState({required this.error});
+}

@@ -105,7 +105,7 @@ class _HomeFragmentState extends State<HomeFragment> {
                 }, builder: (context, state) {
                   if (state is TournamentSuccessState) {
                     var tournaments = state.tournaments.tournaments!.where((t) => DateTime.parse(t.registerDuration!).isAfter(DateTime.now())).toList();
-                    return Column(
+                    return tournaments.isNotEmpty ? Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
@@ -172,6 +172,9 @@ class _HomeFragmentState extends State<HomeFragment> {
                                     Row(
                                       mainAxisAlignment: MainAxisAlignment.end,
                                       children: [
+                                        Gap.k16.width,
+                                        Text(tournaments[index].fee == 0 ? 'Free' : '${NumberFormat('#,##0', 'en_US').format(tournaments[index].fee)} đ', style: boldTextStyle(color: primaryColor, size: 16)),
+                                        Spacer(),
                                         Container(
                                           decoration: BoxDecoration(
                                             borderRadius: BorderRadius.circular(8),
@@ -197,7 +200,7 @@ class _HomeFragmentState extends State<HomeFragment> {
                           children: _buildPageIndicator(),
                         ),
                       ],
-                    );
+                    ) : const Center(child: Text('No open tournament'));
                   }
                   return const SizedBox.shrink();
                 }),

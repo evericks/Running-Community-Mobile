@@ -4,6 +4,7 @@ import 'package:intl/intl.dart';
 import 'package:nb_utils/nb_utils.dart';
 
 import '../domain/models/tournaments.dart';
+import '../screens/TournamentDetailScreen.dart';
 import '../utils/app_assets.dart';
 import '../utils/colors.dart';
 import '../utils/constants.dart';
@@ -63,6 +64,9 @@ class TournamentComponent extends StatelessWidget {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
+                    Gap.k16.width,
+                    Text(tournaments.fee == 0 ? 'Free' : '${NumberFormat('#,##0', 'en_US').format(tournaments.fee)} đ', style: boldTextStyle(color: primaryColor, size: 16)),
+                    Spacer(),
                     Container(
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(8),
@@ -79,7 +83,7 @@ class TournamentComponent extends StatelessWidget {
                           backgroundColor: tomato,
                         ));
                       } else {
-                        // Navigator.pushNamed(context, RegisterTournamentScreen.routeName, arguments: tournaments);
+                         Navigator.pushNamed(context, TournamentDetailScreen.routeName, arguments: tournaments.id);
                       }
                     }),
                   ],

@@ -59,4 +59,18 @@ class TournamentRepo {
       throw Exception(msg_server_error);
     }
   }
+
+  Future<String> requestPaymentTournament({required String tournamentId, required int amount}) async {
+    try {
+      Map<String, dynamic> data = {
+        'tournamentId': tournamentId,
+        'amount': amount
+      };
+      var res = await _apiClient.post('/api/payments/request', data: data);
+      return res.data;
+    } on DioException catch (e) {
+      print('Error at paymentTournament: $e');
+      throw Exception(msg_server_error);
+    }
+  }
 }

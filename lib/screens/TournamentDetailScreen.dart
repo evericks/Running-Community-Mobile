@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'dart:io';
-import 'dart:math';
 import 'dart:typed_data';
 import 'dart:ui' as ui;
 import 'package:flutter/material.dart';
@@ -20,6 +19,7 @@ import 'package:running_community_mobile/widgets/AppBar.dart';
 import '../cubit/tournament/tournament_cubit.dart';
 import '../utils/app_assets.dart';
 import '../widgets/TimeCard.dart';
+import 'PaymentScreen.dart';
 import 'QRCodeScreen.dart';
 
 class TournamentDetailScreen extends StatefulWidget {
@@ -152,6 +152,16 @@ class _TournamentDetailScreenState extends State<TournamentDetailScreen> {
               hideLoader(context);
               ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(state.error.replaceAll('Exception: ', '')), backgroundColor: tomato));
             }
+
+            if (state is RequestPaymentTournamentLoadingState) {
+              showLoader(context);
+            } else if (state is RequestPaymentTournamentSuccessState) {
+              hideLoader(context);
+              Navigator.pushNamed(context, PaymentScreen.routeName, arguments: {'paymentUrl': state.paymentUrl, 'tournamentId': widget.id});
+            } else if (state is RequestPaymentTournamentFailedState) {
+              hideLoader(context);
+              ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(state.error.replaceAll('Exception: ', '')), backgroundColor: tomato));
+            }
           },
           builder: (context, state) {
             if (state is TournamentDetailLoadingState) {
@@ -233,11 +243,18 @@ class _TournamentDetailScreenState extends State<TournamentDetailScreen> {
                                   ).paddingSymmetric(horizontal: 32, vertical: 8))
                               .onTap(() {
                             if (UserRepo.user.id != null) {
-                              showConfirmDialog(context, 'Do you want to register this tournament?').then((value) => value ? context.read<TournamentCubit>().attendTournament(tournament.id!) : null);
+                              if (tournament.fee == 0) {
+                                showConfirmDialog(context, 'Do you want to register this tournament?').then((value) => value ? context.read<TournamentCubit>().attendTournament(tournament.id!) : null);
+                              } else {
+                                showConfirmDialog(context, 'Do you want to go to the VNPay payment page?')
+                                    .then((value) => value ? context.read<TournamentCubit>().requestPaymentTournament(tournamentId: tournament.id!, amount: tournament.fee!) : null);
+                              }
                             } else {
                               ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: const Text('Please login to register'), backgroundColor: tomato));
                             }
                           }).expand(),
+                          Gap.k16.width,
+                          Text(tournament.fee == 0 ? 'Free' : '${NumberFormat('#,##0', 'en_US').format(tournament.fee)} đ', style: boldTextStyle(color: primaryColor, size: 16)),
                         ],
                       ).paddingSymmetric(horizontal: 16),
                     ],
@@ -310,6 +327,7 @@ Future<String> generateAndCacheQRCode(String tournamentId, String userId) async 
 
     final qrCode = qrValidationResult.qrCode;
 
+    // ignore: unused_local_variable
     final qrImage = QrImageView(
       data: '$tournamentId$userId',
       version: QrVersions.auto,

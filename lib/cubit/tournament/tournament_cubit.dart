@@ -69,4 +69,14 @@ class TournamentCubit extends Cubit<TournamentState> {
     await getTournamentsAttended();
     getTournaments();
   }
+
+  Future<void> requestPaymentTournament({required String tournamentId, required int amount}) async {
+    emit(RequestPaymentTournamentLoadingState());
+    try {
+      var paymentUrl = await _tournamentRepo.requestPaymentTournament(tournamentId: tournamentId, amount: amount);
+      emit(RequestPaymentTournamentSuccessState(paymentUrl: paymentUrl));
+    } catch (e) {
+      emit(RequestPaymentTournamentFailedState(error: e.toString()));
+    }
+  }
 }

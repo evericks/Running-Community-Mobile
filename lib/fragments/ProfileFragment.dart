@@ -257,10 +257,6 @@ class _ProfileFragmentState extends State<ProfileFragment> {
                                                   archivements[index].name!,
                                                   style: secondaryTextStyle(),
                                                 ),
-                                                Text(
-                                                  'Rank: ${archivements[index].rank!}',
-                                                  style: secondaryTextStyle(),
-                                                ),
                                               ],
                                             ).paddingAll(8),
                                           ],

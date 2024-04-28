@@ -5,6 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:nb_utils/nb_utils.dart';
 import 'package:running_community_mobile/cubit/group/group_state.dart';
+import 'package:running_community_mobile/domain/repositories/user_repo.dart';
 import '../cubit/archivement/archivement_cubit.dart';
 import '../cubit/group/group_cubit.dart';
 import '../cubit/user/user_cubit.dart';
@@ -155,7 +156,7 @@ class _DashboardScreenState extends State<DashboardScreen> with SingleTickerProv
       body: MultiBlocProvider(
           providers: [
             BlocProvider<UserCubit>(create: (context) => UserCubit()..getUserProfile()),
-            BlocProvider<ArchivementCubit>(create: (context) => ArchivementCubit()..getArchivements(pageSize: 100)),
+            BlocProvider<ArchivementCubit>(create: (context) => ArchivementCubit()..getArchivements(userId: UserRepo.user.id, pageSize: 100)),
             BlocProvider<GroupCubit>(
               create: (context) => GroupCubit()..getGroups(pageSize: 100),
             )

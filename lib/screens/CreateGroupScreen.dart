@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:nb_utils/nb_utils.dart';
+import 'package:running_community_mobile/domain/repositories/user_repo.dart';
 import 'package:running_community_mobile/screens/DashboardScreen.dart';
 import 'package:running_community_mobile/utils/app_assets.dart';
 import 'package:running_community_mobile/utils/colors.dart';
@@ -183,15 +184,19 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
                   ),
                 ).onTap(() async {
                   if (groupNameController.text != '' && groupDescriptionController.text != '' && groupRuleController.text != '' && imageFile != null) {
-                    final GroupCubit groupCubit = context.read<GroupCubit>();
-                    groupCubit.createGroup(
-                      name: groupNameController.text,
-                      description: groupDescriptionController.text,
-                      rule: groupRuleController.text,
-                      thumbnail: imageFile!,
-                    );
+                    if (UserRepo.user.id != null) {
+                      final GroupCubit groupCubit = context.read<GroupCubit>();
+                      groupCubit.createGroup(
+                        name: groupNameController.text,
+                        description: groupDescriptionController.text,
+                        rule: groupRuleController.text,
+                        thumbnail: imageFile!,
+                      );
+                    } else {
+                      Fluttertoast.showToast(msg: 'Please login to create group');
+                    }
                   } else {
-                    Fluttertoast.showToast(msg: 'Please login to join the tournament');
+                    Fluttertoast.showToast(msg: 'please fill all fields');
                   }
                 }),
               ],

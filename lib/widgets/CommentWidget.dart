@@ -49,8 +49,10 @@ class _CommentWidgetState extends State<CommentWidget> {
       children: [
         Column(
           children: [
-            ClipOval(
+            widget.postComment.user!.avatarUrl != null ? ClipOval(
               child: FadeInImage.assetNetwork(placeholder: AppAssets.user_placeholder, image: widget.postComment.user!.avatarUrl!, width: 40, height: 40, fit: BoxFit.cover),
+            ) : ClipOval(
+              child: Image.asset(AppAssets.user_placeholder, width: 40, height: 40, fit: BoxFit.cover),
             ),
             // Gap.k8.height,
             // CustomPaint(
