@@ -33,7 +33,7 @@ class _TournamentFragmentState extends State<TournamentFragment> {
             if (state is TournamentSuccessState) {
               var tournaments = state.tournaments.tournaments!;
               tournaments.removeWhere((t) => attendTournament.contains(t.id));
-              var upcoming = tournaments.where((t) => DateTime.parse(t.startTime!).isAfter(DateTime.now())).toList();
+              var upcoming = tournaments.where((t) => DateTime.parse(t.registerDuration!).isAfter(DateTime.now())).toList();
               var happenning = tournaments.where((t) => DateTime.parse(t.startTime!).isBefore(DateTime.now()) && DateTime.parse(t.endTime!).isAfter(DateTime.now())).toList();
               var finished = tournaments.where((t) => DateTime.parse(t.endTime!).isBefore(DateTime.now())).toList();
               return RefreshIndicator(
