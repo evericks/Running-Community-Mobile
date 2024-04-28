@@ -38,7 +38,7 @@ class _TournamentFragmentState extends State<TournamentFragment> {
               var finished = tournaments.where((t) => DateTime.parse(t.endTime!).isBefore(DateTime.now())).toList();
               return RefreshIndicator(
                 onRefresh: () async {
-                  context.read<TournamentCubit>().getTournaments();
+                  context.read<TournamentCubit>().getTournaments(pageSize: 100);
                 },
                 child: SingleChildScrollView(
                     physics: const AlwaysScrollableScrollPhysics(),
