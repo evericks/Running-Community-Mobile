@@ -30,7 +30,15 @@ class _GroupFragmentState extends State<GroupFragment> {
       appBar: const MyAppBar(
         title: 'Group',
       ),
-      body: BlocBuilder<GroupCubit, GroupState>(builder: (context, state) {
+      body: UserRepo.user.status != 'Active'
+              ? Center(
+                  child: Text(
+                    'Your account has been blocked, you cannot access this function',
+                    style: boldTextStyle(),
+                    textAlign: TextAlign.center,
+                  ),
+                ).paddingSymmetric(horizontal: 16)
+              : BlocBuilder<GroupCubit, GroupState>(builder: (context, state) {
         if (state is GroupsLoadingState) {
           return const Center(
             child: CircularProgressIndicator(),

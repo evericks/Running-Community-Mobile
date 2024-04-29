@@ -6,6 +6,7 @@ import 'package:running_community_mobile/widgets/AppBar.dart';
 import '../components/TournamentListComponent.dart';
 import '../cubit/tournament/tournament_cubit.dart';
 import '../cubit/tournament/tournament_state.dart';
+import '../domain/repositories/user_repo.dart';
 import '../screens/SeeAllTournamentScreen.dart';
 import '../utils/colors.dart';
 import '../utils/gap.dart';
@@ -23,7 +24,15 @@ class _TournamentFragmentState extends State<TournamentFragment> {
     var attendTournament = [];
     return Scaffold(
       appBar: const MyAppBar(title: 'Tournament'),
-      body: BlocProvider<TournamentCubit>(
+      body: UserRepo.user.status != 'Active'
+              ? Center(
+                  child: Text(
+                    'Your account has been blocked, you cannot access this function',
+                    style: boldTextStyle(),
+                    textAlign: TextAlign.center,
+                  ),
+                ).paddingSymmetric(horizontal: 16)
+              : BlocProvider<TournamentCubit>(
           create: (context) => TournamentCubit()
             ..getTournaments(pageSize: 100),
           child: BlocBuilder<TournamentCubit, TournamentState>( builder: (context, state) {

@@ -1,3 +1,5 @@
+// ignore_for_file: deprecated_member_use
+
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -34,16 +36,6 @@ class _ProfileFragmentState extends State<ProfileFragment> {
   int _selectedIndex = 0;
   @override
   Widget build(BuildContext context) {
-    @override
-    void initState() {
-      super.initState();
-    }
-
-    @override
-    void dispose() {
-      super.dispose();
-    }
-
     return Scaffold(
       appBar: const MyAppBar(
         title: 'Profile',
@@ -133,17 +125,17 @@ class _ProfileFragmentState extends State<ProfileFragment> {
                                 padding: const EdgeInsets.all(8.0),
                                 child: Container(
                                   decoration: BoxDecoration(
-                                  color: _selectedIndex == 1 ? white : context.scaffoldBackgroundColor,
-                                  borderRadius: BorderRadius.circular(8),
-                                  boxShadow: [
-                                    BoxShadow(
-                                      color: Colors.grey.withOpacity(0.5),
-                                      spreadRadius: 1,
-                                      blurRadius: 7,
-                                      offset: const Offset(0, 3), // changes position of shadow
-                                    )
-                                  ],
-                                ),
+                                    color: _selectedIndex == 1 ? white : context.scaffoldBackgroundColor,
+                                    borderRadius: BorderRadius.circular(8),
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: Colors.grey.withOpacity(0.5),
+                                        spreadRadius: 1,
+                                        blurRadius: 7,
+                                        offset: const Offset(0, 3), // changes position of shadow
+                                      )
+                                    ],
+                                  ),
                                   padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
                                   child: SvgPicture.asset(
                                     AppAssets.trophy,
@@ -160,17 +152,17 @@ class _ProfileFragmentState extends State<ProfileFragment> {
                                 padding: const EdgeInsets.all(8.0),
                                 child: Container(
                                   decoration: BoxDecoration(
-                                  color: _selectedIndex == 2 ? white : context.scaffoldBackgroundColor,
-                                  borderRadius: BorderRadius.circular(8),
-                                  boxShadow: [
-                                    BoxShadow(
-                                      color: Colors.grey.withOpacity(0.5),
-                                      spreadRadius: 1,
-                                      blurRadius: 7,
-                                      offset: const Offset(0, 3), // changes position of shadow
-                                    )
-                                  ],
-                                ),
+                                    color: _selectedIndex == 2 ? white : context.scaffoldBackgroundColor,
+                                    borderRadius: BorderRadius.circular(8),
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: Colors.grey.withOpacity(0.5),
+                                        spreadRadius: 1,
+                                        blurRadius: 7,
+                                        offset: const Offset(0, 3), // changes position of shadow
+                                      )
+                                    ],
+                                  ),
                                   // width: context.width() * 0.2,
                                   padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
                                   child: SvgPicture.asset(
@@ -350,7 +342,7 @@ class _ProfileFragmentState extends State<ProfileFragment> {
                                                           ),
                                                           Gap.k8.width,
                                                           Text(
-                                                            tournaments[index].distance.toString() + ' km',
+                                                            '${tournaments[index].distance} km',
                                                             style: secondaryTextStyle(),
                                                           ),
                                                         ],
@@ -369,49 +361,56 @@ class _ProfileFragmentState extends State<ProfileFragment> {
                                     ],
                                   );
                                 } else {
-                                  return Wrap(
-                                    children: [
-                                      Container(
-                                        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
-                                        width: context.width(),
-                                        decoration: BoxDecoration(
-                                          color: white,
-                                          borderRadius: BorderRadius.circular(8),
-                                          boxShadow: defaultBoxShadow(),
-                                        ),
-                                        child: Column(
+                                  return UserRepo.user.status != 'Active'
+                                      ? Center(
+                                          child: Text(
+                                            'Your account has been blocked, you cannot access this function',
+                                            style: boldTextStyle(),
+                                            textAlign: TextAlign.center,
+                                          ),
+                                        ).paddingSymmetric(horizontal: 16)
+                                      : Wrap(
                                           children: [
-                                            Image.asset(
-                                              AppAssets.login_background,
-                                              height: 100,
-                                              width: 100,
-                                            ),
-                                            Gap.k16.height,
-                                            Text(
-                                              "Let's join the first tournament",
-                                              style: primaryTextStyle(size: 14),
-                                              textAlign: TextAlign.center,
-                                            ),
-                                            Gap.k16.height,
                                             Container(
-                                              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                                              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+                                              width: context.width(),
                                               decoration: BoxDecoration(
-                                                color: primaryColor,
+                                                color: white,
                                                 borderRadius: BorderRadius.circular(8),
+                                                boxShadow: defaultBoxShadow(),
                                               ),
-                                              child: Text(
-                                                'Join now',
-                                                style: primaryTextStyle(color: white),
+                                              child: Column(
+                                                children: [
+                                                  Image.asset(
+                                                    AppAssets.login_background,
+                                                    height: 100,
+                                                    width: 100,
+                                                  ),
+                                                  Gap.k16.height,
+                                                  Text(
+                                                    "Let's join the first tournament",
+                                                    style: primaryTextStyle(size: 14),
+                                                    textAlign: TextAlign.center,
+                                                  ),
+                                                  Gap.k16.height,
+                                                  Container(
+                                                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                                                    decoration: BoxDecoration(
+                                                      color: primaryColor,
+                                                      borderRadius: BorderRadius.circular(8),
+                                                    ),
+                                                    child: Text(
+                                                      'Join now',
+                                                      style: primaryTextStyle(color: white),
+                                                    ),
+                                                  ).onTap(() {
+                                                    Navigator.pushNamed(context, SeeAllTournamentScreen.routeName, arguments: 'open');
+                                                  })
+                                                ],
                                               ),
-                                            ).onTap((){
-                                              Navigator.pushNamed(context, SeeAllTournamentScreen.routeName, arguments: 'open');
-                                            
-                                            })
+                                            ),
                                           ],
-                                        ),
-                                      ),
-                                    ],
-                                  );
+                                        );
                                 }
                               }
                               return const SizedBox.shrink();
@@ -425,8 +424,8 @@ class _ProfileFragmentState extends State<ProfileFragment> {
                         onPressed: () async {
                           await setValue(AppConstant.TOKEN_KEY, '');
                           UserRepo.user = User();
+                          // ignore: use_build_context_synchronously
                           Navigator.pushReplacementNamed(context, DashboardScreen.routeName, arguments: 0);
-
                         },
                         child: const Text('Logout'),
                       ),

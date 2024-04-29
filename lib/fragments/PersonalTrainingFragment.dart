@@ -8,6 +8,8 @@ import 'package:running_community_mobile/utils/app_assets.dart';
 import 'package:running_community_mobile/utils/gap.dart';
 import 'package:running_community_mobile/widgets/AppBar.dart';
 
+import '../domain/repositories/user_repo.dart';
+
 class PersonalTrainingFragment extends StatelessWidget {
   const PersonalTrainingFragment({super.key});
 
@@ -15,7 +17,15 @@ class PersonalTrainingFragment extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: const MyAppBar(title: 'Personal Training'),
-      body: BlocProvider<ExerciseCubit>(
+      body: UserRepo.user.status != 'Active'
+              ? Center(
+                  child: Text(
+                    'Your account has been blocked, you cannot access this function',
+                    style: boldTextStyle(),
+                    textAlign: TextAlign.center,
+                  ),
+                ).paddingSymmetric(horizontal: 16)
+              : BlocProvider<ExerciseCubit>(
         create: (context) => ExerciseCubit()..getExercises(),
         child: BlocBuilder<ExerciseCubit, ExerciseState>(
           builder: (context, state) {

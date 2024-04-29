@@ -5,6 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:intl/intl.dart';
 import 'package:nb_utils/nb_utils.dart';
+import 'package:running_community_mobile/domain/repositories/user_repo.dart';
 
 import '../cubit/tournament/tournament_cubit.dart';
 import '../cubit/tournament/tournament_state.dart';
@@ -78,135 +79,146 @@ class _HomeFragmentState extends State<HomeFragment> {
               create: (context) => TournamentCubit()..getTournaments(),
             ),
           ],
-          child: SingleChildScrollView(
-            physics: const AlwaysScrollableScrollPhysics(),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                BlocConsumer<TournamentCubit, TournamentState>(listener: (context, state) {
-                  if (state is TournamentSuccessState) {
-                    setState(() {
-                      pageSize = state.tournaments.tournaments!.where((t) => DateTime.parse(t.registerDuration!).isAfter(DateTime.now())).toList().length;
-                    });
-                    Timer.periodic(const Duration(seconds: 3), (Timer timer) {
-                      if (_currentPage < pageSize! - 1) {
-                        _currentPage++;
-                      } else {
-                        _currentPage = 0;
-                      }
+          child: UserRepo.user.status != 'Active'
+              ? Center(
+                  child: Text(
+                    'Your account has been blocked, you cannot access this function',
+                    style: boldTextStyle(),
+                    textAlign: TextAlign.center,
+                  ),
+                ).paddingSymmetric(horizontal: 16)
+              : SingleChildScrollView(
+                  physics: const AlwaysScrollableScrollPhysics(),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      BlocConsumer<TournamentCubit, TournamentState>(listener: (context, state) {
+                        if (state is TournamentSuccessState) {
+                          setState(() {
+                            pageSize = state.tournaments.tournaments!.where((t) => DateTime.parse(t.registerDuration!).isAfter(DateTime.now())).toList().length;
+                          });
+                          Timer.periodic(const Duration(seconds: 3), (Timer timer) {
+                            if (_currentPage < pageSize! - 1) {
+                              _currentPage++;
+                            } else {
+                              _currentPage = 0;
+                            }
 
-                      _pageController.animateToPage(
-                        _currentPage,
-                        duration: const Duration(milliseconds: 400),
-                        curve: Curves.easeInOut,
-                      );
-                    });
-                  }
-                }, builder: (context, state) {
-                  if (state is TournamentSuccessState) {
-                    var tournaments = state.tournaments.tournaments!.where((t) => DateTime.parse(t.registerDuration!).isAfter(DateTime.now())).toList();
-                    return tournaments.isNotEmpty ? Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          'Open Tournaments',
-                          style: boldTextStyle(),
-                        ).paddingLeft(16),
-                        Gap.k16.height,
-                        SizedBox(
-                          height: 350,
-                          child: PageView.builder(
-                            controller: _pageController,
-                            itemCount: tournaments.length,
-                            itemBuilder: (BuildContext context, int index) {
-                              return Container(
-                                margin: const EdgeInsets.only(bottom: 16, right: 16, left: 16),
-                                padding: const EdgeInsets.only(bottom: 16),
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(16),
-                                  color: white,
-                                  boxShadow: defaultBoxShadow(),
-                                ),
-                                child: Column(
+                            _pageController.animateToPage(
+                              _currentPage,
+                              duration: const Duration(milliseconds: 400),
+                              curve: Curves.easeInOut,
+                            );
+                          });
+                        }
+                      }, builder: (context, state) {
+                        if (state is TournamentSuccessState) {
+                          var tournaments = state.tournaments.tournaments!.where((t) => DateTime.parse(t.registerDuration!).isAfter(DateTime.now())).toList();
+                          return tournaments.isNotEmpty
+                              ? Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    ClipRRect(
-                                        borderRadius: const BorderRadius.vertical(top: Radius.circular(16)),
-                                        child: FadeInImage.assetNetwork(
-                                          placeholder: AppAssets.placeholder,
-                                          image: tournaments[index].thumbnailUrl!,
-                                          height: 150,
-                                          width: context.width(),
-                                          fit: BoxFit.cover,
-                                        )),
-                                    Gap.k8.height,
-                                    SizedBox(
-                                        width: context.width() * 0.8,
-                                        child: Text(
-                                          tournaments[index].title!,
-                                          style: boldTextStyle(size: 20),
-                                          overflow: TextOverflow.ellipsis,
-                                        ).paddingLeft(16)),
-                                    const Spacer(),
-                                    Row(
-                                      children: [
-                                        SvgPicture.asset(AppAssets.calendar, height: 16, width: 16, color: gray),
-                                        Gap.k4.width,
-                                        Text(
-                                          '${DateFormat('dd/MM/yyyy').format(DateTime.parse(tournaments[index].startTime!))} to ${DateFormat('dd/MM/yyyy').format(DateTime.parse(tournaments[index].endTime!))}',
-                                          style: primaryTextStyle(),
-                                        )
-                                      ],
+                                    Text(
+                                      'Open Tournaments',
+                                      style: boldTextStyle(),
                                     ).paddingLeft(16),
-                                    const Spacer(),
+                                    Gap.k16.height,
                                     SizedBox(
-                                      height: 50,
-                                      child: Text(
-                                        tournaments[index].description!,
-                                        style: primaryTextStyle(),
-                                        overflow: TextOverflow.ellipsis,
-                                        maxLines: 2,
-                                      ).paddingSymmetric(horizontal: 16),
+                                      height: 350,
+                                      child: PageView.builder(
+                                        controller: _pageController,
+                                        itemCount: tournaments.length,
+                                        itemBuilder: (BuildContext context, int index) {
+                                          return Container(
+                                            margin: const EdgeInsets.only(bottom: 16, right: 16, left: 16),
+                                            padding: const EdgeInsets.only(bottom: 16),
+                                            decoration: BoxDecoration(
+                                              borderRadius: BorderRadius.circular(16),
+                                              color: white,
+                                              boxShadow: defaultBoxShadow(),
+                                            ),
+                                            child: Column(
+                                              crossAxisAlignment: CrossAxisAlignment.start,
+                                              children: [
+                                                ClipRRect(
+                                                    borderRadius: const BorderRadius.vertical(top: Radius.circular(16)),
+                                                    child: FadeInImage.assetNetwork(
+                                                      placeholder: AppAssets.placeholder,
+                                                      image: tournaments[index].thumbnailUrl!,
+                                                      height: 150,
+                                                      width: context.width(),
+                                                      fit: BoxFit.cover,
+                                                    )),
+                                                Gap.k8.height,
+                                                SizedBox(
+                                                    width: context.width() * 0.8,
+                                                    child: Text(
+                                                      tournaments[index].title!,
+                                                      style: boldTextStyle(size: 20),
+                                                      overflow: TextOverflow.ellipsis,
+                                                    ).paddingLeft(16)),
+                                                const Spacer(),
+                                                Row(
+                                                  children: [
+                                                    SvgPicture.asset(AppAssets.calendar, height: 16, width: 16, color: gray),
+                                                    Gap.k4.width,
+                                                    Text(
+                                                      '${DateFormat('dd/MM/yyyy').format(DateTime.parse(tournaments[index].startTime!))} to ${DateFormat('dd/MM/yyyy').format(DateTime.parse(tournaments[index].endTime!))}',
+                                                      style: primaryTextStyle(),
+                                                    )
+                                                  ],
+                                                ).paddingLeft(16),
+                                                const Spacer(),
+                                                SizedBox(
+                                                  height: 50,
+                                                  child: Text(
+                                                    tournaments[index].description!,
+                                                    style: primaryTextStyle(),
+                                                    overflow: TextOverflow.ellipsis,
+                                                    maxLines: 2,
+                                                  ).paddingSymmetric(horizontal: 16),
+                                                ),
+                                                const Spacer(),
+                                                Row(
+                                                  mainAxisAlignment: MainAxisAlignment.end,
+                                                  children: [
+                                                    Gap.k16.width,
+                                                    Text(tournaments[index].fee == 0 ? 'Free' : '${NumberFormat('#,##0', 'en_US').format(tournaments[index].fee)} đ',
+                                                        style: boldTextStyle(color: primaryColor, size: 16)),
+                                                    const Spacer(),
+                                                    Container(
+                                                      decoration: BoxDecoration(
+                                                        borderRadius: BorderRadius.circular(8),
+                                                        color: primaryColor,
+                                                      ),
+                                                      child: Text(
+                                                        'View detail',
+                                                        style: boldTextStyle(color: white, size: 14),
+                                                      ).paddingSymmetric(horizontal: 32, vertical: 4),
+                                                    ).paddingSymmetric(horizontal: 16).onTap(() {
+                                                      Navigator.pushNamed(context, TournamentDetailScreen.routeName, arguments: tournaments[index].id);
+                                                    }),
+                                                  ],
+                                                ),
+                                              ],
+                                            ),
+                                          );
+                                        },
+                                      ),
                                     ),
-                                    const Spacer(),
                                     Row(
-                                      mainAxisAlignment: MainAxisAlignment.end,
-                                      children: [
-                                        Gap.k16.width,
-                                        Text(tournaments[index].fee == 0 ? 'Free' : '${NumberFormat('#,##0', 'en_US').format(tournaments[index].fee)} đ', style: boldTextStyle(color: primaryColor, size: 16)),
-                                        Spacer(),
-                                        Container(
-                                          decoration: BoxDecoration(
-                                            borderRadius: BorderRadius.circular(8),
-                                            color: primaryColor,
-                                          ),
-                                          child: Text(
-                                            'View detail',
-                                            style: boldTextStyle(color: white, size: 14),
-                                          ).paddingSymmetric(horizontal: 32, vertical: 4),
-                                        ).paddingSymmetric(horizontal: 16).onTap(() {
-                                          Navigator.pushNamed(context, TournamentDetailScreen.routeName, arguments: tournaments[index].id);
-                                        }),
-                                      ],
+                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      children: _buildPageIndicator(),
                                     ),
                                   ],
-                                ),
-                              );
-                            },
-                          ),
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: _buildPageIndicator(),
-                        ),
-                      ],
-                    ) : const Center(child: Text('No open tournament'));
-                  }
-                  return const SizedBox.shrink();
-                }),
-              ],
-            ),
-          ),
+                                )
+                              : const Center(child: Text('No open tournament'));
+                        }
+                        return const SizedBox.shrink();
+                      }),
+                    ],
+                  ),
+                ),
         ));
   }
 }
