@@ -75,6 +75,7 @@ class _GroupDetailScreenState extends State<GroupDetailScreen> {
                 }
                 if (state is GetGroupSuccessState) {
                   var group = state.group;
+                  group.groupMembers!.sort((a, b) => b.role!.compareTo(a.role!));
                   return SingleChildScrollView(
                     physics: const AlwaysScrollableScrollPhysics(),
                     child: Column(
@@ -200,11 +201,11 @@ class _GroupDetailScreenState extends State<GroupDetailScreen> {
                               ],
                             ),
                             Gap.kSection.height,
-                            ListView.separated(
+                            group.groupMembers!.any((m) => m.user == UserRepo.user) ? ListView.separated(
                                 shrinkWrap: true,
                                 itemBuilder: (context, index) => MemberWidget(member: group.groupMembers![index]),
                                 separatorBuilder: (context, index) => const Divider(),
-                                itemCount: group.groupMembers!.length)
+                                itemCount: group.groupMembers!.length) : Text('You are not a member of this group. Please join to see the members list.', style: primaryTextStyle(size: 16))
                           ],
                         ).paddingSymmetric(horizontal: 16)
                       ],
