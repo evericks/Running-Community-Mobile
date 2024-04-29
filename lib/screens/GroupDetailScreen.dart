@@ -54,7 +54,8 @@ class _GroupDetailScreenState extends State<GroupDetailScreen> {
                 if (state is JoinGroupSuccessState) {
                   hideLoader(context);
                   Fluttertoast.showToast(msg: 'Joined group successfully');
-                  context.read<GroupCubit>().getGroupById(widget.id);
+                  // context.read<GroupCubit>().getGroupById(widget.id);
+                  Navigator.pushReplacementNamed(context, PostsScreen.routeName, arguments: widget.id);
                 }
                 if (state is JoinGroupFailedState) {
                   ScaffoldMessenger.of(context).showSnackBar(SnackBar(
@@ -119,7 +120,6 @@ class _GroupDetailScreenState extends State<GroupDetailScreen> {
                                           ).onTap(() {
                                             if (!group.groupMembers!.any((mem) => mem.user!.id == UserRepo.user.id)) {
                                               context.read<GroupCubit>().joinGroup(userId: UserRepo.user.id!, groupId: group.id!);
-                                              Navigator.pushReplacementNamed(context, PostsScreen.routeName, arguments: group.id);
                                             }
                                           }))
                                       : Positioned(
@@ -144,7 +144,6 @@ class _GroupDetailScreenState extends State<GroupDetailScreen> {
                                               ));
                                             } else {
                                               context.read<GroupCubit>().joinGroup(userId: UserRepo.user.id!, groupId: group.id!);
-                                              Navigator.pushReplacementNamed(context, PostsScreen.routeName, arguments: group.id);
                                             }
                                           })),
                             ],
