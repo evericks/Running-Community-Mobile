@@ -35,6 +35,7 @@ class _PostsScreenState extends State<PostsScreen> {
   String? role;
   bool isLiked = false;
   int likeCount = 0;
+  String? memStatus;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -71,12 +72,13 @@ class _PostsScreenState extends State<PostsScreen> {
             if (state is GetGroupSuccessState) {
               group = state.group;
               role = group!.groupMembers!.firstWhere((mem) => mem.user!.id == UserRepo.user.id).role;
+              memStatus = group!.groupMembers!.firstWhere((mem) => mem.user!.id == UserRepo.user.id).status;
             }
             return RefreshIndicator(
               onRefresh: () async {
                 context.read<PostCubit>().getPosts(groupId: widget.groupId);
               },
-              child: SingleChildScrollView(
+              child: memStatus == 'Active' ? SingleChildScrollView(
                 physics: AlwaysScrollableScrollPhysics(),
                 child: Column(
                   children: [
@@ -241,6 +243,8 @@ class _PostsScreenState extends State<PostsScreen> {
                     })
                   ],
                 ),
+              ) : Center(
+                child: Text('You currently cannot access this group', style: boldTextStyle(size: 16)),
               ),
             );
           })),
