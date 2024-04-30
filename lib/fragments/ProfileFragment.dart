@@ -361,7 +361,7 @@ class _ProfileFragmentState extends State<ProfileFragment> {
                                     ],
                                   );
                                 } else {
-                                  return UserRepo.user.status != 'Active'
+                                  return (UserRepo.user.status != 'Active' && UserRepo.user.id != null)
                                       ? Center(
                                           child: Text(
                                             'Your account has been blocked, you cannot access this function',

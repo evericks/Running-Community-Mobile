@@ -30,7 +30,7 @@ class _GroupFragmentState extends State<GroupFragment> {
       appBar: const MyAppBar(
         title: 'Group',
       ),
-      body: UserRepo.user.status != 'Active'
+      body: (UserRepo.user.status != 'Active' && UserRepo.user.id != null)
               ? Center(
                   child: Text(
                     'Your account has been blocked, you cannot access this function',

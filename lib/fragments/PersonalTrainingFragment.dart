@@ -17,7 +17,7 @@ class PersonalTrainingFragment extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: const MyAppBar(title: 'Personal Training'),
-      body: UserRepo.user.status != 'Active'
+      body: (UserRepo.user.status != 'Active' && UserRepo.user.id != null)
               ? Center(
                   child: Text(
                     'Your account has been blocked, you cannot access this function',

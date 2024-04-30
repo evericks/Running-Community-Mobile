@@ -79,7 +79,7 @@ class _HomeFragmentState extends State<HomeFragment> {
               create: (context) => TournamentCubit()..getTournaments(),
             ),
           ],
-          child: UserRepo.user.status != 'Active'
+          child: (UserRepo.user.status != 'Active' && UserRepo.user.id != null)
               ? Center(
                   child: Text(
                     'Your account has been blocked, you cannot access this function',
