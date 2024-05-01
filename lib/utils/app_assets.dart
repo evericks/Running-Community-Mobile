@@ -29,4 +29,5 @@ class AppAssets {
   static const String magnifying_glass = 'assets/icons/magnifying-glass.svg';
   static const String qr = 'assets/icons/qr.svg';
   static const String bell = 'assets/icons/bell.svg';
+  static const String flag = 'assets/icons/flag.svg';
 }

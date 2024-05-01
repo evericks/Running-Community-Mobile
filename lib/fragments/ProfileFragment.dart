@@ -11,6 +11,7 @@ import 'package:running_community_mobile/cubit/tournament/tournament_cubit.dart'
 import 'package:running_community_mobile/cubit/tournament/tournament_state.dart';
 import 'package:running_community_mobile/cubit/user/user_cubit.dart';
 import 'package:running_community_mobile/cubit/user/user_state.dart';
+import 'package:running_community_mobile/domain/models/tournaments.dart';
 import 'package:running_community_mobile/domain/repositories/user_repo.dart';
 import 'package:running_community_mobile/screens/DashboardScreen.dart';
 import 'package:running_community_mobile/screens/LoginScreen.dart';
@@ -34,6 +35,7 @@ class ProfileFragment extends StatefulWidget {
 
 class _ProfileFragmentState extends State<ProfileFragment> {
   int _selectedIndex = 0;
+  List<Tournament> completedTournament = [];
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -88,7 +90,7 @@ class _ProfileFragmentState extends State<ProfileFragment> {
                     ).paddingSymmetric(horizontal: 32),
                     Gap.k16.height,
                     SizedBox(
-                      height: 50,
+                      height: 38,
                       child: Stack(
                         children: [
                           Positioned(
@@ -98,7 +100,7 @@ class _ProfileFragmentState extends State<ProfileFragment> {
                               padding: const EdgeInsets.all(8.0),
                               child: Container(
                                 // width: context.width() * 0.2,
-                                padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
+                                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                                 decoration: BoxDecoration(
                                   color: _selectedIndex == 0 ? white : context.scaffoldBackgroundColor,
                                   borderRadius: BorderRadius.circular(8),
@@ -113,14 +115,15 @@ class _ProfileFragmentState extends State<ProfileFragment> {
                                 ),
                                 child: SvgPicture.asset(
                                   AppAssets.info,
-                                  width: 24,
+                                  height: 20,
+                                  width: 20,
                                   color: _selectedIndex == 0 ? primaryColor : textSecondaryColor,
                                 ),
                               ).onTap(() => setState(() => _selectedIndex = 0)),
                             ),
                           ),
                           Positioned(
-                              left: 90,
+                              left: 55,
                               child: Padding(
                                 padding: const EdgeInsets.all(8.0),
                                 child: Container(
@@ -136,10 +139,11 @@ class _ProfileFragmentState extends State<ProfileFragment> {
                                       )
                                     ],
                                   ),
-                                  padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
+                                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                                   child: SvgPicture.asset(
                                     AppAssets.trophy,
-                                    width: 24,
+                                    height: 20,
+                                    width: 20,
                                     color: _selectedIndex == 1 ? primaryColor : textSecondaryColor,
                                   ),
                                 ),
@@ -147,7 +151,7 @@ class _ProfileFragmentState extends State<ProfileFragment> {
                                 () => setState(() => _selectedIndex = 1),
                               )),
                           Positioned(
-                              left: 180,
+                              left: 110,
                               child: Padding(
                                 padding: const EdgeInsets.all(8.0),
                                 child: Container(
@@ -164,19 +168,49 @@ class _ProfileFragmentState extends State<ProfileFragment> {
                                     ],
                                   ),
                                   // width: context.width() * 0.2,
-                                  padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
+                                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                                   child: SvgPicture.asset(
                                     AppAssets.signature,
-                                    width: 24,
+                                    height: 20,
+                                    width: 20,
                                     color: _selectedIndex == 2 ? primaryColor : textSecondaryColor,
                                   ),
                                 ),
                               ).onTap(
                                 () => setState(() => _selectedIndex = 2),
                               )),
+                          // Positioned(
+                          //     left: 167,
+                          //     child: Padding(
+                          //       padding: const EdgeInsets.all(8.0),
+                          //       child: Container(
+                          //         decoration: BoxDecoration(
+                          //           color: _selectedIndex == 3 ? white : context.scaffoldBackgroundColor,
+                          //           borderRadius: BorderRadius.circular(8),
+                          //           boxShadow: [
+                          //             BoxShadow(
+                          //               color: Colors.grey.withOpacity(0.5),
+                          //               spreadRadius: 1,
+                          //               blurRadius: 7,
+                          //               offset: const Offset(0, 3), // changes position of shadow
+                          //             )
+                          //           ],
+                          //         ),
+                          //         // width: context.width() * 0.2,
+                          //         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                          //         child: SvgPicture.asset(
+                          //           AppAssets.flag,
+                          //           height: 20,
+                          //           width: 20,
+                          //           color: _selectedIndex == 3 ? primaryColor : textSecondaryColor,
+                          //         ),
+                          //       ),
+                          //     ).onTap(
+                          //       () => setState(() => _selectedIndex = 3),
+                          //     )),
                         ],
                       ),
-                    ).paddingSymmetric(horizontal: 32),
+                    ).paddingSymmetric(horizontal: 16),
                     Container(
                       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
                       color: white,
@@ -186,7 +220,7 @@ class _ProfileFragmentState extends State<ProfileFragment> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              'Email: ${userProfile.address}',
+                              'Address: ${userProfile.address}',
                               style: secondaryTextStyle(),
                             ),
                             Text(
@@ -271,6 +305,9 @@ class _ProfileFragmentState extends State<ProfileFragment> {
                               }
                               if (state is GetTournamentAttendedSuccessState) {
                                 var tournaments = state.tournaments.tournaments!;
+                                // setState(() {
+                                //   completedTournament = tournaments.where((t) => t.);
+                                // });
                                 if (tournaments.isNotEmpty) {
                                   return Column(
                                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -279,80 +316,7 @@ class _ProfileFragmentState extends State<ProfileFragment> {
                                           shrinkWrap: true,
                                           physics: const AlwaysScrollableScrollPhysics(),
                                           itemBuilder: (context, index) {
-                                            return Container(
-                                              height: 90,
-                                              decoration: BoxDecoration(
-                                                color: white,
-                                                borderRadius: BorderRadius.circular(8),
-                                                boxShadow: [
-                                                  BoxShadow(
-                                                    color: Colors.grey.withOpacity(0.5),
-                                                    spreadRadius: 1,
-                                                    blurRadius: 7,
-                                                    offset: const Offset(0, 3), // changes position of shadow
-                                                  )
-                                                ],
-                                              ),
-                                              child: Row(
-                                                children: [
-                                                  FractionallySizedBox(
-                                                    heightFactor: 1,
-                                                    child: ClipRRect(
-                                                      borderRadius: const BorderRadius.only(topLeft: Radius.circular(8), bottomLeft: Radius.circular(8)),
-                                                      child: FadeInImage.assetNetwork(
-                                                        placeholder: AppAssets.placeholder,
-                                                        image: tournaments[index].thumbnailUrl!,
-                                                        // height: 60,
-                                                        width: 90,
-                                                        fit: BoxFit.cover,
-                                                      ),
-                                                    ),
-                                                  ),
-                                                  Gap.k16.width,
-                                                  Column(
-                                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                                    children: [
-                                                      Text(
-                                                        tournaments[index].title!,
-                                                        style: primaryTextStyle(),
-                                                        maxLines: 2,
-                                                      ),
-                                                      Gap.k4.height,
-                                                      Row(
-                                                        children: [
-                                                          SvgPicture.asset(
-                                                            AppAssets.calendar,
-                                                            width: 16,
-                                                            color: textSecondaryColor,
-                                                          ),
-                                                          Gap.k8.width,
-                                                          Text(
-                                                            '${DateFormat('dd-MM-yyyy').format(DateTime.parse(tournaments[index].startTime!))} - ${DateFormat('dd-MM-yyyy').format(DateTime.parse(tournaments[index].endTime!))}',
-                                                            style: secondaryTextStyle(),
-                                                          ),
-                                                        ],
-                                                      ),
-                                                      Gap.k4.height,
-                                                      Row(
-                                                        children: [
-                                                          SvgPicture.asset(
-                                                            AppAssets.ruler,
-                                                            width: 16,
-                                                            color: textSecondaryColor,
-                                                          ),
-                                                          Gap.k8.width,
-                                                          Text(
-                                                            '${tournaments[index].distance} km',
-                                                            style: secondaryTextStyle(),
-                                                          ),
-                                                        ],
-                                                      ),
-                                                      // Text('Rank: ${tournaments[index].rank!}', style: secondaryTextStyle(),),
-                                                    ],
-                                                  ).paddingAll(8).expand(),
-                                                ],
-                                              ),
-                                            ).onTap(() {
+                                            return TournamentWidget(tournaments: tournaments[index]).onTap(() {
                                               Navigator.pushNamed(context, TournamentDetailScreen.routeName, arguments: tournaments[index].id);
                                             });
                                           },
@@ -416,7 +380,7 @@ class _ProfileFragmentState extends State<ProfileFragment> {
                               return const SizedBox.shrink();
                             },
                           ),
-                        )
+                        ),
                       ].elementAt(_selectedIndex),
                     ).expand(),
                     Center(
@@ -449,6 +413,93 @@ class _ProfileFragmentState extends State<ProfileFragment> {
                 ]),
               ),
             ),
+    );
+  }
+}
+
+class TournamentWidget extends StatelessWidget {
+  const TournamentWidget({
+    super.key,
+    required this.tournaments,
+  });
+
+  final Tournament tournaments;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: 90,
+      decoration: BoxDecoration(
+        color: white,
+        borderRadius: BorderRadius.circular(8),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.grey.withOpacity(0.5),
+            spreadRadius: 1,
+            blurRadius: 7,
+            offset: const Offset(0, 3), // changes position of shadow
+          )
+        ],
+      ),
+      child: Row(
+        children: [
+          FractionallySizedBox(
+            heightFactor: 1,
+            child: ClipRRect(
+              borderRadius: const BorderRadius.only(topLeft: Radius.circular(8), bottomLeft: Radius.circular(8)),
+              child: FadeInImage.assetNetwork(
+                placeholder: AppAssets.placeholder,
+                image: tournaments.thumbnailUrl!,
+                // height: 60,
+                width: 90,
+                fit: BoxFit.cover,
+              ),
+            ),
+          ),
+          Gap.k16.width,
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                tournaments.title!,
+                style: primaryTextStyle(),
+                maxLines: 2,
+              ),
+              Gap.k4.height,
+              Row(
+                children: [
+                  SvgPicture.asset(
+                    AppAssets.calendar,
+                    width: 16,
+                    color: textSecondaryColor,
+                  ),
+                  Gap.k8.width,
+                  Text(
+                    '${DateFormat('dd-MM-yyyy').format(DateTime.parse(tournaments.startTime!))} - ${DateFormat('dd-MM-yyyy').format(DateTime.parse(tournaments.endTime!))}',
+                    style: secondaryTextStyle(),
+                  ),
+                ],
+              ),
+              Gap.k4.height,
+              Row(
+                children: [
+                  SvgPicture.asset(
+                    AppAssets.ruler,
+                    width: 16,
+                    color: textSecondaryColor,
+                  ),
+                  Gap.k8.width,
+                  Text(
+                    '${tournaments.distance} km',
+                    style: secondaryTextStyle(),
+                  ),
+                ],
+              ),
+              // Text('Rank: ${tournaments.rank!}', style: secondaryTextStyle(),),
+            ],
+          ).paddingAll(8).expand(),
+        ],
+      ),
     );
   }
 }
