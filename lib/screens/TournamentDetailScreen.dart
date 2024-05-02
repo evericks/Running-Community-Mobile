@@ -287,7 +287,7 @@ class _TournamentDetailScreenState extends State<TournamentDetailScreen> {
 
 Future<Uint8List> generateQRCode(String tournamentId, String userId) async {
   ui.PictureRecorder recorder = ui.PictureRecorder();
-  final qrValidationResult = QrValidator.validate(data: 'tournamentId=$tournamentId&userId=$userId', version: QrVersions.auto, errorCorrectionLevel: QrErrorCorrectLevel.L);
+  final qrValidationResult = QrValidator.validate(data: '$tournamentId,$userId', version: QrVersions.auto, errorCorrectionLevel: QrErrorCorrectLevel.L);
 
   if (!qrValidationResult.isValid) {
     throw Exception('Failed to generate QR code');
