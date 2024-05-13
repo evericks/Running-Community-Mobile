@@ -1,5 +1,7 @@
 import 'package:running_community_mobile/domain/models/exercises.dart';
 
+import '../../domain/models/user_exercise_item.dart';
+
 class ExerciseState {}
 
 class ExercisesLoadingState extends ExerciseState {}
@@ -36,4 +38,25 @@ class GetExerciseItemByIdSuccessState extends ExerciseState {
 class GetExerciseItemByIdFailedState extends ExerciseState {
   final String error;
   GetExerciseItemByIdFailedState(this.error);
+}
+
+class MarkExerciseAsDoneLoadingState extends ExerciseState {}
+
+class MarkExerciseAsDoneSuccessState extends ExerciseState {}
+
+class MarkExerciseAsDoneFailedState extends ExerciseState {
+  final String error;
+  MarkExerciseAsDoneFailedState(this.error);
+}
+
+class GetUserExerciseItemLoadingState extends ExerciseState {}
+
+class GetUserExerciseItemSuccessState extends ExerciseState {
+  final List<UserExerciseItem> userExerciseItems;
+  GetUserExerciseItemSuccessState(this.userExerciseItems);
+}
+
+class GetUserExerciseItemFailedState extends ExerciseState {
+  final String error;
+  GetUserExerciseItemFailedState(this.error);
 }

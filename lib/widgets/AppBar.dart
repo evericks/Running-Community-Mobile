@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:nb_utils/nb_utils.dart';
 import 'package:running_community_mobile/utils/app_assets.dart';
 import 'package:badges/badges.dart' as badges;
+import 'package:running_community_mobile/utils/app_shared.dart';
 
 class MyAppBar extends StatelessWidget implements PreferredSizeWidget {
   final String title;
@@ -28,10 +30,26 @@ class MyAppBar extends StatelessWidget implements PreferredSizeWidget {
   @override
   Widget build(BuildContext context) {
     List<Widget> defaultActions = [
-      badges.Badge(
-        position: badges.BadgePosition.topEnd(top: -10, end: 10),
-        badgeContent: Text('3', style: secondaryTextStyle(size: 10, color: white),),
-        child: SvgPicture.asset(AppAssets.bell, color: gray, width: 16,).paddingSymmetric(horizontal: 16),
+      GestureDetector(
+        onTap: () => Navigator.pushNamed(context, '/notification'),
+        child: badges.Badge(
+          position: badges.BadgePosition.topEnd(top: -10, end: 10),
+          badgeContent: StreamBuilder<int>(
+            stream: watchCountNotify(),
+            builder: (context, snapshot) {
+              int value = snapshot.data ?? 0;
+              if (value > 0) {
+              return Text(value.toString(), style: secondaryTextStyle(size: 10, color: white),);
+                
+              }
+              else{
+        
+                return const SizedBox.shrink();
+              }
+            }
+          ),
+          child: SvgPicture.asset(AppAssets.bell, color: gray, width: 16,).paddingSymmetric(horizontal: 16),
+        ),
       ),
     ];
 
@@ -50,23 +68,9 @@ class MyAppBar extends StatelessWidget implements PreferredSizeWidget {
       centerTitle: centerTitle ?? true,
       elevation: elevation,
       bottom: bottom,
-      leading: leadingIcon != null ? Container(
-        decoration: BoxDecoration(
-          shape: BoxShape.circle,
-          color: Colors.white,
-          boxShadow: [
-            BoxShadow(
-              color: Colors.grey.withOpacity(0.5),
-              spreadRadius: 1,
-              blurRadius: 3,
-              offset: const Offset(0, 1), // changes position of shadow
-            ),
-          ],
-        ),
-        child: SvgPicture.asset(leadingIcon!, color: leadingIconColor ?? textPrimaryColor).onTap(() {
-          Navigator.pop(context, isRefresh);
-        },).paddingSymmetric(vertical: 18),
-      ).paddingLeft(16) : null,
+      leading: leadingIcon != null ? SvgPicture.asset(leadingIcon!, color: leadingIconColor ?? textPrimaryColor).onTap(() {
+        Navigator.pop(context, isRefresh);
+      },).paddingSymmetric(vertical: 18).paddingLeft(16) : null,
     );
   }
 

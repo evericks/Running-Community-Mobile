@@ -5,6 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:nb_utils/nb_utils.dart';
 import 'package:running_community_mobile/cubit/user/user_cubit.dart';
 import 'package:running_community_mobile/cubit/user/user_state.dart';
+import 'package:running_community_mobile/domain/repositories/user_repo.dart';
 import 'package:running_community_mobile/screens/DashboardScreen.dart';
 import 'package:running_community_mobile/utils/app_assets.dart';
 import 'package:running_community_mobile/utils/colors.dart';
@@ -34,6 +35,7 @@ class _LoginScreenState extends State<LoginScreen> {
         child: BlocConsumer<UserCubit, UserState>(
           listener: (context, state) {
             if (state is LoginSuccessState) {
+              UserRepo().sendDeviceToken();
               Navigator.pop(context);
               Navigator.pushReplacementNamed(context, DashboardScreen.routeName, arguments: 0);
             } else if (state is LoginFailedState) {

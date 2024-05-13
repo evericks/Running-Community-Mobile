@@ -36,7 +36,7 @@ class PersonalTrainingFragment extends StatelessWidget {
               return ListView.separated(
                 padding: const EdgeInsets.symmetric(horizontal: 16),
                 itemCount: exercises!.length,
-                separatorBuilder: (context, index) => Gap.k8.height,
+                separatorBuilder: (context, index) => Gap.k16.height,
                 itemBuilder: (context, index) {
                   return Container(
                     decoration: BoxDecoration(
@@ -53,7 +53,7 @@ class PersonalTrainingFragment extends StatelessWidget {
                     
                     ),
                       width: context.width(),
-                      height: context.width() * 3/4,
+                      height: context.width() * 3/5,
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [

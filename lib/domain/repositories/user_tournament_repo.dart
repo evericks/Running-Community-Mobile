@@ -10,10 +10,10 @@ class UserTournamentRepo {
   Future<UsersTournament> getUsersTournament ({String? tournamentId, String? status, int? pageNumber, int? pageSize}) async {
     try {
       Map<String, dynamic> queryParameters = {
-        'tournamentId': tournamentId,
-        'status': status,
-        'pageNumber': pageNumber,
-        'pageSize': pageSize
+        if(tournamentId != null) 'tournamentId': tournamentId,
+        if(status != null) 'status': status,
+        if(pageNumber != null) 'pageNumber': pageNumber,
+        if(pageSize != null) 'pageSize': pageSize
       };
       var res = await _apiClient.get('/api/user-tournaments', queryParameters: queryParameters);
       return UsersTournament.fromJson(res.data);

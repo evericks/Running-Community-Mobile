@@ -11,12 +11,14 @@ import 'package:nb_utils/nb_utils.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import 'package:running_community_mobile/cubit/tournament/tournament_state.dart';
+import 'package:running_community_mobile/cubit/user_tournament/user_tournament_cubit.dart';
 import 'package:running_community_mobile/domain/repositories/user_repo.dart';
 import 'package:running_community_mobile/utils/colors.dart';
 import 'package:running_community_mobile/utils/gap.dart';
 import 'package:running_community_mobile/widgets/AppBar.dart';
 
 import '../cubit/tournament/tournament_cubit.dart';
+import '../cubit/user_tournament/user_tournament_state.dart';
 import '../utils/app_assets.dart';
 import '../widgets/TimeCard.dart';
 import 'PaymentScreen.dart';
@@ -36,6 +38,7 @@ class _TournamentDetailScreenState extends State<TournamentDetailScreen> {
   Timer? timer;
   bool isAttended = false;
   File? qrCodeImage;
+  int memberQuantity = 0;
 
   void startTimer() {
     timer = Timer.periodic(const Duration(seconds: 1), (_) {
@@ -132,6 +135,7 @@ class _TournamentDetailScreenState extends State<TournamentDetailScreen> {
               var endTime = DateTime.parse(tournament.endTime!);
               duration = endTime.difference(DateTime.now());
               // context.read<TournamentCubit>().getTournamentsAttended();
+              setState(() {});
             }
             if (state is GetTournamentAttendedSuccessState) {
               context.read<TournamentCubit>().getTournamentById(widget.id);
@@ -211,53 +215,88 @@ class _TournamentDetailScreenState extends State<TournamentDetailScreen> {
                     ).paddingLeft(16),
                     Gap.k16.height,
                     const Divider(),
-                    if (DateTime.now().isBefore(DateTime.parse(tournament.registerDuration!)) && !isAttended) ...[
-                      Gap.k16.height,
-                      Text('Registration time remaining', style: boldTextStyle(size: 16)).paddingLeft(16),
-                      Gap.k8.height,
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: <Widget>[
-                          buildTimeCard(time: days, header: 'Ngày'),
-                          Spacer(),
-                          buildTimeCard(time: hours, header: 'Giờ'),
-                          Spacer(),
-                          buildTimeCard(time: minutes, header: 'Phút'),
-                          Spacer(),
-                          buildTimeCard(time: seconds, header: 'Giây'),
-                        ],
-                      ).paddingSymmetric(horizontal: 16),
-                      Gap.k16.height,
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Container(
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(8),
-                                    color: primaryColor,
-                                  ),
-                                  child: Text(
-                                    'Register now',
-                                    style: boldTextStyle(color: white, size: 14),
-                                    textAlign: TextAlign.center,
-                                  ).paddingSymmetric(horizontal: 32, vertical: 8))
-                              .onTap(() {
-                            if (UserRepo.user.id != null) {
-                              if (tournament.fee == 0) {
-                                showConfirmDialog(context, 'Do you want to register this tournament?').then((value) => value ? context.read<TournamentCubit>().attendTournament(tournament.id!) : null);
-                              } else {
-                                showConfirmDialog(context, 'Do you want to go to the VNPay payment page?')
-                                    .then((value) => value ? context.read<TournamentCubit>().requestPaymentTournament(tournamentId: tournament.id!, amount: tournament.fee!) : null);
-                              }
-                            } else {
-                              ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: const Text('Please login to register'), backgroundColor: tomato));
-                            }
-                          }).expand(),
-                          Gap.k16.width,
-                          Text(tournament.fee == 0 ? 'Free' : '${NumberFormat('#,##0', 'en_US').format(tournament.fee)} đ', style: boldTextStyle(color: primaryColor, size: 16)),
-                        ],
-                      ).paddingSymmetric(horizontal: 16),
-                    ],
+                    BlocProvider<UserTournamentCubit>(
+                      create: ((context) => UserTournamentCubit()..getUsersTournament(tournamentId: widget.id)),
+                      child: BlocListener<UserTournamentCubit, UserTournamentState>(
+                        listener: (context, state) {
+                          if (state is UserTournamentSuccessState) {
+                            setState(() {
+                              memberQuantity = state.usersTournament.usersTournament!.length;
+                            });
+                          }
+                        },
+                        child: Column(
+                          children: [
+                            if (DateTime.now().isBefore(DateTime.parse(tournament.registerDuration!)) && !isAttended) ...[
+                              if (tournament.maximumMember! <= memberQuantity) ...[
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Container(
+                                      width: context.width(),
+                                      padding: const EdgeInsets.symmetric(horizontal: 16),
+                                      child: Text(
+                                        'The tournament has reached the maximum number of participants',
+                                        style: boldTextStyle(color: gray, size: 12),
+                                        textAlign: TextAlign.center,
+                                        overflow: TextOverflow.ellipsis,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ] else ...[
+                                Gap.k16.height,
+                                Text('Registration time remaining', style: boldTextStyle(size: 16)).paddingLeft(16),
+                                Gap.k8.height,
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: <Widget>[
+                                    buildTimeCard(time: days, header: 'Ngày'),
+                                    Spacer(),
+                                    buildTimeCard(time: hours, header: 'Giờ'),
+                                    Spacer(),
+                                    buildTimeCard(time: minutes, header: 'Phút'),
+                                    Spacer(),
+                                    buildTimeCard(time: seconds, header: 'Giây'),
+                                  ],
+                                ).paddingSymmetric(horizontal: 16),
+                                Gap.k16.height,
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Container(
+                                            decoration: BoxDecoration(
+                                              borderRadius: BorderRadius.circular(8),
+                                              color: primaryColor,
+                                            ),
+                                            child: Text(
+                                              'Register now',
+                                              style: boldTextStyle(color: white, size: 14),
+                                              textAlign: TextAlign.center,
+                                            ).paddingSymmetric(horizontal: 32, vertical: 8))
+                                        .onTap(() {
+                                      if (UserRepo.user.id != null) {
+                                        if (tournament.fee == 0) {
+                                          showConfirmDialog(context, 'Do you want to register this tournament?')
+                                              .then((value) => value ? context.read<TournamentCubit>().attendTournament(tournament.id!) : null);
+                                        } else {
+                                          showConfirmDialog(context, 'Do you want to go to the VNPay payment page?')
+                                              .then((value) => value ? context.read<TournamentCubit>().requestPaymentTournament(tournamentId: tournament.id!, amount: tournament.fee!) : null);
+                                        }
+                                      } else {
+                                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: const Text('Please login to register'), backgroundColor: tomato));
+                                      }
+                                    }).expand(),
+                                    Gap.k16.width,
+                                    Text(tournament.fee == 0 ? 'Free' : '${NumberFormat('#,##0', 'en_US').format(tournament.fee)} đ', style: boldTextStyle(color: primaryColor, size: 16)),
+                                  ],
+                                ).paddingSymmetric(horizontal: 16),
+                              ],
+                            ],
+                          ],
+                        ),
+                      ),
+                    ),
                     if (isAttended) ...[
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
@@ -271,11 +310,17 @@ class _TournamentDetailScreenState extends State<TournamentDetailScreen> {
                       ),
                     ],
                     Gap.k16.height,
-                    Text('Rule', style: boldTextStyle(),).paddingSymmetric(horizontal: 16),
+                    Text(
+                      'Rule',
+                      style: boldTextStyle(),
+                    ).paddingSymmetric(horizontal: 16),
                     Gap.k4.height,
                     Text(tournament.rule!, style: secondaryTextStyle()).paddingSymmetric(horizontal: 16),
                     Gap.k16.height,
-                    Text('Description', style: boldTextStyle(),).paddingSymmetric(horizontal: 16),
+                    Text(
+                      'Description',
+                      style: boldTextStyle(),
+                    ).paddingSymmetric(horizontal: 16),
                     Gap.k4.height,
                     Text(tournament.description!, style: secondaryTextStyle()).paddingSymmetric(horizontal: 16),
                   ],

@@ -13,6 +13,7 @@ import '../screens/DashboardScreen.dart';
 import '../screens/ExerciseScreen.dart';
 import '../screens/GroupDetailScreen.dart';
 import '../screens/LoginScreen.dart';
+import '../screens/NotificationScreen.dart';
 import '../screens/PostDetailScreen.dart';
 import '../screens/PostsScreen.dart';
 import '../screens/SignUpScreen.dart';
@@ -70,6 +71,8 @@ Route<dynamic> generateRoute(RouteSettings settings) {
     case PaymentScreen.routeName:
       Map<String, dynamic> args = settings.arguments as Map<String, dynamic>;
       return MaterialPageRoute(builder: (_) => PaymentScreen(paymentUrl: args['paymentUrl'] as String, tournamentId: args['tournamentId'] as String,));
+    case NotificationScreen.routeName:
+      return MaterialPageRoute(builder: (_) => NotificationScreen());
     default:
       return MaterialPageRoute(builder: (_) => const NotFoundScreen());
   }

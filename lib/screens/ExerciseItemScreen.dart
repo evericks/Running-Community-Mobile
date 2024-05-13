@@ -82,13 +82,13 @@ class _ExerciseItemScreenState extends State<ExerciseItemScreen> {
   @override
   Widget build(BuildContext context) {
     return BlocProvider<ExerciseCubit>(
-      create: (context) => ExerciseCubit()..getExerciseItemById(widget.id),
+      create: (context) => ExerciseCubit()..getExerciseItemById(id: widget.id),
       child: Scaffold(
-        appBar: const MyAppBar(title: 'Exercise'),
+        appBar: const MyAppBar(title: 'Exercise', leadingIcon: AppAssets.arrow_left, isRefresh: true,),
         body: BlocListener<ExerciseCubit, ExerciseState>(
           listener: (context, state) {
             if (state is GetExerciseItemByIdFailedState) {
-              ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(state.error)));
+              ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(state.error.replaceAll('Exception: ', ''))));
             }
             if (state is GetExerciseItemByIdSuccessState) {
               var exerciseItems = state.exerciseItems;
@@ -166,7 +166,7 @@ class _ExerciseItemScreenState extends State<ExerciseItemScreen> {
                                       left: 0,
                                       right: 32,
                                       child: Slider(
-                                        activeColor: primaryColor,
+                                          activeColor: primaryColor,
                                           thumbColor: primaryColor,
                                           value: _controller.value.position.inSeconds.toDouble(),
                                           max: _controller.value.duration.inSeconds.toDouble(),

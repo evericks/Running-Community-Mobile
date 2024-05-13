@@ -8,7 +8,7 @@ class UserTournamentCubit extends Cubit<UserTournamentState>{
   UserTournamentCubit() : super(UserTournamentState());
   final UserTournamentRepo _userTournamentRepo = getIt.get<UserTournamentRepo>();
 
-  Future<void> getUsersTournamentCubit({String? tournamentId, String? status, int? pageNumber, int? pageSize}) async {
+  Future<void> getUsersTournament({String? tournamentId, String? status, int? pageNumber, int? pageSize}) async {
     emit(UserTournamentLoadingState());
     try {
       var res = await _userTournamentRepo.getUsersTournament(tournamentId: tournamentId, status: status, pageNumber: pageNumber, pageSize: pageSize);

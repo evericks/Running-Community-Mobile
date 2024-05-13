@@ -3,6 +3,7 @@ import 'package:running_community_mobile/utils/get_it.dart';
 import 'package:running_community_mobile/utils/messages.dart';
 
 import '../models/exercises.dart';
+import '../models/user_exercise_item.dart';
 
 final Dio _apiClient = getIt.get<Dio>();
 
@@ -43,6 +44,26 @@ class ExerciseRepo {
       return ExerciseItems.fromJson(response.data);
     } on DioException catch (e) {
       print('Error at getExerciseItem: $e');
+      throw Exception(msg_server_error);
+    }
+  }
+
+  Future<bool> markExerciseAsDone({required String id}) async {
+    try {
+      final response = await _apiClient.post('/api/user-exercise-items', data: {'exerciseItemId': id});
+      return response.statusCode == 200;
+    } on DioException catch (e) {
+      print('Error at markExerciseAsDone: $e');
+      throw Exception(msg_server_error);
+    }
+  }
+
+  Future<List<UserExerciseItem>> getUserExerciseItem() async {
+    try {
+      final response = await _apiClient.get('/api/user-exercise-items');
+      return (response.data as List).map((e) => UserExerciseItem.fromJson(e)).toList();
+    } on DioException catch (e) {
+      print('Error at getUserExerciseItemById: $e');
       throw Exception(msg_server_error);
     }
   }

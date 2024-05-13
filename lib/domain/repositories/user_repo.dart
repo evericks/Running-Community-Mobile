@@ -69,12 +69,21 @@ class UserRepo {
     } on DioException catch (e) {
       if (e.response?.statusCode == 400) {
         throw Exception(e.response!.data);
-      } else if(e.response?.statusCode == 409) {
+      } else if (e.response?.statusCode == 409) {
         throw Exception(msg_phone_exist);
-      }
-       else {
+      } else {
         throw Exception(msg_server_error);
       }
+    }
+  }
+
+  Future<void> sendDeviceToken() async {
+    var deviceToken = getStringAsync(AppConstant.DEVICE_TOKEN);
+    try {
+      await _apiClient.post('/api/device-tokens/users', data: {'deviceToken': deviceToken});
+    } on DioException catch (e) {
+      print(e);
+      throw Exception(e);
     }
   }
 }
