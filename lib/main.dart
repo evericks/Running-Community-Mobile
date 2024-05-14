@@ -1,7 +1,9 @@
 import 'package:camera/camera.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:nb_utils/nb_utils.dart';
+import 'package:running_community_mobile/cubit/notification/notification_cubit.dart';
 import 'package:running_community_mobile/services/messaging_service.dart';
 import 'firebase_options.dart';
 import 'screens/DashboardScreen.dart';
@@ -14,8 +16,11 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await initialize();
   await initialGetIt();
-  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
-  await MessagingService().initNotification();
+  var accessToken = getStringAsync(AppConstant.TOKEN_KEY);
+  if (accessToken.isNotEmpty) {
+    await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+    await MessagingService().initNotification();
+  }
   runApp(const MainApp());
 }
 
@@ -33,7 +38,7 @@ class MainApp extends StatelessWidget {
       //   // )
       // ], child: MultiBlocListener(listeners: [BlocListener<UserCubit, UserState>(listener: (context, state) {})], child: _fetchAuthAndInitialRoute())),
       // home: _fetchAuthAndInitialRoute(),
-      home: DashboardScreen(),
+      home: MultiBlocProvider(providers: [BlocProvider<NotificationCubit>(create: (context) => NotificationCubit())], child: DashboardScreen()),
       theme: ThemeData(
         fontFamily: 'Roboto',
       ),

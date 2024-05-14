@@ -2,6 +2,8 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:nb_utils/nb_utils.dart';
+import 'package:running_community_mobile/screens/PostDetailScreen.dart';
+import 'package:running_community_mobile/screens/TournamentDetailScreen.dart';
 import 'package:running_community_mobile/utils/constants.dart';
 
 import '../cubit/notification/notification_cubit.dart';
@@ -17,7 +19,15 @@ class MessagingService {
     String title = message.notification?.title ?? 'Default Title';
     String body = message.notification?.body ?? 'Default Body';
     await showNotification(title, body, message.data['link'], message.data['type']);
-    navigatorKey.currentState!.pushNamed('/notification');
+    // Thực hiện các hành động khi người dùng nhấn vào thông báo tại đây.
+    String type = message.data['type']!;
+    String link = message.data['link']!;
+
+    if (type == 'POST') {
+      navigatorKey.currentState!.pushNamed(PostDetailScreen.routeName, arguments: link);
+    } else if (type == 'TOURNAMENT') {
+      navigatorKey.currentState!.pushNamed(TournamentDetailScreen.routeName, arguments: link);
+    }
   }
 
   Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
@@ -43,7 +53,7 @@ class MessagingService {
       styleInformation: BigTextStyleInformation(''),
     );
     var platformChannelSpecifics = NotificationDetails(android: androidPlatformChannelSpecifics);
-    await _flutterLocalNotificationsPlugin.show(0, title, body, platformChannelSpecifics, payload: type + link);
+    await _flutterLocalNotificationsPlugin.show(0, title, body, platformChannelSpecifics, payload: '$type|$link');
   }
 
   Future<void> initNotification() async {
@@ -87,6 +97,20 @@ class MessagingService {
     _flutterLocalNotificationsPlugin.initialize(initializationSettings, onDidReceiveNotificationResponse: (detail) {
       NotificationCubit().getNotifications(pageSize: 1000);
       //xử lý khi click vào thông báo
+      String? payload = detail.payload;
+      if (payload != null) {
+        debugPrint('notification payload: $payload');
+        // Thực hiện các hành động khi người dùng nhấn vào thông báo tại đây.
+        List<String> parts = payload.split('|');
+        String type = parts[0];
+        String link = parts[1];
+
+        if (type == 'POST') {
+          navigatorKey.currentState!.pushNamed(PostDetailScreen.routeName, arguments: link);
+        } else if (type == 'TOURNAMENT') {
+          navigatorKey.currentState!.pushNamed(TournamentDetailScreen.routeName, arguments: link);
+        }
+      }
     });
 
     final value = getIntAsync(AppConstant.NOTI_COUNT);

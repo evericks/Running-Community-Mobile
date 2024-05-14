@@ -262,16 +262,18 @@ class _ProfileFragmentState extends State<ProfileFragment> {
                                               heightFactor: 1,
                                               child: ClipRRect(
                                                 borderRadius: const BorderRadius.only(topLeft: Radius.circular(8), bottomLeft: Radius.circular(8)),
-                                                child: FadeInImage.assetNetwork(
-                                                  placeholder: AppAssets.placeholder,
-                                                  image: archivements[index].thumbnailUrl!,
-                                                  // height: 60,
-                                                  width: 80,
-                                                  fit: BoxFit.cover,
+                                                child: Transform.scale(
+                                                  scale: 0.6,
+                                                  child: FadeInImage.assetNetwork(
+                                                    placeholder: AppAssets.placeholder,
+                                                    image: archivements[index].thumbnailUrl!,
+                                                    // width: 60,
+                                                    fit: BoxFit.cover,
+                                                  ),
                                                 ),
                                               ),
                                             ),
-                                            Gap.k16.width,
+                                            // Gap.k16.width,
                                             Column(
                                               crossAxisAlignment: CrossAxisAlignment.start,
                                               children: [

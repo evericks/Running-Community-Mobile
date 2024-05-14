@@ -1,12 +1,14 @@
 import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:running_community_mobile/screens/ExerciseItemScreen.dart';
 import 'package:running_community_mobile/screens/FullScreenVideoScreen.dart';
 import 'package:running_community_mobile/screens/PaymentScreen.dart';
 import 'package:running_community_mobile/screens/QRCodeScreen.dart';
 import 'package:running_community_mobile/screens/SeeAllTournamentScreen.dart';
 import 'package:video_player/video_player.dart';
+import '../cubit/notification/notification_cubit.dart';
 import '../screens/CreateGroupScreen.dart';
 import '../screens/CreatePostScreen.dart';
 import '../screens/DashboardScreen.dart';
@@ -26,7 +28,10 @@ Route<dynamic> generateRoute(RouteSettings settings) {
     case SplashScreen.routeName:
       return MaterialPageRoute(builder: (_) => const SplashScreen());
     case DashboardScreen.routeName:
-      return MaterialPageRoute(builder: (_) => DashboardScreen(tabIndex: settings.arguments as int,));
+      return MaterialPageRoute(
+          builder: (_) => DashboardScreen(
+                tabIndex: settings.arguments as int,
+              ));
     case LoginScreen.routeName:
       return MaterialPageRoute(builder: (_) => const LoginScreen());
     case SignUpScreen.routeName:
@@ -39,9 +44,15 @@ Route<dynamic> generateRoute(RouteSettings settings) {
                 id: settings.arguments.toString(),
               ));
     case PostsScreen.routeName:
-      return MaterialPageRoute(builder: (_) => PostsScreen(groupId: settings.arguments.toString(),));
+      return MaterialPageRoute(
+          builder: (_) => PostsScreen(
+                groupId: settings.arguments.toString(),
+              ));
     case CreatePostScreen.routeName:
-      return MaterialPageRoute(builder: (_) => CreatePostScreen(groupId: settings.arguments.toString(),));
+      return MaterialPageRoute(
+          builder: (_) => CreatePostScreen(
+                groupId: settings.arguments.toString(),
+              ));
     case PostDetailScreen.routeName:
       return MaterialPageRoute(
           builder: (_) => PostDetailScreen(
@@ -63,16 +74,33 @@ Route<dynamic> generateRoute(RouteSettings settings) {
                 videoPlayerController: settings.arguments as VideoPlayerController,
               ));
     case SeeAllTournamentScreen.routeName:
-      return MaterialPageRoute(builder: (_) => SeeAllTournamentScreen(status: settings.arguments as String,));
+      return MaterialPageRoute(
+          builder: (_) => SeeAllTournamentScreen(
+                status: settings.arguments as String,
+              ));
     case TournamentDetailScreen.routeName:
-      return MaterialPageRoute(builder: (_) => TournamentDetailScreen(id: settings.arguments as String,));
+      return MaterialPageRoute(
+          builder: (_) => TournamentDetailScreen(
+                id: settings.arguments as String,
+              ));
     case QRCodeScreen.routeName:
-      return MaterialPageRoute(builder: (_) => QRCodeScreen(qrCodeImage: settings.arguments as Uint8List,));
+      return MaterialPageRoute(
+          builder: (_) => QRCodeScreen(
+                qrCodeImage: settings.arguments as Uint8List,
+              ));
     case PaymentScreen.routeName:
       Map<String, dynamic> args = settings.arguments as Map<String, dynamic>;
-      return MaterialPageRoute(builder: (_) => PaymentScreen(paymentUrl: args['paymentUrl'] as String, tournamentId: args['tournamentId'] as String,));
+      return MaterialPageRoute(
+          builder: (_) => PaymentScreen(
+                paymentUrl: args['paymentUrl'] as String,
+                tournamentId: args['tournamentId'] as String,
+              ));
     case NotificationScreen.routeName:
-      return MaterialPageRoute(builder: (_) => NotificationScreen());
+      return MaterialPageRoute(
+          builder: (_) => MultiBlocProvider(providers: [
+                BlocProvider<NotificationCubit>(create: (context) => NotificationCubit()..getNotifications(pageSize: 1000)),
+                BlocProvider<MarkAsReadNotificationCubit>(create: (context) => MarkAsReadNotificationCubit())
+              ], child: NotificationScreen()));
     default:
       return MaterialPageRoute(builder: (_) => const NotFoundScreen());
   }

@@ -1,6 +1,6 @@
 class Notifications {
   Pagination? pagination;
-  List<Notification>? notifications;
+  List<NotificationItem>? notifications;
 
   Notifications({this.pagination, this.notifications});
 
@@ -9,9 +9,9 @@ class Notifications {
         ? new Pagination.fromJson(json['pagination'])
         : null;
     if (json['data'] != null) {
-      notifications = <Notification>[];
+      notifications = <NotificationItem>[];
       json['data'].forEach((v) {
-        notifications!.add(new Notification.fromJson(v));
+        notifications!.add(new NotificationItem.fromJson(v));
       });
     }
   }
@@ -50,7 +50,7 @@ class Pagination {
   }
 }
 
-class Notification {
+class NotificationItem {
   String? id;
   String? title;
   String? message;
@@ -59,7 +59,7 @@ class Notification {
   bool? isRead;
   String? createAt;
 
-  Notification(
+  NotificationItem(
       {this.id,
       this.title,
       this.message,
@@ -68,7 +68,7 @@ class Notification {
       this.isRead,
       this.createAt});
 
-  Notification.fromJson(Map<String, dynamic> json) {
+  NotificationItem.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     title = json['title'];
     message = json['message'];

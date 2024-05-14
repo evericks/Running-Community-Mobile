@@ -28,4 +28,13 @@ class NotificationRepo {
       throw Exception(e);
     }
   }
+
+  Future<int> markAllAsRead() async {
+    try {
+      var res = await _apiClient.get('/api/notifications/mark-as-read/users');
+      return res.statusCode!;
+    } on DioException catch (e) {
+      throw Exception(e);
+    }
+  }
 }

@@ -28,7 +28,7 @@ class DashboardScreen extends StatefulWidget {
   State<DashboardScreen> createState() => _DashboardScreenState();
 }
 
-class _DashboardScreenState extends State<DashboardScreen> with SingleTickerProviderStateMixin {
+class _DashboardScreenState extends State<DashboardScreen> with SingleTickerProviderStateMixin, WidgetsBindingObserver {
   int selectedIndex = 0;
   late AnimationController _animationController;
   late Animation<double> _animation;
@@ -53,13 +53,25 @@ class _DashboardScreenState extends State<DashboardScreen> with SingleTickerProv
     Timer.periodic(Duration(seconds: 1), (Timer timer) {
       _animationController.forward();
     });
+
+    WidgetsBinding.instance.addObserver(this);
     super.initState();
   }
 
   @override
   void dispose() {
     _animationController.dispose();
+    WidgetsBinding.instance.removeObserver(this);
     super.dispose();
+  }
+
+    @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.resumed) {
+      // Khi ứng dụng trở lại foreground, gọi API để lấy số lượng thông báo
+      context.read<NotificationCubit>().getNotifications();
+      print('AppLifecycleState.resumed');
+    }
   }
 
   void onTabSelection(int index) {

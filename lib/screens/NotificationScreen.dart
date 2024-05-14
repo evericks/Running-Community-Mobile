@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:nb_utils/nb_utils.dart';
 import 'package:running_community_mobile/cubit/notification/notification_cubit.dart';
 import 'package:running_community_mobile/cubit/notification/notification_state.dart';
+import 'package:running_community_mobile/screens/PostDetailScreen.dart';
 import 'package:running_community_mobile/utils/app_assets.dart';
-import 'package:running_community_mobile/utils/colors.dart';
 import 'package:running_community_mobile/utils/gap.dart';
+
+import '../components/NotificationComponent.dart';
 
 class NotificationScreen extends StatefulWidget {
   const NotificationScreen({super.key});
@@ -16,63 +19,59 @@ class NotificationScreen extends StatefulWidget {
 }
 
 class _NotificationScreenState extends State<NotificationScreen> {
-  Map<String, String> notificationIcon = {
-    'Post': AppAssets.interact_post,
-    'Tournament': AppAssets.tournament,
-  };
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(
+        title: const Text(
           'Notification',
           style: TextStyle(fontSize: 20),
         ),
-        leading: Icon(Icons.arrow_back),
+        // leading: const Icon(Icons.arrow_back),
         centerTitle: true,
+        actions: [
+          IconButton(
+            onPressed: () async {
+              await context.read<MarkAsReadNotificationCubit>().markAllAsRead();
+              context.read<NotificationCubit>().getNotifications(pageSize: 1000);
+            },
+            icon: SvgPicture.asset(AppAssets.envelope_open, color: gray, height: 20, width: 20),
+          )
+        ],
       ),
-      body: BlocProvider<NotificationCubit>(
-        create: (context) => NotificationCubit()..getNotifications(),
-        child: BlocBuilder<NotificationCubit, NotificationState>(
-          builder: (context, state) {
-            if (state is NotificationLoadingState) {
-              return const Center(child: CircularProgressIndicator());
-            }
-            if (state is NotificationSuccessState) {
-              var notifications = state.notifications.notifications;
-              return ListView.builder(
+      body: BlocBuilder<NotificationCubit, NotificationState>(
+        builder: (context, state) {
+          if (state is NotificationLoadingState) {
+            return const Center(child: CircularProgressIndicator());
+          }
+          if (state is NotificationSuccessState) {
+            var notifications = state.notifications.notifications;
+            return RefreshIndicator(
+              onRefresh: () async {
+                context.read<NotificationCubit>().getNotifications(pageSize: 1000);
+              },
+              child: ListView.separated(
                 padding: const EdgeInsets.symmetric(horizontal: 16),
                 itemCount: notifications!.length,
+                separatorBuilder: (context, index) => Gap.k8.height,
                 itemBuilder: (context, index) {
-                  return Container(
-                    padding: EdgeInsets.all(8),
-                    decoration: BoxDecoration(
-                     borderRadius: BorderRadius.circular(10),
-                      color: primaryColor.withOpacity(0.1),
-                    ),
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Image.asset(
-                          notificationIcon[notifications[index].type!]!,
-                          width: 50,
-                          height: 50,
-                        ),
-                        Gap.k16.width,
-                        Column(
-                          children: [
-                            Text(notifications[index].title!, style: boldTextStyle(),),
-                          ],
-                        ),
-                      ],
-                    ),
-                  );
+                  return NotificationComponent(notification: notifications[index]).onTap(() async {
+                    context.read<MarkAsReadNotificationCubit>().markAsRead(notificationId: notifications[index].id!);
+                    if (notifications[index].type == 'POST') {
+                      var isRefresh = await Navigator.pushNamed(context, PostDetailScreen.routeName, arguments: notifications[index].link);
+                      if (isRefresh == true) {
+                        context.read<NotificationCubit>().getNotifications(pageSize: 1000);
+                      }
+                    } else if (notifications[index].type == 'TOURNAMENT') {
+                      // Navigator.pushNamed(context, TournamentDetailScreen.routeName, arguments: notifications[index].tournamentId);
+                    }
+                  });
                 },
-              );
-            }
-            return const SizedBox.shrink();
-          },
-        ),
+              ),
+            );
+          }
+          return const SizedBox.shrink();
+        },
       ),
     );
   }

@@ -31,6 +31,7 @@ class AppAssets {
   static const String bell = 'assets/icons/bell.svg';
   static const String flag = 'assets/icons/flag.svg';
   static const String circle_check = 'assets/icons/circle-check.svg';
+  static const String envelope_open = 'assets/icons/envelope-open.svg';
 
   static const String interact_post = 'assets/icons/interact-post.png';
   static const String tournament = 'assets/icons/tournament.png';
