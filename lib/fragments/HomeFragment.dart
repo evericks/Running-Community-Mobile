@@ -76,7 +76,7 @@ class _HomeFragmentState extends State<HomeFragment> {
         body: MultiBlocProvider(
           providers: [
             BlocProvider<TournamentCubit>(
-              create: (context) => TournamentCubit()..getTournaments(),
+              create: (context) => TournamentCubit()..getTournaments(pageSize: 1000),
             ),
           ],
           child: (UserRepo.user.status != 'Active' && UserRepo.user.id != null)

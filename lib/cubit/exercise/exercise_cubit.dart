@@ -1,5 +1,7 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:nb_utils/nb_utils.dart';
 import 'package:running_community_mobile/domain/repositories/exercise_repo.dart';
+import 'package:running_community_mobile/utils/constants.dart';
 import 'package:running_community_mobile/utils/get_it.dart';
 
 import 'exercise_state.dart';
@@ -9,6 +11,8 @@ class ExerciseCubit extends Cubit<ExerciseState> {
   ExerciseCubit() : super(ExerciseState());
 
   void fetchUserDataAndExercise({required String id}) {
+    if (getStringAsync(AppConstant.TOKEN_KEY).isNotEmpty) {
+      
     emit(GetExerciseByIdLoadingState());
     _exerciseRepository.getUserExerciseItem().then((userExerciseItem) {
       emit(GetUserExerciseItemSuccessState(userExerciseItem));
@@ -18,6 +22,9 @@ class ExerciseCubit extends Cubit<ExerciseState> {
     }).catchError((error) {
       emit(GetExerciseByIdFailedState(error.toString()));
     });
+    } else {
+      getExerciseById(id: id);
+    }
   }
 
   Future<void> getExercises({String? name, int? pageSize, int? pageNumber}) async {
@@ -49,11 +56,13 @@ class ExerciseCubit extends Cubit<ExerciseState> {
       emit(GetExerciseItemByIdFailedState(e.toString()));
     }
 
-    try {
-      await _exerciseRepository.markExerciseAsDone(id: id);
-    } catch (e) {
-      // Không làm gì nếu hàm phụ bị lỗi
-      print('Error in marking exercise as done: $e');
+    if (getStringAsync(AppConstant.TOKEN_KEY).isNotEmpty) {
+      try {
+        await _exerciseRepository.markExerciseAsDone(id: id);
+      } catch (e) {
+        // Không làm gì nếu hàm phụ bị lỗi
+        print('Error in marking exercise as done: $e');
+      }
     }
   }
 

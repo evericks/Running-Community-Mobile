@@ -19,7 +19,7 @@ class SeeAllTournamentScreen extends StatelessWidget {
     return Scaffold(
       appBar: const MyAppBar(title: 'See All Tournament'),
       body: BlocProvider<TournamentCubit>(
-        create: (context) => TournamentCubit()..getTournaments(),
+        create: (context) => TournamentCubit()..getTournaments(pageSize: 1000),
         child: BlocBuilder<TournamentCubit, TournamentState>(
           builder: (context, state) {
             if (state is TournamentLoadingState) {
@@ -27,16 +27,17 @@ class SeeAllTournamentScreen extends StatelessWidget {
             }
             if (state is TournamentSuccessState) {
               var tournaments = state.tournaments.tournaments!;
+             tournaments.forEach((element) {print(element.title);});
               if (status == 'happening') {
                 tournaments = state.tournaments.tournaments!.where((t) => DateTime.parse(t.startTime!).isBefore(DateTime.now()) && DateTime.parse(t.endTime!).isAfter(DateTime.now())).toList();
               }
               if (status == 'finished') {
                 tournaments = state.tournaments.tournaments!.where((t) => DateTime.parse(t.endTime!).isBefore(DateTime.now())).toList();
               }
+              // if (status == 'upcoming') {
+              //   tournaments = state.tournaments.tournaments!.where((t) => DateTime.parse(t.startTime!).isAfter(DateTime.now())).toList();
+              // }
               if (status == 'upcoming') {
-                tournaments = state.tournaments.tournaments!.where((t) => DateTime.parse(t.startTime!).isAfter(DateTime.now())).toList();
-              }
-              if (status == 'open') {
                 tournaments = state.tournaments.tournaments!.where((t) => DateTime.parse(t.registerDuration!).isAfter(DateTime.now())).toList();
               }
               return tournaments.isNotEmpty ? SingleChildScrollView(

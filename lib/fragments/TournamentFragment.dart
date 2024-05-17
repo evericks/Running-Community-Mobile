@@ -112,7 +112,7 @@ class _TournamentFragmentState extends State<TournamentFragment> {
                           ),
                         ),
                   BlocProvider<TournamentCubit>(
-                      create: (context) => TournamentCubit()..getTournaments(pageSize: 100),
+                      create: (context) => TournamentCubit()..getTournaments(pageSize: 1000),
                       child: BlocBuilder<TournamentCubit, TournamentState>(builder: (context, state) {
                         if (state is TournamentLoadingState) {
                           return const Center(child: CircularProgressIndicator());

@@ -148,6 +148,7 @@ class _ExerciseScreenState extends State<ExerciseScreen> {
                                       ).onTap(() async {
                                         var isRefresh = await Navigator.pushNamed(context, ExerciseItemScreen.routeName, arguments: exerciseItems[index].id!);
                                         if (isRefresh == true) {
+
                                           context.read<ExerciseCubit>().fetchUserDataAndExercise(id: widget.id);
                                         }
                                       });
