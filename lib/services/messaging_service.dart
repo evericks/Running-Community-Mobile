@@ -109,6 +109,8 @@ class MessagingService {
           navigatorKey.currentState!.pushNamed(PostDetailScreen.routeName, arguments: link);
         } else if (type == 'TOURNAMENT') {
           navigatorKey.currentState!.pushNamed(TournamentDetailScreen.routeName, arguments: link);
+        } else if (type == 'GROUP') {
+          navigatorKey.currentState!.pushNamed('/notification');
         }
       }
     });

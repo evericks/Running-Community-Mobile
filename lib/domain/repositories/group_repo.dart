@@ -62,4 +62,18 @@ class GroupRepo {
       throw Exception(msg_server_error);
     }
   }
+
+  Future<bool> joinRequestProcess({required String memId, String? role, String? status}) async {
+    try {
+      Map<String, dynamic> data = {
+        if(role != null) 'role': role,
+        if(status != null) 'status': status,
+      };
+      await _apiClient.put('/api/group-members/$memId', data: data);
+      return true;
+    } on DioException catch (e) {
+      print('Error at joinRequestProcess: $e');
+      throw Exception(msg_server_error);
+    }
+  }
 }

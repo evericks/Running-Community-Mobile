@@ -79,7 +79,7 @@ class _PostsScreenState extends State<PostsScreen> {
                 context.read<PostCubit>().getPosts(groupId: widget.groupId);
               },
               child: memStatus == 'Active' ? SingleChildScrollView(
-                physics: AlwaysScrollableScrollPhysics(),
+                physics: const AlwaysScrollableScrollPhysics(),
                 child: Column(
                   children: [
                     role == 'Owner'

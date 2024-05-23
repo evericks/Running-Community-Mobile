@@ -8,23 +8,23 @@ class Groups {
 
   Groups.fromJson(Map<String, dynamic> json) {
     pagination = json['pagination'] != null
-        ? new Pagination.fromJson(json['pagination'])
+        ? Pagination.fromJson(json['pagination'])
         : null;
     if (json['data'] != null) {
       groups = <Group>[];
       json['data'].forEach((v) {
-        groups!.add(new Group.fromJson(v));
+        groups!.add(Group.fromJson(v));
       });
     }
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    if (this.pagination != null) {
-      data['pagination'] = this.pagination!.toJson();
+    final Map<String, dynamic> data = <String, dynamic>{};
+    if (pagination != null) {
+      data['pagination'] = pagination!.toJson();
     }
-    if (this.groups != null) {
-      data['data'] = this.groups!.map((v) => v.toJson()).toList();
+    if (groups != null) {
+      data['data'] = groups!.map((v) => v.toJson()).toList();
     }
     return data;
   }
@@ -44,10 +44,10 @@ class Pagination {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['pageNumber'] = this.pageNumber;
-    data['pageSize'] = this.pageSize;
-    data['totalRow'] = this.totalRow;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['pageNumber'] = pageNumber;
+    data['pageSize'] = pageSize;
+    data['totalRow'] = totalRow;
     return data;
   }
 }
@@ -56,8 +56,10 @@ class Group {
   String? id;
   String? name;
   String? description;
-  String? rule;
   String? thumbnailUrl;
+  int? minAge;
+  int? maxAge;
+  String? gender;
   List<GroupMembers>? groupMembers;
   String? createAt;
 
@@ -65,8 +67,10 @@ class Group {
       {this.id,
       this.name,
       this.description,
-      this.rule,
       this.thumbnailUrl,
+      this.minAge,
+      this.maxAge,
+      this.gender,
       this.groupMembers,
       this.createAt});
 
@@ -74,33 +78,38 @@ class Group {
     id = json['id'];
     name = json['name'];
     description = json['description'];
-    rule = json['rule'];
     thumbnailUrl = json['thumbnailUrl'];
+    minAge = json['minAge'];
+    maxAge = json['maxAge'];
+    gender = json['gender'];
     if (json['groupMembers'] != null) {
       groupMembers = <GroupMembers>[];
       json['groupMembers'].forEach((v) {
-        groupMembers!.add(new GroupMembers.fromJson(v));
+        groupMembers!.add(GroupMembers.fromJson(v));
       });
     }
     createAt = json['createAt'];
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
-    data['name'] = this.name;
-    data['description'] = this.description;
-    data['rule'] = this.rule;
-    data['thumbnailUrl'] = this.thumbnailUrl;
-    if (this.groupMembers != null) {
-      data['groupMembers'] = this.groupMembers!.map((v) => v.toJson()).toList();
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['id'] = id;
+    data['name'] = name;
+    data['description'] = description;
+    data['thumbnailUrl'] = thumbnailUrl;
+    data['minAge'] = minAge;
+    data['maxAge'] = maxAge;
+    data['gender'] = gender;
+    if (groupMembers != null) {
+      data['groupMembers'] = groupMembers!.map((v) => v.toJson()).toList();
     }
-    data['createAt'] = this.createAt;
+    data['createAt'] = createAt;
     return data;
   }
 }
 
 class GroupMembers {
+  String? id;
   User? user;
   String? role;
   String? status;
@@ -109,20 +118,22 @@ class GroupMembers {
   GroupMembers({this.user, this.role, this.status, this.createAt});
 
   GroupMembers.fromJson(Map<String, dynamic> json) {
-    user = json['user'] != null ? new User.fromJson(json['user']) : null;
+    id = json['id'];
+    user = json['user'] != null ? User.fromJson(json['user']) : null;
     role = json['role'];
     status = json['status'];
     createAt = json['createAt'];
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    if (this.user != null) {
-      data['user'] = this.user!.toJson();
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['id'] = id;
+    if (user != null) {
+      data['user'] = user!.toJson();
     }
-    data['role'] = this.role;
-    data['status'] = this.status;
-    data['createAt'] = this.createAt;
+    data['role'] = role;
+    data['status'] = status;
+    data['createAt'] = createAt;
     return data;
   }
 }

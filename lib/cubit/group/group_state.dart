@@ -49,3 +49,15 @@ class JoinGroupFailedState extends GroupState {
   final String error;
   JoinGroupFailedState(this.error);
 }
+
+class JoinRequestProcessLoadingState extends GroupState {}
+
+class JoinRequestProcessSuccessState extends GroupState {
+  final bool status;
+  JoinRequestProcessSuccessState(this.status);
+}
+
+class JoinRequestProcessFailedState extends GroupState {
+  final String error;
+  JoinRequestProcessFailedState(this.error);
+}

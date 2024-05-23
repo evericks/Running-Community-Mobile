@@ -16,11 +16,8 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await initialize();
   await initialGetIt();
-  var accessToken = getStringAsync(AppConstant.TOKEN_KEY);
-  if (accessToken.isNotEmpty) {
-    await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
-    await MessagingService().initNotification();
-  }
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+  await MessagingService().initNotification();
   runApp(const MainApp());
 }
 

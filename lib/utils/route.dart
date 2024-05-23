@@ -100,7 +100,7 @@ Route<dynamic> generateRoute(RouteSettings settings) {
           builder: (_) => MultiBlocProvider(providers: [
                 BlocProvider<NotificationCubit>(create: (context) => NotificationCubit()..getNotifications(pageSize: 1000)),
                 BlocProvider<MarkAsReadNotificationCubit>(create: (context) => MarkAsReadNotificationCubit())
-              ], child: NotificationScreen()));
+              ], child: const NotificationScreen()));
     default:
       return MaterialPageRoute(builder: (_) => const NotFoundScreen());
   }

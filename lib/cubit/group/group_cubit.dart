@@ -52,4 +52,14 @@ class GroupCubit extends Cubit<GroupState>{
       emit(JoinGroupFailedState(e.toString()));
     }
   }
+
+  Future<void> joinRequestProcess({required String memId, String? role, String? status}) async {
+    emit(JoinRequestProcessLoadingState());
+    try {
+      final rs = await _groupRepo.joinRequestProcess(memId: memId, role: role, status: status);
+      emit(JoinRequestProcessSuccessState(rs));
+    } catch (e) {
+      emit(JoinRequestProcessFailedState(e.toString()));
+    }
+  }
 }

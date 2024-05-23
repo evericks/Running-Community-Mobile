@@ -35,4 +35,5 @@ class AppAssets {
 
   static const String interact_post = 'assets/icons/interact-post.png';
   static const String tournament = 'assets/icons/tournament.png';
+  static const String join = 'assets/icons/join.png';
 }

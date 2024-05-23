@@ -4,7 +4,6 @@ import 'package:flutter_svg/svg.dart';
 import 'package:nb_utils/nb_utils.dart';
 import 'package:running_community_mobile/cubit/notification/notification_cubit.dart';
 import 'package:running_community_mobile/cubit/notification/notification_state.dart';
-import 'package:running_community_mobile/screens/PostDetailScreen.dart';
 import 'package:running_community_mobile/utils/app_assets.dart';
 import 'package:running_community_mobile/utils/gap.dart';
 
@@ -55,17 +54,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
                 itemCount: notifications!.length,
                 separatorBuilder: (context, index) => Gap.k8.height,
                 itemBuilder: (context, index) {
-                  return NotificationComponent(notification: notifications[index]).onTap(() async {
-                    context.read<MarkAsReadNotificationCubit>().markAsRead(notificationId: notifications[index].id!);
-                    if (notifications[index].type == 'POST') {
-                      var isRefresh = await Navigator.pushNamed(context, PostDetailScreen.routeName, arguments: notifications[index].link);
-                      if (isRefresh == true) {
-                        context.read<NotificationCubit>().getNotifications(pageSize: 1000);
-                      }
-                    } else if (notifications[index].type == 'TOURNAMENT') {
-                      // Navigator.pushNamed(context, TournamentDetailScreen.routeName, arguments: notifications[index].tournamentId);
-                    }
-                  });
+                  return NotificationComponent(notification: notifications[index]);
                 },
               ),
             );
