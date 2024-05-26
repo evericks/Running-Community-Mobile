@@ -19,10 +19,10 @@ class GroupCubit extends Cubit<GroupState>{
     }
   }
 
-  Future<void> createGroup({required String name, required String description, required String rule, required XFile thumbnail}) async {
+  Future<void> createGroup({required String name, required String description , int? maxAge, int? minAge, String? gender, required XFile thumbnail}) async {
     emit(GroupCreateLoadingState());
     try {
-      final response = await _groupRepo.createGroup(name: name, description: description, rule: rule, thumbnail: thumbnail);
+      final response = await _groupRepo.createGroup(name: name, description: description, maxAge: maxAge, minAge: minAge, gender: gender, thumbnail: thumbnail);
       if (response == 201) {
         emit(GroupCreateSuccessState(true));
       } else {

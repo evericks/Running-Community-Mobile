@@ -63,6 +63,9 @@ class Tournament {
   String? address;
   double? longitude;
   double? latitude;
+  int? maxAge;
+  int? minAge;
+  String? gender;
   String? createAt;
 
   Tournament(
@@ -80,6 +83,9 @@ class Tournament {
       this.address,
       this.longitude,
       this.latitude,
+      this.maxAge,
+      this.minAge,
+      this.gender,
       this.createAt});
 
   Tournament.fromJson(Map<String, dynamic> json) {
@@ -97,6 +103,9 @@ class Tournament {
     address = json['address'];
     longitude = json['longitude'];
     latitude = json['latitude'];
+    maxAge = json['maxAge'];
+    minAge = json['minAge'];
+    gender = json['gender'];
     createAt = json['createAt'];
   }
 
@@ -116,6 +125,9 @@ class Tournament {
     data['address'] = address;
     data['longitude'] = longitude;
     data['latitude'] = latitude;
+    data['maxAge'] = maxAge;
+    data['minAge'] = minAge;
+    data['gender'] = gender;
     data['createAt'] = createAt;
     return data;
   }

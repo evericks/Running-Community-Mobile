@@ -23,13 +23,15 @@ class GroupRepo {
     }
   }
 
-  Future<int> createGroup({required String name, required String description, required String rule, required XFile thumbnail}) async {
+  Future<int> createGroup({required String name, required String description, int? maxAge, int? minAge, String? gender, required XFile thumbnail}) async {
     try {
       FormData formData = FormData.fromMap({
         'thumbnail': await MultipartFile.fromFile(thumbnail.path, filename: '$name-thumbnail'),
         'name': name,
         'description': description,
-        'rule': rule,
+        if(maxAge != null) 'maxAge': maxAge,
+        if(minAge != null) 'minAge': minAge,
+        if(gender != null) 'gender' : gender,
       });
       final response = await _apiClient.post('/api/groups', data: formData, options: Options(contentType: Headers.multipartFormDataContentType));
       return response.statusCode!;

@@ -35,7 +35,7 @@ class MainApp extends StatelessWidget {
       //   // )
       // ], child: MultiBlocListener(listeners: [BlocListener<UserCubit, UserState>(listener: (context, state) {})], child: _fetchAuthAndInitialRoute())),
       // home: _fetchAuthAndInitialRoute(),
-      home: MultiBlocProvider(providers: [BlocProvider<NotificationCubit>(create: (context) => NotificationCubit())], child: DashboardScreen()),
+      home: MultiBlocProvider(providers: [BlocProvider<NotificationCubit>(create: (context) => NotificationCubit())], child: const DashboardScreen()),
       theme: ThemeData(
         fontFamily: 'Roboto',
       ),

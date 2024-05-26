@@ -26,7 +26,9 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
   XFile? imageFile;
   TextEditingController groupNameController = TextEditingController();
   TextEditingController groupDescriptionController = TextEditingController();
-  TextEditingController groupRuleController = TextEditingController();
+  String? selectedGender;
+  int? maxAge;
+  int? minAge;
 
   Future imageSelector(BuildContext context, String pickerType) async {
     final ImagePicker picker = ImagePicker();
@@ -160,36 +162,88 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
                   ),
                 ),
                 Gap.k16.height,
-                Container(
-                  height: 150,
-                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
-                  decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(8), boxShadow: defaultBoxShadow()),
-                  child: TextField(
-                    maxLines: null,
-                    controller: groupRuleController,
-                    decoration: const InputDecoration(hintText: 'Rule', border: InputBorder.none),
-                    onChanged: (_) => setState(() {}),
+                Row(children: [
+                  Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 12),
+                    decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(8), boxShadow: defaultBoxShadow()),
+                    child: DropdownButtonHideUnderline(child: DropdownButton<String>(
+                      items: ['Male', 'Female', 'Other'].map((String value) {
+                        return DropdownMenuItem<String>(
+                          value: value,
+                          child: Text(value),
+                        );
+                      }).toList(),
+                      onChanged: (String? value) {
+                        setState(() {
+                          selectedGender = value;
+                        });
+                      },
+                      value: selectedGender,
+                      hint: Text('Gender', style: primaryTextStyle(color: gray),),)
+                    ),
                   ),
-                ),
+                  const Spacer(),
+                  Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 12),
+                    decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(8), boxShadow: defaultBoxShadow()),
+                    child: DropdownButtonHideUnderline(child: DropdownButton<int>(
+                      items: List.generate(100, (index) => index + 1).map((int value) {
+                        return DropdownMenuItem<int>(
+                          value: value,
+                          child: Text(value.toString()),
+                        );
+                      }).toList(),
+                      onChanged: (int? value) {
+                        setState(() {
+                          minAge = value;
+                        });
+                      },
+                      value: minAge,
+                      hint: Text('Min age', style: primaryTextStyle(color: gray),),)
+                    ),
+                  ),
+                  const Spacer(),
+                  Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 12),
+                    decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(8), boxShadow: defaultBoxShadow()),
+                    child: DropdownButtonHideUnderline(child: DropdownButton<int>(
+                      items: List.generate(100, (index) => index + 1).map((int value) {
+                        return DropdownMenuItem<int>(
+                          value: value,
+                          child: Text(value.toString()),
+                        );
+                      }).toList(),
+                      onChanged: (int? value) {
+                        setState(() {
+                          maxAge = value;
+                        });
+                      },
+                      value: maxAge,
+                      hint: Text('Max age', style: primaryTextStyle(color: gray),),)
+                    ),
+                  ),
+                ],),
                 Gap.kSection.height,
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                   decoration: BoxDecoration(
-                      color: (groupNameController.text != '' && groupDescriptionController.text != '' && groupRuleController.text != '' && imageFile != null) ? primaryColor : white,
+                      color: (groupNameController.text != '' && groupDescriptionController.text != '' && imageFile != null) ? primaryColor : white,
                       borderRadius: BorderRadius.circular(8),
                       boxShadow: defaultBoxShadow()),
                   child: Text(
                     'Save group',
-                    style: primaryTextStyle(color: (groupNameController.text != '' && groupDescriptionController.text != '' && groupRuleController.text != '' && imageFile != null) ? white : grey),
+                    style: primaryTextStyle(color: (groupNameController.text != '' && groupDescriptionController.text != '' && imageFile != null) ? white : grey),
                   ),
                 ).onTap(() async {
-                  if (groupNameController.text != '' && groupDescriptionController.text != '' && groupRuleController.text != '' && imageFile != null) {
+                  if (groupNameController.text != '' && groupDescriptionController.text != '' && imageFile != null) {
                     if (UserRepo.user.id != null) {
                       final GroupCubit groupCubit = context.read<GroupCubit>();
                       groupCubit.createGroup(
                         name: groupNameController.text,
                         description: groupDescriptionController.text,
-                        rule: groupRuleController.text,
+                        maxAge: maxAge,
+                        minAge: minAge,
+                        gender: selectedGender,
                         thumbnail: imageFile!,
                       );
                     } else {

@@ -170,13 +170,16 @@ class _DashboardScreenState extends State<DashboardScreen> with SingleTickerProv
           providers: [
             BlocProvider<UserCubit>(create: (context) => UserCubit()..getUserProfile()),
             BlocProvider<ArchivementCubit>(create: (context) => ArchivementCubit()..getArchivements(userId: UserRepo.user.id, pageSize: 100)),
-            BlocProvider<GroupCubit>(
-              create: (context) => GroupCubit()..getGroups(pageSize: 100),
-            ),
+            // BlocProvider<GroupCubit>(
+            //   create: (context) => GroupCubit()..getGroups(pageSize: 100),
+            // ),
             BlocProvider<NotificationCubit>(create: (context) => NotificationCubit()..getNotifications(pageSize: 100)),
           ],
           child: MultiBlocListener(
-              listeners: [BlocListener<UserCubit, UserState>(listener: (context, state) {}), BlocListener<GroupCubit, GroupState>(listener: (context, state) {})],
+              listeners: [
+                BlocListener<UserCubit, UserState>(listener: (context, state) {}), 
+                // BlocListener<GroupCubit, GroupState>(listener: (context, state) {})
+                ],
               child: _fragments.elementAt(selectedIndex))),
     );
   }

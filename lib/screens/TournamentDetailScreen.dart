@@ -315,7 +315,17 @@ class _TournamentDetailScreenState extends State<TournamentDetailScreen> {
                       style: boldTextStyle(),
                     ).paddingSymmetric(horizontal: 16),
                     Gap.k4.height,
-                    Text(tournament.rule!, style: secondaryTextStyle()).paddingSymmetric(horizontal: 16),
+                            Row(
+                              children: [
+                                Text(
+                                  'Age from ${tournament.minAge}',
+                                  style: secondaryTextStyle(size: 14),
+                                ).visible(tournament.minAge != null),
+                                Text(" - ${tournament.maxAge}", style: secondaryTextStyle(size: 14)).visible(tournament.maxAge != null),
+                                Gap.k16.width,
+                                Text('Gender: ${tournament.gender}', style: secondaryTextStyle(size: 14)).visible(tournament.gender != null),
+                              ],
+                            ).paddingLeft(16),
                     Gap.k16.height,
                     Text(
                       'Description',
