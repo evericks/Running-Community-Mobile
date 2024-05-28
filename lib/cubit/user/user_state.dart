@@ -31,3 +31,12 @@ class SignUpFailedState extends UserState {
   final String error;
   SignUpFailedState(this.error);
 }
+
+class UpdateProfileLoadingState extends UserState {}
+
+class UpdateProfileSuccessState extends UserState {}
+
+class UpdateProfileFailedState extends UserState {
+  final String error;
+  UpdateProfileFailedState(this.error);
+}

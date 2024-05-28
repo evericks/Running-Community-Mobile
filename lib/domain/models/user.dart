@@ -4,8 +4,8 @@ class User {
   String? phone;
   String? avatarUrl;
   String? address;
-  double? longitude;
-  double? latitude;
+  String? gender;
+  String? dateOfBirth;
   String? status;
   String? createAt;
 
@@ -15,8 +15,8 @@ class User {
       this.phone,
       this.avatarUrl,
       this.address,
-      this.longitude,
-      this.latitude,
+      this.gender,
+      this.dateOfBirth,
       this.status,
       this.createAt});
 
@@ -26,8 +26,8 @@ class User {
     phone = json['phone'];
     avatarUrl = json['avatarUrl'];
     address = json['address'];
-    longitude = json['longitude'];
-    latitude = json['latitude'];
+    gender = json['gender'];
+    dateOfBirth = json['dateOfBirth'];
     status = json['status'];
     createAt = json['createAt'];
   }
@@ -39,8 +39,8 @@ class User {
     data['phone'] = this.phone;
     data['avatarUrl'] = this.avatarUrl;
     data['address'] = this.address;
-    data['longitude'] = this.longitude;
-    data['latitude'] = this.latitude;
+    data['gender'] = this.gender;
+    data['dateOfBirth'] = this.dateOfBirth;
     data['status'] = this.status;
     data['createAt'] = this.createAt;
     return data;

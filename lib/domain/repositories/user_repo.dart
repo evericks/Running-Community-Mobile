@@ -1,4 +1,6 @@
+
 import 'package:dio/dio.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:nb_utils/nb_utils.dart';
 
 import '../../utils/constants.dart';
@@ -41,8 +43,8 @@ class UserRepo {
       user.phone = response.data['phone'];
       user.avatarUrl = response.data['avatarUrl'];
       user.address = response.data['address'];
-      user.longitude = response.data['longitude'];
-      user.latitude = response.data['latitude'];
+      user.gender = response.data['gender'];
+      user.dateOfBirth = response.data['dateOfBirth'];
       user.status = response.data['status'];
       user.createAt = response.data['createAt'];
       return User.fromJson(response.data);
@@ -55,7 +57,7 @@ class UserRepo {
     }
   }
 
-  Future<bool> signUp({required String name, required String phone, required String password}) async {
+  Future<bool> signUp({required String name, required String phone, required String password, required DateTime dob}) async {
     try {
       await _apiClient.post(
         '/api/users',
@@ -63,6 +65,7 @@ class UserRepo {
           'name': name,
           'phone': phone,
           'password': password,
+          'dateOfBirth': dob.toString().substring(0, 10),
         },
       );
       return true;
@@ -71,6 +74,30 @@ class UserRepo {
         throw Exception(e.response!.data);
       } else if (e.response?.statusCode == 409) {
         throw Exception(msg_phone_exist);
+      } else {
+        throw Exception(msg_server_error);
+      }
+    }
+  }
+
+  Future<void> updateProfile({required String id, String? name, String? address, XFile? avatar, DateTime? dob, String? password, String? gender}) async {
+    try {
+      FormData formData = FormData.fromMap({
+        if(avatar != null) 'avatar': await MultipartFile.fromFile(avatar.path, filename: '$name-avatar'),
+        if(name != null) 'name': name,
+        if(address != null) 'address': address,
+        if(dob != null) 'dateOfBirth': dob.toString().substring(0, 10),
+        if(password != null) 'password': password,
+        if(gender != null) 'gender' : gender
+      });
+      await _apiClient.put(
+        '/api/users/$id',
+        data: formData,
+        options: Options(contentType: Headers.multipartFormDataContentType)
+      );
+    } on DioException catch (e) {
+      if (e.response?.statusCode == 400) {
+        throw Exception(e.response!.data);
       } else {
         throw Exception(msg_server_error);
       }

@@ -173,6 +173,15 @@ class _TournamentDetailScreenState extends State<TournamentDetailScreen> {
             }
             if (state is TournamentDetailSuccessState) {
               var tournament = state.tournament;
+              bool isEligible() {
+                    int userAge = (DateTime.now().difference(DateTime.parse(UserRepo.user.dateOfBirth!)).inDays / 365.25).floor();
+
+                    bool isMinAgeValid = tournament.minAge == null || tournament.minAge! <= userAge;
+                    bool isMaxAgeValid = tournament.maxAge == null || userAge <= tournament.maxAge!;
+                    bool isGenderValid = tournament.gender == null || tournament.gender == UserRepo.user.gender;
+
+                    return isMinAgeValid && isMaxAgeValid && isGenderValid;
+                  }
               return SingleChildScrollView(
                 physics: const AlwaysScrollableScrollPhysics(),
                 child: Column(
@@ -252,11 +261,11 @@ class _TournamentDetailScreenState extends State<TournamentDetailScreen> {
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: <Widget>[
                                     buildTimeCard(time: days, header: 'Ngày'),
-                                    Spacer(),
+                                    const Spacer(),
                                     buildTimeCard(time: hours, header: 'Giờ'),
-                                    Spacer(),
+                                    const Spacer(),
                                     buildTimeCard(time: minutes, header: 'Phút'),
-                                    Spacer(),
+                                    const Spacer(),
                                     buildTimeCard(time: seconds, header: 'Giây'),
                                   ],
                                 ).paddingSymmetric(horizontal: 16),
@@ -264,6 +273,8 @@ class _TournamentDetailScreenState extends State<TournamentDetailScreen> {
                                 Row(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
+                                    if(isEligible()) ...[
+
                                     Container(
                                             decoration: BoxDecoration(
                                               borderRadius: BorderRadius.circular(8),
@@ -284,9 +295,22 @@ class _TournamentDetailScreenState extends State<TournamentDetailScreen> {
                                               .then((value) => value ? context.read<TournamentCubit>().requestPaymentTournament(tournamentId: tournament.id!, amount: tournament.fee!) : null);
                                         }
                                       } else {
-                                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: const Text('Please login to register'), backgroundColor: tomato));
+                                        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Please login to register'), backgroundColor: tomato));
                                       }
                                     }).expand(),
+                                    ] else ...[
+                                      Container(
+                                            decoration: BoxDecoration(
+                                              borderRadius: BorderRadius.circular(8),
+                                              color: gray,
+                                            ),
+                                            child: Text(
+                                              'You are not eligible to register',
+                                              style: boldTextStyle(color: white, size: 14),
+                                              textAlign: TextAlign.center,
+                                            ).paddingSymmetric(horizontal: 32, vertical: 8))
+                                        .expand(),
+                                    ],
                                     Gap.k16.width,
                                     Text(tournament.fee == 0 ? 'Free' : '${NumberFormat('#,##0', 'en_US').format(tournament.fee)} đ', style: boldTextStyle(color: primaryColor, size: 16)),
                                   ],

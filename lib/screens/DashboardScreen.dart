@@ -1,14 +1,11 @@
 import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:nb_utils/nb_utils.dart';
-import 'package:running_community_mobile/cubit/group/group_state.dart';
 import 'package:running_community_mobile/cubit/notification/notification_cubit.dart';
 import 'package:running_community_mobile/domain/repositories/user_repo.dart';
 import '../cubit/archivement/archivement_cubit.dart';
-import '../cubit/group/group_cubit.dart';
 import '../cubit/user/user_cubit.dart';
 import '../cubit/user/user_state.dart';
 import '../fragments/GroupFragment.dart';

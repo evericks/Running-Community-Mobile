@@ -2,6 +2,8 @@ import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:running_community_mobile/screens/ChangePasswordScreen.dart';
+import 'package:running_community_mobile/screens/EditProfileScreen.dart';
 import 'package:running_community_mobile/screens/ExerciseItemScreen.dart';
 import 'package:running_community_mobile/screens/FullScreenVideoScreen.dart';
 import 'package:running_community_mobile/screens/PaymentScreen.dart';
@@ -101,6 +103,10 @@ Route<dynamic> generateRoute(RouteSettings settings) {
                 BlocProvider<NotificationCubit>(create: (context) => NotificationCubit()..getNotifications(pageSize: 1000)),
                 BlocProvider<MarkAsReadNotificationCubit>(create: (context) => MarkAsReadNotificationCubit())
               ], child: const NotificationScreen()));
+    case EditProfileScreen.routeName:
+      return MaterialPageRoute(builder: (_) => const EditProfileScreen());
+    case ChangePasswordScreen.routeName:
+      return MaterialPageRoute(builder: (_) => const ChangePasswordScreen());
     default:
       return MaterialPageRoute(builder: (_) => const NotFoundScreen());
   }

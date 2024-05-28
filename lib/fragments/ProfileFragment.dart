@@ -14,6 +14,7 @@ import 'package:running_community_mobile/cubit/user/user_state.dart';
 import 'package:running_community_mobile/domain/models/tournaments.dart';
 import 'package:running_community_mobile/domain/repositories/user_repo.dart';
 import 'package:running_community_mobile/screens/DashboardScreen.dart';
+import 'package:running_community_mobile/screens/EditProfileScreen.dart';
 import 'package:running_community_mobile/screens/LoginScreen.dart';
 import 'package:running_community_mobile/screens/SeeAllTournamentScreen.dart';
 import 'package:running_community_mobile/screens/TournamentDetailScreen.dart';
@@ -85,9 +86,21 @@ class _ProfileFragmentState extends State<ProfileFragment> {
                               ),
                             ],
                           ),
+                          const Spacer(),
+                          SvgPicture.asset(
+                            AppAssets.user_pen,
+                            height: 20,
+                            width: 20,
+                            color: gray,
+                          ).onTap(() async {
+                            var isRefresh = await Navigator.pushNamed(context, EditProfileScreen.routeName);
+                            if (isRefresh != null && isRefresh == true) {
+                              context.read<UserCubit>().getUserProfile();
+                            }
+                          }),
                         ],
                       ),
-                    ).paddingSymmetric(horizontal: 32),
+                    ).paddingSymmetric(horizontal: 16),
                     Gap.k16.height,
                     SizedBox(
                       height: 38,
@@ -220,11 +233,15 @@ class _ProfileFragmentState extends State<ProfileFragment> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              'Address: ${userProfile.address}',
+                              'Address: ${userProfile.address ?? 'N/A'}',
                               style: secondaryTextStyle(),
                             ),
                             Text(
                               'Phone: ${userProfile.phone}',
+                              style: secondaryTextStyle(),
+                            ),
+                            Text(
+                              'Date Of Birth: ${userProfile.dateOfBirth != null ? DateFormat('dd/MM/yyyy').format(DateTime.parse(userProfile.dateOfBirth!)) : 'N/A'}',
                               style: secondaryTextStyle(),
                             ),
                           ],

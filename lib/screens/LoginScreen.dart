@@ -106,10 +106,10 @@ class _LoginScreenState extends State<LoginScreen> {
                             ),
                           ).paddingOnly(left: 16),
                         ),
-                        Gap.k16.height,
-                        const Text('Forgot Password?', style: TextStyle(color: textSecondaryColor))..onTap(() {
-                          Navigator.pushNamed(context, '/signup');
-                        }),
+                        // Gap.k16.height,
+                        // const Text('Forgot Password?', style: TextStyle(color: textSecondaryColor))..onTap(() {
+                        //   Navigator.pushNamed(context, '/signup');
+                        // }),
                         Gap.k16.height,
                         Button(title: 'Log In', onPressed: (){
                           context.read<UserCubit>().login(username: usernameController.text, password: passwordController.text);

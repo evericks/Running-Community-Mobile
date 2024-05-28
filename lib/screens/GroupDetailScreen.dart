@@ -90,6 +90,16 @@ class _GroupDetailScreenState extends State<GroupDetailScreen> {
                   bool isUserInGroup = group.groupMembers!.any((mem) => mem.user!.id == UserRepo.user.id);
                   bool isActive = isUserInGroup && group.groupMembers!.firstWhere((mem) => mem.user!.id == UserRepo.user.id).status == 'Active';
                   bool isRequested = isUserInGroup && group.groupMembers!.firstWhere((mem) => mem.user!.id == UserRepo.user.id).status == 'Requested';
+                  bool isEligible() {
+                    int userAge = (DateTime.now().difference(DateTime.parse(UserRepo.user.dateOfBirth!)).inDays / 365.25).floor();
+
+                    bool isMinAgeValid = group.minAge == null || group.minAge! <= userAge;
+                    bool isMaxAgeValid = group.maxAge == null || userAge <= group.maxAge!;
+                    bool isGenderValid = group.gender == null || group.gender == UserRepo.user.gender;
+
+                    return isMinAgeValid && isMaxAgeValid && isGenderValid;
+                  }
+
                   return SingleChildScrollView(
                     physics: const AlwaysScrollableScrollPhysics(),
                     child: Column(
@@ -115,33 +125,61 @@ class _GroupDetailScreenState extends State<GroupDetailScreen> {
                                     borderRadius: BorderRadius.circular(8),
                                     child: FadeInImage.assetNetwork(placeholder: AppAssets.placeholder, image: group.thumbnailUrl!, height: 100, width: 100, fit: BoxFit.cover)),
                               ),
-                              if (isUserOwner) ...[
-                                const SizedBox.shrink()
-                              ] else if (isUserInGroup) ...[
-                                Positioned(
-                                  right: 16,
-                                  bottom: 0,
-                                  child: Container(
-                                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                                    decoration: BoxDecoration(
-                                      border: Border.all(color: gray),
-                                      color: isActive || isRequested ? white : primaryColor,
-                                      borderRadius: BorderRadius.circular(8),
-                                    ),
-                                    child: Text(
-                                      isActive
-                                          ? 'Out'
-                                          : isRequested
-                                              ? 'Requested'
-                                              : 'Join',
-                                      style: boldTextStyle(color: isActive || isRequested ? grey : white),
-                                    ),
-                                  ).onTap(() {
-                                    if (!isUserInGroup) {
-                                      context.read<GroupCubit>().joinGroup(userId: UserRepo.user.id!, groupId: group.id!);
-                                    }
-                                  }),
-                                )
+                              if (isEligible()) ...[
+                                if (isUserOwner) ...[
+                                  const SizedBox.shrink()
+                                ] else if (isUserInGroup) ...[
+                                  Positioned(
+                                    right: 16,
+                                    bottom: 0,
+                                    child: Container(
+                                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                                      decoration: BoxDecoration(
+                                        border: Border.all(color: gray),
+                                        color: isActive || isRequested ? white : primaryColor,
+                                        borderRadius: BorderRadius.circular(8),
+                                      ),
+                                      child: Text(
+                                        isActive
+                                            ? 'Out'
+                                            : isRequested
+                                                ? 'Requested'
+                                                : 'Join',
+                                        style: boldTextStyle(color: isActive || isRequested ? grey : white),
+                                      ),
+                                    ).onTap(() {
+                                      if (!isUserInGroup) {
+                                        context.read<GroupCubit>().joinGroup(userId: UserRepo.user.id!, groupId: group.id!);
+                                      }
+                                    }),
+                                  )
+                                ] else ...[
+                                  Positioned(
+                                    right: 16,
+                                    bottom: 0,
+                                    child: Container(
+                                      padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 8),
+                                      decoration: BoxDecoration(
+                                        border: Border.all(color: primaryColor),
+                                        color: primaryColor,
+                                        borderRadius: BorderRadius.circular(8),
+                                      ),
+                                      child: Text(
+                                        'Join',
+                                        style: boldTextStyle(color: white),
+                                      ),
+                                    ).onTap(() {
+                                      if (getStringAsync(AppConstant.TOKEN_KEY) == '') {
+                                        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                                          content: Text('Please login to join the tournament'),
+                                          backgroundColor: tomato,
+                                        ));
+                                      } else {
+                                        context.read<GroupCubit>().joinGroup(userId: UserRepo.user.id!, groupId: group.id!);
+                                      }
+                                    }),
+                                  )
+                                ]
                               ] else ...[
                                 Positioned(
                                   right: 16,
@@ -149,24 +187,15 @@ class _GroupDetailScreenState extends State<GroupDetailScreen> {
                                   child: Container(
                                     padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 8),
                                     decoration: BoxDecoration(
-                                      border: Border.all(color: primaryColor),
-                                      color: primaryColor,
+                                      border: Border.all(color: gray),
+                                      color: white,
                                       borderRadius: BorderRadius.circular(8),
                                     ),
                                     child: Text(
-                                      'Join',
-                                      style: boldTextStyle(color: white),
+                                      'Not enough condition',
+                                      style: boldTextStyle(color: gray),
                                     ),
-                                  ).onTap(() {
-                                    if (getStringAsync(AppConstant.TOKEN_KEY) == '') {
-                                      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                                        content: Text('Please login to join the tournament'),
-                                        backgroundColor: tomato,
-                                      ));
-                                    } else {
-                                      context.read<GroupCubit>().joinGroup(userId: UserRepo.user.id!, groupId: group.id!);
-                                    }
-                                  }),
+                                  ),
                                 )
                               ]
                             ],
@@ -186,20 +215,22 @@ class _GroupDetailScreenState extends State<GroupDetailScreen> {
                               style: primaryTextStyle(size: 16),
                             ),
                             Gap.k16.height,
-                            Text('Rule', style: boldTextStyle(size: 16)),
-                            Gap.k8.height,
-                            Row(
-                              children: [
-                                Text(
-                                  'Age from ${group.minAge}',
-                                  style: secondaryTextStyle(size: 14),
-                                ).visible(group.minAge != null),
-                                Text(" - ${group.maxAge}", style: secondaryTextStyle(size: 14)).visible(group.maxAge != null),
-                                Gap.k16.width,
-                                Text('Gender: ${group.gender}', style: secondaryTextStyle(size: 14)).visible(group.gender != null),
-                              ],
-                            ),
-                            Gap.k16.height,
+                            if (group.maxAge != null || group.minAge != null || group.gender != null) ...[
+                              Text('Rule', style: boldTextStyle(size: 16)),
+                              Gap.k8.height,
+                              Row(
+                                children: [
+                                  Text(
+                                    'Age from ${group.minAge}',
+                                    style: secondaryTextStyle(size: 14),
+                                  ).visible(group.minAge != null),
+                                  Text(" - ${group.maxAge}", style: secondaryTextStyle(size: 14)).visible(group.maxAge != null),
+                                  Gap.k16.width,
+                                  Text('Gender: ${group.gender}', style: secondaryTextStyle(size: 14)).visible(group.gender != null),
+                                ],
+                              ),
+                              Gap.k16.height,
+                            ],
                             Row(
                               children: [
                                 Container(

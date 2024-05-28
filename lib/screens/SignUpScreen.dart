@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_svg/svg.dart';
+import 'package:intl/intl.dart';
 import 'package:nb_utils/nb_utils.dart';
 import 'package:running_community_mobile/cubit/user/user_cubit.dart';
 import 'package:running_community_mobile/cubit/user/user_state.dart';
@@ -23,6 +25,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
   TextEditingController nameController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
   TextEditingController confirmPasswordController = TextEditingController();
+  DateTime? selectedDate;
 
   void showLoader(BuildContext context) {
     showDialog(
@@ -55,7 +58,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
             Navigator.pop(context);
           } else if (state is SignUpFailedState) {
             hideLoader(context);
-            ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(state.error.replaceAll('Exception: ', '')), backgroundColor: tomato,));
+            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+              content: Text(state.error.replaceAll('Exception: ', '')),
+              backgroundColor: tomato,
+            ));
           }
         }, builder: (context, state) {
           return SingleChildScrollView(
@@ -64,14 +70,14 @@ class _SignUpScreenState extends State<SignUpScreen> {
             child: Column(
               children: [
                 SizedBox(
-                  height: context.height() * 0.3,
+                  height: context.height() * 0.2,
                   child: Image.asset(
                     AppAssets.login_background,
                     fit: BoxFit.cover,
                   ),
                 ),
                 Container(
-                  height: MediaQuery.of(context).size.height * 0.6,
+                  height: MediaQuery.of(context).size.height * 0.7,
                   decoration: BoxDecoration(borderRadius: const BorderRadius.only(topLeft: Radius.circular(50), topRight: Radius.circular(50)), color: primaryColor.withOpacity(0.1)),
                   child: Column(
                     children: [
@@ -92,11 +98,11 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         child: TextField(
                           controller: phoneController,
                           onChanged: (value) => setState(() {}),
-                          decoration: const InputDecoration(
-                            hintText: 'Phone number (*)',
-                            // contentPadding: const EdgeInsets.all(16),
-                            border: InputBorder.none,
-                          ),
+                          decoration: InputDecoration(
+                              hintText: 'Phone number (*)',
+                              // contentPadding: const EdgeInsets.all(16),
+                              border: InputBorder.none,
+                              hintStyle: secondaryTextStyle()),
                         ).paddingOnly(left: 16),
                       ),
                       Gap.k16.height,
@@ -108,11 +114,11 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         child: TextField(
                           controller: nameController,
                           onChanged: (value) => setState(() {}),
-                          decoration: const InputDecoration(
-                            hintText: 'Name (*)',
-                            // contentPadding: const EdgeInsets.all(16),
-                            border: InputBorder.none,
-                          ),
+                          decoration: InputDecoration(
+                              hintText: 'Name (*)',
+                              // contentPadding: const EdgeInsets.all(16),
+                              border: InputBorder.none,
+                              hintStyle: secondaryTextStyle()),
                         ).paddingOnly(left: 16),
                       ),
                       Gap.k16.height,
@@ -125,11 +131,11 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           controller: passwordController,
                           onChanged: (value) => setState(() {}),
                           obscureText: true,
-                          decoration: const InputDecoration(
-                            hintText: 'Password (*)',
-                            // contentPadding: const EdgeInsets.all(16),
-                            border: InputBorder.none,
-                          ),
+                          decoration: InputDecoration(
+                              hintText: 'Password (*)',
+                              // contentPadding: const EdgeInsets.all(16),
+                              border: InputBorder.none,
+                              hintStyle: secondaryTextStyle()),
                         ).paddingOnly(left: 16),
                       ),
                       Gap.k16.height,
@@ -142,42 +148,57 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           controller: confirmPasswordController,
                           onChanged: (value) => setState(() {}),
                           obscureText: true,
-                          decoration: const InputDecoration(
-                            hintText: 'Confirm password (*)',
-                            // contentPadding: const EdgeInsets.all(16),
-                            border: InputBorder.none,
-                          ),
+                          decoration: InputDecoration(
+                              hintText: 'Confirm password (*)',
+                              // contentPadding: const EdgeInsets.all(16),
+                              border: InputBorder.none,
+                              hintStyle: secondaryTextStyle()),
                         ).paddingOnly(left: 16),
                       ),
-                      // Gap.k16.height,
-                      // Container(
-                      //   decoration: BoxDecoration(
-                      //     color: white,
-                      //     borderRadius: BorderRadius.circular(10),
-                      //   ),
-                      //   child: const TextField(
-                      //     decoration: InputDecoration(
-                      //       hintText: 'Email',
-                      //       // contentPadding: const EdgeInsets.all(16),
-                      //       border: InputBorder.none,
-                      //     ),
-                      //   ).paddingOnly(left: 16),
-                      // ),
+                      Gap.k16.height,
+                      Container(
+                        decoration: BoxDecoration(
+                          color: white,
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        padding: const EdgeInsets.symmetric(vertical: 12),
+                        child: Row(
+                          children: [
+                            Text(selectedDate != null ? DateFormat('dd/MM/yyyy').format(selectedDate!) : 'Date of birth (*)', style: secondaryTextStyle()).paddingOnly(left: 16),
+                            const Spacer(),
+                            SvgPicture.asset(
+                              AppAssets.calendar,
+                              width: 24,
+                              height: 24,
+                              color: gray,
+                            ).paddingOnly(right: 16),
+                          ],
+                        ),
+                      ).onTap(() {
+                        showDatePicker(
+                          context: context,
+                          initialDate: DateTime.now(),
+                          firstDate: DateTime(1900),
+                          lastDate: DateTime.now(),
+                        ).then((value) => setState(() {
+                              selectedDate = value;
+                            }));
+                      }),
                       Gap.k8.height,
                       const Text('(*) Required field', style: TextStyle(color: gray, fontSize: 12)),
                       Gap.k16.height,
-
                       Button(
                           title: 'Sign Up',
                           isActive:
-                              (phoneController.text.isNotEmpty && nameController.text.isNotEmpty && passwordController.text.isNotEmpty && confirmPasswordController.text.isNotEmpty) ? true : false,
+                              (phoneController.text.isNotEmpty && nameController.text.isNotEmpty && passwordController.text.isNotEmpty && confirmPasswordController.text.isNotEmpty && selectedDate != null) ? true : false,
                           onPressed: () {
-                            if (phoneController.text.isNotEmpty && nameController.text.isNotEmpty && passwordController.text.isNotEmpty && confirmPasswordController.text.isNotEmpty) {
+                            if (phoneController.text.isNotEmpty && nameController.text.isNotEmpty && passwordController.text.isNotEmpty && confirmPasswordController.text.isNotEmpty && selectedDate != null) {
                               if (passwordController.text == confirmPasswordController.text) {
                                 context.read<UserCubit>().signUp(
                                       phone: phoneController.text,
                                       name: nameController.text,
                                       password: passwordController.text,
+                                      dob: selectedDate!,
                                     );
                               } else {
                                 ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Password does not match')));

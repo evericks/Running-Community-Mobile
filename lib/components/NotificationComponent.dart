@@ -65,11 +65,23 @@ class _NotificationComponentState extends State<NotificationComponent> {
             Gap.k16.width,
             SizedBox(
                 width: context.width() * 0.7,
-                child: Text(
-                  notification!.message!,
-                  style: primaryTextStyle(size: 14),
-                  maxLines: 2,
-                  overflow: TextOverflow.ellipsis,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      notification!.title!,
+                      style: primaryTextStyle(size: 14),
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                    Gap.k4.height,
+                    Text(
+                      notification!.message!,
+                      style: secondaryTextStyle(size: 12),
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ],
                 )),
           ],
         ),
