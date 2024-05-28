@@ -2,7 +2,6 @@ import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:running_community_mobile/screens/ChangePasswordScreen.dart';
 import 'package:running_community_mobile/screens/EditProfileScreen.dart';
 import 'package:running_community_mobile/screens/ExerciseItemScreen.dart';
 import 'package:running_community_mobile/screens/FullScreenVideoScreen.dart';
@@ -105,8 +104,6 @@ Route<dynamic> generateRoute(RouteSettings settings) {
               ], child: const NotificationScreen()));
     case EditProfileScreen.routeName:
       return MaterialPageRoute(builder: (_) => const EditProfileScreen());
-    case ChangePasswordScreen.routeName:
-      return MaterialPageRoute(builder: (_) => const ChangePasswordScreen());
     default:
       return MaterialPageRoute(builder: (_) => const NotFoundScreen());
   }
