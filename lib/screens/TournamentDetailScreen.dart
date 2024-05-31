@@ -55,7 +55,7 @@ class _TournamentDetailScreenState extends State<TournamentDetailScreen> {
   @override
   void initState() {
     super.initState();
-    startTimer();
+    // startTimer();
   }
 
   @override
@@ -135,7 +135,7 @@ class _TournamentDetailScreenState extends State<TournamentDetailScreen> {
               var endTime = DateTime.parse(tournament.endTime!);
               duration = endTime.difference(DateTime.now());
               // context.read<TournamentCubit>().getTournamentsAttended();
-              setState(() {});
+              startTimer();
             }
             if (state is GetTournamentAttendedSuccessState) {
               context.read<TournamentCubit>().getTournamentById(widget.id);
@@ -178,7 +178,7 @@ class _TournamentDetailScreenState extends State<TournamentDetailScreen> {
 
                     bool isMinAgeValid = tournament.minAge == null || tournament.minAge! <= userAge;
                     bool isMaxAgeValid = tournament.maxAge == null || userAge <= tournament.maxAge!;
-                    bool isGenderValid = tournament.gender == null || tournament.gender == UserRepo.user.gender;
+                    bool isGenderValid = tournament.gender == 'None' || tournament.gender == UserRepo.user.gender;
 
                     return isMinAgeValid && isMaxAgeValid && isGenderValid;
                   }
