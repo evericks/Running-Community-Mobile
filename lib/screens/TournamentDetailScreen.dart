@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'dart:async';
 import 'dart:io';
 import 'dart:typed_data';
@@ -55,7 +57,6 @@ class _TournamentDetailScreenState extends State<TournamentDetailScreen> {
   @override
   void initState() {
     super.initState();
-    startTimer();
   }
 
   @override
@@ -110,12 +111,12 @@ class _TournamentDetailScreenState extends State<TournamentDetailScreen> {
                 var qrCodeData = await generateQRCode(widget.id, UserRepo.user.id!);
                 Navigator.pushNamed(context, QRCodeScreen.routeName, arguments: qrCodeData);
               },
+              backgroundColor: primaryColor,
               child: SvgPicture.asset(
                 AppAssets.qr,
                 color: white,
                 width: 32,
               ),
-              backgroundColor: primaryColor,
             )
           : null,
       body: BlocProvider<TournamentCubit>(
@@ -135,7 +136,8 @@ class _TournamentDetailScreenState extends State<TournamentDetailScreen> {
               var endTime = DateTime.parse(tournament.endTime!);
               duration = endTime.difference(DateTime.now());
               // context.read<TournamentCubit>().getTournamentsAttended();
-              setState(() {});
+              // setState(() {});
+              startTimer();
             }
             if (state is GetTournamentAttendedSuccessState) {
               context.read<TournamentCubit>().getTournamentById(widget.id);
@@ -178,7 +180,7 @@ class _TournamentDetailScreenState extends State<TournamentDetailScreen> {
 
                     bool isMinAgeValid = tournament.minAge == null || tournament.minAge! <= userAge;
                     bool isMaxAgeValid = tournament.maxAge == null || userAge <= tournament.maxAge!;
-                    bool isGenderValid = tournament.gender == null || tournament.gender == UserRepo.user.gender;
+                    bool isGenderValid = tournament.gender == 'None' || tournament.gender == UserRepo.user.gender;
 
                     return isMinAgeValid && isMaxAgeValid && isGenderValid;
                   }
@@ -224,17 +226,7 @@ class _TournamentDetailScreenState extends State<TournamentDetailScreen> {
                     ).paddingLeft(16),
                     Gap.k16.height,
                     const Divider(),
-                    BlocProvider<UserTournamentCubit>(
-                      create: ((context) => UserTournamentCubit()..getUsersTournament(tournamentId: widget.id)),
-                      child: BlocListener<UserTournamentCubit, UserTournamentState>(
-                        listener: (context, state) {
-                          if (state is UserTournamentSuccessState) {
-                            setState(() {
-                              memberQuantity = state.usersTournament.usersTournament!.length;
-                            });
-                          }
-                        },
-                        child: Column(
+                    Column(
                           children: [
                             if (DateTime.now().isBefore(DateTime.parse(tournament.registerDuration!)) && !isAttended) ...[
                               if (tournament.maximumMember! <= memberQuantity) ...[
@@ -270,7 +262,22 @@ class _TournamentDetailScreenState extends State<TournamentDetailScreen> {
                                   ],
                                 ).paddingSymmetric(horizontal: 16),
                                 Gap.k16.height,
-                                Row(
+                                
+                              ],
+                            ],
+                          ],
+                        ),
+                    BlocProvider<UserTournamentCubit>(
+                      create: ((context) => UserTournamentCubit()..getUsersTournament(tournamentId: widget.id)),
+                      child: BlocListener<UserTournamentCubit, UserTournamentState>(
+                        listener: (context, state) {
+                          if (state is UserTournamentSuccessState) {
+                            setState(() {
+                              memberQuantity = state.usersTournament.usersTournament!.length;
+                            });
+                          }
+                        },
+                        child: Row(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
                                     if(isEligible()) ...[
@@ -315,10 +322,6 @@ class _TournamentDetailScreenState extends State<TournamentDetailScreen> {
                                     Text(tournament.fee == 0 ? 'Free' : '${NumberFormat('#,##0', 'en_US').format(tournament.fee)} đ', style: boldTextStyle(color: primaryColor, size: 16)),
                                   ],
                                 ).paddingSymmetric(horizontal: 16),
-                              ],
-                            ],
-                          ],
-                        ),
                       ),
                     ),
                     if (isAttended) ...[
