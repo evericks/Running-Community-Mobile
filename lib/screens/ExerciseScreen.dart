@@ -132,13 +132,13 @@ class _ExerciseScreenState extends State<ExerciseScreen> {
                                         ),
                                         child: Row(
                                           children: [
-                                            exerciseItems[index].thumbnailUrl != null
-                                                ? ClipRRect(
-                                                    borderRadius: BorderRadius.circular(8),
-                                                    child: FadeInImage.assetNetwork(
-                                                        placeholder: AppAssets.placeholder, image: exerciseItems[index].thumbnailUrl!, width: 80, height: 80 * 9 / 16, fit: BoxFit.cover))
-                                                : ClipRRect(borderRadius: BorderRadius.circular(8), child: Image.asset(AppAssets.placeholder, width: 80, height: 80 * 9 / 16, fit: BoxFit.cover)),
-                                            Gap.k16.width,
+                                            // exerciseItems[index].thumbnailUrl != null
+                                            //     ? ClipRRect(
+                                            //         borderRadius: BorderRadius.circular(8),
+                                            //         child: FadeInImage.assetNetwork(
+                                            //             placeholder: AppAssets.placeholder, image: exerciseItems[index].thumbnailUrl!, width: 80, height: 80 * 9 / 16, fit: BoxFit.cover))
+                                            //     : ClipRRect(borderRadius: BorderRadius.circular(8), child: Image.asset(AppAssets.placeholder, width: 80, height: 80 * 9 / 16, fit: BoxFit.cover)),
+                                            // Gap.k16.width,
                                             Text(exerciseItems[index].title!, style: boldTextStyle()),
                                             const Spacer(),
                                             SvgPicture.asset(userExerciseItems.any((i) => i.exerciseItemId == exerciseItems[index].id) ? AppAssets.circle_check : AppAssets.circle_play,

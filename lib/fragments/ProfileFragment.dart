@@ -233,6 +233,10 @@ class _ProfileFragmentState extends State<ProfileFragment> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
+                              'Gender: ${userProfile.gender ?? 'N/A'}',
+                              style: secondaryTextStyle(),
+                            ),
+                            Text(
                               'Address: ${userProfile.address ?? 'N/A'}',
                               style: secondaryTextStyle(),
                             ),
@@ -252,65 +256,68 @@ class _ProfileFragmentState extends State<ProfileFragment> {
                           }
                           if (state is ArchivementSuccessState) {
                             var archivements = state.archivements.archivements!;
-                            return Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                ListView.separated(
-                                    shrinkWrap: true,
-                                    physics: const AlwaysScrollableScrollPhysics(),
-                                    itemBuilder: (context, index) {
-                                      return Container(
-                                        height: 80,
-                                        decoration: BoxDecoration(
-                                          color: white,
-                                          borderRadius: BorderRadius.circular(8),
-                                          boxShadow: [
-                                            BoxShadow(
-                                              color: Colors.grey.withOpacity(0.5),
-                                              spreadRadius: 1,
-                                              blurRadius: 7,
-                                              offset: const Offset(0, 3), // changes position of shadow
-                                            )
-                                          ],
-                                        ),
-                                        child: Row(
-                                          children: [
-                                            FractionallySizedBox(
-                                              heightFactor: 1,
-                                              child: ClipRRect(
-                                                borderRadius: const BorderRadius.only(topLeft: Radius.circular(8), bottomLeft: Radius.circular(8)),
-                                                child: Transform.scale(
-                                                  scale: 0.6,
-                                                  child: FadeInImage.assetNetwork(
-                                                    placeholder: AppAssets.placeholder,
-                                                    image: archivements[index].thumbnailUrl!,
-                                                    // width: 60,
-                                                    fit: BoxFit.cover,
+                            return SingleChildScrollView(
+                              physics: const AlwaysScrollableScrollPhysics(),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  ListView.separated(
+                                      shrinkWrap: true,
+                                      physics: const NeverScrollableScrollPhysics(),
+                                      itemBuilder: (context, index) {
+                                        return Container(
+                                          height: 80,
+                                          decoration: BoxDecoration(
+                                            color: white,
+                                            borderRadius: BorderRadius.circular(8),
+                                            boxShadow: [
+                                              BoxShadow(
+                                                color: Colors.grey.withOpacity(0.5),
+                                                spreadRadius: 1,
+                                                blurRadius: 7,
+                                                offset: const Offset(0, 3), // changes position of shadow
+                                              )
+                                            ],
+                                          ),
+                                          child: Row(
+                                            children: [
+                                              FractionallySizedBox(
+                                                heightFactor: 1,
+                                                child: ClipRRect(
+                                                  borderRadius: const BorderRadius.only(topLeft: Radius.circular(8), bottomLeft: Radius.circular(8)),
+                                                  child: Transform.scale(
+                                                    scale: 0.6,
+                                                    child: FadeInImage.assetNetwork(
+                                                      placeholder: AppAssets.placeholder,
+                                                      image: archivements[index].thumbnailUrl!,
+                                                      // width: 60,
+                                                      fit: BoxFit.cover,
+                                                    ),
                                                   ),
                                                 ),
                                               ),
-                                            ),
-                                            // Gap.k16.width,
-                                            Column(
-                                              crossAxisAlignment: CrossAxisAlignment.start,
-                                              children: [
-                                                Text(
-                                                  archivements[index].tournament!.title!,
-                                                  style: primaryTextStyle(),
-                                                ),
-                                                Text(
-                                                  archivements[index].name!,
-                                                  style: secondaryTextStyle(),
-                                                ),
-                                              ],
-                                            ).paddingAll(8),
-                                          ],
-                                        ),
-                                      );
-                                    },
-                                    separatorBuilder: (context, index) => const Divider(),
-                                    itemCount: archivements.length)
-                              ],
+                                              // Gap.k16.width,
+                                              Column(
+                                                crossAxisAlignment: CrossAxisAlignment.start,
+                                                children: [
+                                                  Text(
+                                                    archivements[index].tournament!.title!,
+                                                    style: primaryTextStyle(),
+                                                  ),
+                                                  Text(
+                                                    archivements[index].name!,
+                                                    style: secondaryTextStyle(),
+                                                  ),
+                                                ],
+                                              ).paddingAll(8),
+                                            ],
+                                          ),
+                                        );
+                                      },
+                                      separatorBuilder: (context, index) => const Divider(),
+                                      itemCount: archivements.length)
+                                ],
+                              ),
                             );
                           }
                           return const SizedBox.shrink();

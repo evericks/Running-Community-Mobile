@@ -237,6 +237,8 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
                 ).onTap(() async {
                   if (groupNameController.text != '' && groupDescriptionController.text != '' && imageFile != null) {
                     if (UserRepo.user.id != null) {
+                      if (minAge! < maxAge!) {
+                        
                       final GroupCubit groupCubit = context.read<GroupCubit>();
                       groupCubit.createGroup(
                         name: groupNameController.text,
@@ -246,6 +248,9 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
                         gender: selectedGender,
                         thumbnail: imageFile!,
                       );
+                      } else {
+                        Fluttertoast.showToast(msg: 'Min age must be less than max age');
+                      }
                     } else {
                       Fluttertoast.showToast(msg: 'Please login to create group');
                     }
