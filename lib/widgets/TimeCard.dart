@@ -8,11 +8,11 @@ Widget buildTimeCard({required String time, required String header}) {
       mainAxisAlignment: MainAxisAlignment.center,
       children: <Widget>[
         Container(
-          padding: const EdgeInsets.all(8),
+          padding: EdgeInsets.all(8),
           decoration: BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.circular(5),
-            boxShadow: const [
+            boxShadow: [
               BoxShadow(
                 color: Colors.black26,
                 blurRadius: 8,
@@ -22,7 +22,7 @@ Widget buildTimeCard({required String time, required String header}) {
           ),
           child: Text(
             time,
-            style: const TextStyle(
+            style: TextStyle(
               fontWeight: FontWeight.bold,
               fontSize: 50,
               color: primaryColor,
