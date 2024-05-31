@@ -6,7 +6,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:intl/intl.dart';
 import 'package:nb_utils/nb_utils.dart';
-import 'package:running_community_mobile/cubit/archivement/archivement_state.dart';
 import 'package:running_community_mobile/cubit/tournament/tournament_cubit.dart';
 import 'package:running_community_mobile/cubit/tournament/tournament_state.dart';
 import 'package:running_community_mobile/cubit/user/user_cubit.dart';
@@ -22,8 +21,6 @@ import 'package:running_community_mobile/utils/app_assets.dart';
 import 'package:running_community_mobile/utils/colors.dart';
 import 'package:running_community_mobile/utils/gap.dart';
 import 'package:running_community_mobile/widgets/AppBar.dart';
-
-import '../cubit/archivement/archivement_cubit.dart';
 import '../domain/models/user.dart';
 import '../utils/constants.dart';
 
@@ -50,6 +47,7 @@ class _ProfileFragmentState extends State<ProfileFragment> {
               }
               if (state is UserProfileSuccessState) {
                 var userProfile = state.user;
+                var userArchivement = state.user.userArchivements;
                 return Column(
                   children: [
                     IntrinsicHeight(
@@ -250,13 +248,7 @@ class _ProfileFragmentState extends State<ProfileFragment> {
                             ),
                           ],
                         ),
-                        BlocBuilder<ArchivementCubit, ArchivementState>(builder: (context, state) {
-                          if (state is ArchivementLoadingState) {
-                            return const Center(child: CircularProgressIndicator());
-                          }
-                          if (state is ArchivementSuccessState) {
-                            var archivements = state.archivements.archivements!;
-                            return SingleChildScrollView(
+                        userArchivement != null && userArchivement.isNotEmpty ? SingleChildScrollView(
                               physics: const AlwaysScrollableScrollPhysics(),
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -289,7 +281,7 @@ class _ProfileFragmentState extends State<ProfileFragment> {
                                                     scale: 0.6,
                                                     child: FadeInImage.assetNetwork(
                                                       placeholder: AppAssets.placeholder,
-                                                      image: archivements[index].thumbnailUrl!,
+                                                      image: userArchivement[index].archivement!.thumbnailUrl!,
                                                       // width: 60,
                                                       fit: BoxFit.cover,
                                                     ),
@@ -301,11 +293,11 @@ class _ProfileFragmentState extends State<ProfileFragment> {
                                                 crossAxisAlignment: CrossAxisAlignment.start,
                                                 children: [
                                                   Text(
-                                                    archivements[index].tournament!.title!,
+                                                    userArchivement[index].archivement!.tournament!.title!,
                                                     style: primaryTextStyle(),
                                                   ),
                                                   Text(
-                                                    archivements[index].name!,
+                                                    userArchivement[index].archivement!.name!,
                                                     style: secondaryTextStyle(),
                                                   ),
                                                 ],
@@ -315,13 +307,10 @@ class _ProfileFragmentState extends State<ProfileFragment> {
                                         );
                                       },
                                       separatorBuilder: (context, index) => const Divider(),
-                                      itemCount: archivements.length)
+                                      itemCount: userArchivement.length)
                                 ],
                               ),
-                            );
-                          }
-                          return const SizedBox.shrink();
-                        }),
+                            ) : Center(child: Text('No archivement yet', style: primaryTextStyle()).paddingSymmetric(horizontal: 16)),
                         BlocProvider<TournamentCubit>(
                           create: (context) => TournamentCubit()..getTournamentsAttended(),
                           child: BlocBuilder<TournamentCubit, TournamentState>(
@@ -335,20 +324,23 @@ class _ProfileFragmentState extends State<ProfileFragment> {
                                 //   completedTournament = tournaments.where((t) => t.);
                                 // });
                                 if (tournaments.isNotEmpty) {
-                                  return Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: [
-                                      ListView.separated(
-                                          shrinkWrap: true,
-                                          physics: const AlwaysScrollableScrollPhysics(),
-                                          itemBuilder: (context, index) {
-                                            return TournamentWidget(tournaments: tournaments[index]).onTap(() {
-                                              Navigator.pushNamed(context, TournamentDetailScreen.routeName, arguments: tournaments[index].id);
-                                            });
-                                          },
-                                          separatorBuilder: (context, index) => Gap.k8.height,
-                                          itemCount: tournaments.length)
-                                    ],
+                                  return SingleChildScrollView(
+                                    physics: const AlwaysScrollableScrollPhysics(),
+                                    child: Column(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: [
+                                        ListView.separated(
+                                            shrinkWrap: true,
+                                            physics: const NeverScrollableScrollPhysics(),
+                                            itemBuilder: (context, index) {
+                                              return TournamentWidget(tournaments: tournaments[index]).onTap(() {
+                                                Navigator.pushNamed(context, TournamentDetailScreen.routeName, arguments: tournaments[index].id);
+                                              });
+                                            },
+                                            separatorBuilder: (context, index) => Gap.k8.height,
+                                            itemCount: tournaments.length)
+                                      ],
+                                    ),
                                   );
                                 } else {
                                   return (UserRepo.user.status != 'Active' && UserRepo.user.id != null)

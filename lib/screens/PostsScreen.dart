@@ -243,8 +243,13 @@ class _PostsScreenState extends State<PostsScreen> {
                     })
                   ],
                 ),
-              ) : Center(
+              ) : memStatus != null ? Center(
                 child: Text('You currently cannot access this group', style: boldTextStyle(size: 16)),
+              ) : const Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  CircularProgressIndicator(),
+                ],
               ),
             );
           })),

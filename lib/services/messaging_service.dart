@@ -81,8 +81,8 @@ class MessagingService {
       badge: true,
       sound: true,
     );
-    final _notificationCubit = NotificationCubit();
-    _notificationCubit.getNotifications();
+    final notificationCubit = NotificationCubit();
+    notificationCubit.getNotifications();
     FirebaseMessaging.onMessageOpenedApp.listen(_handleMessage);
     FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
     FirebaseMessaging.onMessage.listen((RemoteMessage message) {

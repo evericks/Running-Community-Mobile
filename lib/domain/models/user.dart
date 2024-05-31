@@ -1,3 +1,5 @@
+import 'archivements.dart';
+
 class User {
   String? id;
   String? name;
@@ -8,6 +10,7 @@ class User {
   String? dateOfBirth;
   String? status;
   String? createAt;
+  List<UserArchivements>? userArchivements;
 
   User(
       {this.id,
@@ -18,7 +21,8 @@ class User {
       this.gender,
       this.dateOfBirth,
       this.status,
-      this.createAt});
+      this.createAt,
+      this.userArchivements});
 
   User.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -30,19 +34,29 @@ class User {
     dateOfBirth = json['dateOfBirth'];
     status = json['status'];
     createAt = json['createAt'];
+    if (json['userArchivements'] != null) {
+      userArchivements = <UserArchivements>[];
+      json['userArchivements'].forEach((v) {
+        userArchivements!.add(UserArchivements.fromJson(v));
+      });
+    }
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
-    data['name'] = this.name;
-    data['phone'] = this.phone;
-    data['avatarUrl'] = this.avatarUrl;
-    data['address'] = this.address;
-    data['gender'] = this.gender;
-    data['dateOfBirth'] = this.dateOfBirth;
-    data['status'] = this.status;
-    data['createAt'] = this.createAt;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['id'] = id;
+    data['name'] = name;
+    data['phone'] = phone;
+    data['avatarUrl'] = avatarUrl;
+    data['address'] = address;
+    data['gender'] = gender;
+    data['dateOfBirth'] = dateOfBirth;
+    data['status'] = status;
+    data['createAt'] = createAt;
+    if (userArchivements != null) {
+      data['userArchivements'] =
+          userArchivements!.map((v) => v.toJson()).toList();
+    }
     return data;
   }
 
@@ -51,4 +65,30 @@ class User {
 
   @override
   int get hashCode => id.hashCode;
+}
+
+class UserArchivements {
+  String? id;
+  String? createAt;
+  Archivement? archivement;
+
+  UserArchivements({this.id, this.createAt, this.archivement});
+
+  UserArchivements.fromJson(Map<String, dynamic> json) {
+    id = json['id'];
+    createAt = json['createAt'];
+    archivement = json['archivement'] != null
+        ? Archivement.fromJson(json['archivement'])
+        : null;
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['id'] = id;
+    data['createAt'] = createAt;
+    if (archivement != null) {
+      data['archivement'] = archivement!.toJson();
+    }
+    return data;
+  }
 }

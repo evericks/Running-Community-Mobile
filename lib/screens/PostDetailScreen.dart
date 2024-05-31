@@ -173,7 +173,7 @@ class _PostDetailScreenState extends State<PostDetailScreen> {
                       },),
                     )
                   ],
-                ).paddingSymmetric(horizontal: 16),
+                ).paddingSymmetric(horizontal: 16, vertical: 8),
               ),
             );
           }

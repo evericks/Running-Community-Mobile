@@ -93,6 +93,7 @@ class _HomeFragmentState extends State<HomeFragment> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       BlocConsumer<TournamentCubit, TournamentState>(listener: (context, state) {
+                        
                         if (state is TournamentSuccessState) {
                           setState(() {
                             pageSize = state.tournaments.tournaments!.where((t) => DateTime.parse(t.registerDuration!).isAfter(DateTime.now())).toList().length;
@@ -112,6 +113,9 @@ class _HomeFragmentState extends State<HomeFragment> {
                           });
                         }
                       }, builder: (context, state) {
+                        if (state is TournamentLoadingState) {
+                          return const Center(child: CircularProgressIndicator());
+                        }
                         if (state is TournamentSuccessState) {
                           var tournaments = state.tournaments.tournaments!.where((t) => DateTime.parse(t.registerDuration!).isAfter(DateTime.now())).toList();
                           return tournaments.isNotEmpty
