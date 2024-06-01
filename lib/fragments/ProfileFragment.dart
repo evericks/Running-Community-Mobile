@@ -84,6 +84,10 @@ class _ProfileFragmentState extends State<ProfileFragment> {
                               ),
                             ],
                           ),
+                          Gap.k16.width,
+                          IconButton(onPressed: (){
+                            context.read<UserCubit>().getUserProfile();
+                          }, icon: const Icon(Icons.refresh, color: gray, size: 20,)),
                           const Spacer(),
                           SvgPicture.asset(
                             AppAssets.user_pen,
